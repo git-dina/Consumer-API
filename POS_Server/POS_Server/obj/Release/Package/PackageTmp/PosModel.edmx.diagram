@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0aa57f7689de407db441609c24621379" Name="Diagram1" ZoomLevel="41">
+        <EntityTypeShape EntityType="PosModel.adminMessages" Width="1.5" PointX="5.25" PointY="109.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.agentMemberships" Width="1.5" PointX="7.5" PointY="121" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.agents" Width="1.5" PointX="8" PointY="106.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.banks" Width="1.5" PointX="18.5" PointY="118.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.bondes" Width="1.5" PointX="23" PointY="107.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.branches" Width="1.5" PointX="3" PointY="97.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.branchesUsers" Width="1.5" PointX="5.25" PointY="105" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.branchStore" Width="1.5" PointX="10.25" PointY="105.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.cards" Width="1.5" PointX="3" PointY="105.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.cashTransfer" Width="1.5" PointX="20.75" PointY="113.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.categories" Width="1.5" PointX="3" PointY="109.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.categoryuser" Width="1.5" PointX="13.25" PointY="117.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.cities" Width="1.5" PointX="5.75" PointY="93.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.countriesCodes" Width="1.5" PointX="3.5" PointY="93" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.coupons" Width="1.5" PointX="3" PointY="115" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.couponsInvoices" Width="1.5" PointX="23.75" PointY="117.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.docImages" Width="1.5" PointX="3" PointY="121" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.error" Width="1.5" PointX="10.25" PointY="110.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.Expenses" Width="1.5" PointX="3" PointY="125.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.groupObject" Width="1.5" PointX="5.25" PointY="123.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.groups" Width="1.5" PointX="3" PointY="134.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.Inventory" Width="1.5" PointX="5.25" PointY="115.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.inventoryItemLocation" Width="1.5" PointX="26" PointY="109.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.invoiceOrder" Width="1.5" PointX="20.75" PointY="132" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.invoices" Width="1.5" PointX="18.5" PointY="126.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.invoiceStatus" Width="1.5" PointX="23.75" PointY="112.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.items" Width="1.5" PointX="5.25" PointY="96.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsLocations" Width="1.5" PointX="23.75" PointY="122.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsMaterials" Width="1.5" PointX="7.5" PointY="99" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsOffers" Width="1.5" PointX="12.75" PointY="122.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsProp" Width="1.5" PointX="8" PointY="103" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsTransfer" Width="1.5" PointX="28.25" PointY="143.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemsUnits" Width="1.5" PointX="7.5" PointY="138" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemTransferOffer" Width="1.5" PointX="30.5" PointY="121.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.itemUnitUser" Width="1.5" PointX="15.75" PointY="119.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.locations" Width="1.5" PointX="10.5" PointY="116.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.medalAgent" Width="1.5" PointX="10.25" PointY="122.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.medals" Width="1.5" PointX="3" PointY="142" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.memberships" Width="1.5" PointX="3" PointY="146.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.messagesPos" Width="1.5" PointX="18.5" PointY="113.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.notification" Width="1.5" PointX="3" PointY="151.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.notificationUser" Width="1.5" PointX="15.5" PointY="123.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.objects" Width="1.5" PointX="3" PointY="155.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.offers" Width="1.5" PointX="26" PointY="145.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.packages" Width="1.5" PointX="15.75" PointY="114.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.paperSize" Width="1.5" PointX="13.25" PointY="128.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.Points" Width="1.5" PointX="16.25" PointY="104" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.pos" Width="1.5" PointX="13.25" PointY="104.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.posSerials" Width="1.5" PointX="13.25" PointY="131.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.posSetting" Width="1.5" PointX="15.5" PointY="128.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.posUsers" Width="1.5" PointX="15.5" PointY="109.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.Prices" Width="1.5" PointX="10.75" PointY="135.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.printers" Width="1.5" PointX="3" PointY="160.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.ProgramDetails" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.properties" Width="1.5" PointX="3" PointY="164.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.propertiesItems" Width="1.5" PointX="8.25" PointY="133.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.sections" Width="1.5" PointX="5.25" PointY="129.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.serials" Width="1.5" PointX="33.5" PointY="121.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.servicesCosts" Width="1.5" PointX="7.5" PointY="116.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.setting" Width="1.5" PointX="11.75" PointY="97.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.setValues" Width="1.5" PointX="11.75" PointY="93.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.shippingCompanies" Width="1.5" PointX="16.25" PointY="134.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.siteContact" Width="1.5" PointX="11" PointY="100.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.siteContents" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.siteSubject" Width="1.5" PointX="8.75" PointY="95.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.slices" Width="1.5" PointX="3" PointY="172.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.storageCost" Width="1.5" PointX="5.25" PointY="138" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.storeProperties" Width="1.5" PointX="35.75" PointY="121.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.storePropertiesValues" Width="1.5" PointX="38" PointY="129.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.subscriptionFees" Width="1.5" PointX="5.25" PointY="146.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.sysEmails" Width="1.5" PointX="13.25" PointY="112.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.TokensTable" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.units" Width="1.5" PointX="3" PointY="87.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.users" Width="1.5" PointX="0.75" PointY="96.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.userSetValues" Width="1.5" PointX="14" PointY="99.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.usersLogs" Width="1.5" PointX="18.5" PointY="109.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.UsersRequest" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PosModel.warranty" Width="1.5" PointX="3" PointY="181.5" IsExpanded="true" />
+        <AssociationConnector Association="PosModel.FK_adminMessages_adminMessages" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_adminMessages_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_adminMessages_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_adminMessages_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_adminMessages" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_agents" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_cashTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_memberships2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_subscriptionFees" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agentMemberships_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_agentMemberships" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agents_cities" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agents_countriesCodes" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agents_Points" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agents_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_agents_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_agents" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_agents" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medalAgent_agents" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Points_agents" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_banks" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_bondes_cashTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_bondes_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_bondes_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_bondes" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branches_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branches_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchesUsers_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchStore_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchStore_branches2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_error_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Inventory_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_branches1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_locations_branches1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_pos_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_sections_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_serials_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_sysEmails_branches" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchesUsers_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchStore_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_branchStore_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cards_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cards_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_cards" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_cashTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_pos1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_shippingCompanies" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cashTransfer_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categories_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categories_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categoryuser_categories" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_categories" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categoryuser_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categoryuser_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_categoryuser_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_cities_countriesCodes" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_coupons_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_coupons_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_couponsInvoices_coupons" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_couponsInvoices_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_couponsInvoices_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_couponsInvoices_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_docImages_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_docImages_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_error_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_error_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Expenses_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groupObject_groups" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groupObject_objects" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groupObject_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groupObject_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groups_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_groups_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_users_groups" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Inventory_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Inventory_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Inventory_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_inventoryItemLocation_Inventory" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_inventoryItemLocation_itemsLocations" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_inventoryItemLocation_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_inventoryItemLocation_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_inventoryItemLocation" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceOrder_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceOrder_invoices1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceOrder_itemsTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_shippingCompanies" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_slices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users3" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users4" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoices_users5" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceStatus_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_invoices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceStatus_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_invoiceStatus_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_units" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_units1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_items_users3" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsMaterials_items" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsMaterials_items1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_items" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_servicesCosts_items" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_locations" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsLocations_users3" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsMaterials_units" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsOffers_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsOffers_offers" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsOffers_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsOffers_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsProp_propertiesItems" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsProp_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsProp_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_offers" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_Prices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsTransfer_warranty" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemTransferOffer_itemsTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_serials_itemsTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_itemsTransfer" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_storageCost" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_units" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemsUnits_warranty" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemUnitUser_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_packages_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_packages_itemsUnits1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Prices_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_serials_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_itemsUnits" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemTransferOffer_offers" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemTransferOffer_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemTransferOffer_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemUnitUser_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemUnitUser_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_itemUnitUser_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_locations_sections" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_locations_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_locations_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medalAgent_medals" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medalAgent_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medalAgent_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medals_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_medals_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_memberships_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_memberships_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_subscriptionFees_memberships" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_messagesPos_users3" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notification_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notification_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notificationUser_notification" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notificationUser_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notificationUser_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notificationUser_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_notificationUser_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_objects_objects" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_objects_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_objects_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_packages_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_packages_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_paperSize" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Points_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Points_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_pos_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_pos_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posUsers_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_usersLogs_pos" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_posSerials" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_printers" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_printers1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posSetting_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posUsers_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posUsers_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_posUsers_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Prices_slices" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Prices_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_Prices_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_printers_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_printers_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_properties_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_properties_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_propertiesItems_properties" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_properties" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_propertiesItems_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_propertiesItems_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_propertiesItems" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_serials_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_serials_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_serials" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_servicesCosts_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_servicesCosts_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_setValues_setting" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_userSetValues_setting" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_userSetValues_setValues" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_siteContact_siteSubject" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_siteContact_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_slices_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_slices_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_storeProperties" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_storeProperties1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storePropertiesValues_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_sysEmails_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_sysEmails_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_userSetValues_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_userSetValues_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_userSetValues_users2" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_usersLogs_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_warranty_users" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_warranty_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="PosModel.FK_storeProperties_branches" />
+        <EntityTypeShape EntityType="PosModel.sliceUser" Width="1.5" PointX="5.25" PointY="133.625" />
+        <AssociationConnector Association="PosModel.FK_sliceUser_slices" />
+        <AssociationConnector Association="PosModel.FK_sliceUser_users" />
+        <AssociationConnector Association="PosModel.FK_sliceUser_users1" />
+        <AssociationConnector Association="PosModel.FK_sliceUser_users2" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
