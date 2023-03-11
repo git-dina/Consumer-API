@@ -289,6 +289,7 @@
     <Compile Include="Models\CountryModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
+    <Compile Include="Models\SupplierTypeModel.cs" />
     <Compile Include="Models\VM\APIResult.cs" />
     <Compile Include="Models\VM\ResponseVM.cs" />
     <Compile Include="Models\VM\TokenManager.cs" />
