@@ -234,6 +234,7 @@
     <Compile Include="Classes\ProgramInfo.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\SupplierGroupController.cs" />
     <Compile Include="GEN_ASSISTANT_SUPPLIER.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -257,6 +258,9 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="LST_CountriesCodes.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="LST_PHONE_TYPE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -283,6 +287,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\CountryModel.cs" />
+    <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
     <Compile Include="Models\VM\APIResult.cs" />
     <Compile Include="Models\VM\ResponseVM.cs" />
