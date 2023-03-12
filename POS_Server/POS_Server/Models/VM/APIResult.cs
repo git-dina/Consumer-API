@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 
-namespace Consumer_API.Models.VM
+namespace POS_Server.Models.VM
 {
 
     public class APIResult

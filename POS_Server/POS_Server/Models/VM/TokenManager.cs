@@ -1,9 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using POS_Server;
 using POS_Server.Controllers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.IO.Compression;
@@ -16,7 +18,7 @@ using System.Text;
 using System.Web;
 using System.Web.SessionState;
 
-namespace Consumer_API.Models.VM
+namespace POS_Server.Models.VM
 {
     public class TokenManager : IRequiresSessionState
     {
@@ -95,17 +97,17 @@ namespace Consumer_API.Models.VM
                 
 
                 // check if any user logged in with same user account 
-                string userLogInID = claims.Where(x => x.Type == "userLogInID").Select(x => x.Value).FirstOrDefault();
-                int logInID = 0;
-                if (userLogInID != null && userLogInID != "")
-                    logInID = int.Parse(userLogInID);
-                if (logInID != 0)
-                {
-                    UsersLogsController uc = new UsersLogsController();
-                   bool isLoggedOut =  uc.checkLogByID(logInID);
-                    if (isLoggedOut == true)
-                        return "-8"; // log out
-                }
+                //string userLogInID = claims.Where(x => x.Type == "userLogInID").Select(x => x.Value).FirstOrDefault();
+                //int logInID = 0;
+                //if (userLogInID != null && userLogInID != "")
+                //    logInID = int.Parse(userLogInID);
+                //if (logInID != 0)
+                //{
+                //    UsersLogsController uc = new UsersLogsController();
+                //   bool isLoggedOut =  uc.checkLogByID(logInID);
+                //    if (isLoggedOut == true)
+                //        return "-8"; // log out
+                //}
 
                 #region confirm request token
                 bool requestDone = requestExecuted(requestToken);
@@ -334,12 +336,12 @@ namespace Consumer_API.Models.VM
 
         private static void removeTokenFromBlackList(string requestToken)
         {
-            using (incposdbEntities entity = new incposdbEntities())
+            using (DBEntities entity = new DBEntities())
             {
-                var token = entity.TokensTable.Where(x => x.token == requestToken).FirstOrDefault();
+                var token = entity.LST_REQUEST_TOKEN.Where(x => x.Token == requestToken).FirstOrDefault();
                 if (token != null)
                 {
-                    entity.TokensTable.Remove(token);
+                    entity.LST_REQUEST_TOKEN.Remove(token);
                     entity.SaveChanges();
                 }
             }
@@ -347,9 +349,9 @@ namespace Consumer_API.Models.VM
         }
         private static bool requestExecuted(string requestToken)
         {
-            using (incposdbEntities entity = new incposdbEntities())
+            using (DBEntities entity = new DBEntities())
             {
-                var token = entity.TokensTable.Where(x => x.token == requestToken).FirstOrDefault();
+                var token = entity.LST_REQUEST_TOKEN.Where(x => x.Token == requestToken).FirstOrDefault();
                
                 if (token != null)
                 {
@@ -357,27 +359,45 @@ namespace Consumer_API.Models.VM
                 }
                 else
                 {
-                    int count = entity.TokensTable.Count();
+                    int count = entity.LST_REQUEST_TOKEN.Count();
                     if (count > blackListSize)
                     {
-                        var lastN = entity.TokensTable
-                       .OrderBy(x => x.createDate).Take(count - blackListSize +blackListSize/2);
+                        var lastN = entity.LST_REQUEST_TOKEN
+                       .OrderBy(x => x.CreateDate).Take(count - blackListSize +blackListSize/2);
                         try
                         {
-                            entity.TokensTable.RemoveRange(lastN);
+                            entity.LST_REQUEST_TOKEN.RemoveRange(lastN);
                         }
                         catch { }
 
                     }
  
-                    var newToken = new TokensTable()
+                    var newToken = new LST_REQUEST_TOKEN()
                     {
                         
-                        token = requestToken,
-                        createDate = DateTime.Now,
+                        Token = requestToken,
+                        CreateDate = DateTime.Now,
                     };
-                    entity.TokensTable.Add(newToken);
-                    entity.SaveChanges();
+                    try
+                    {
+                        entity.LST_REQUEST_TOKEN.Add(newToken);
+                        entity.SaveChanges();
+                    }
+                    catch (DbEntityValidationException e)
+                    {
+                        string er = "";
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                                eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+
+                                er += ve.PropertyName + ve.ErrorMessage;
+                            }
+                        }
+                   
+                    }
                     return false;
                 }
             }

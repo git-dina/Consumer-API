@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Consumer_API.Models
+namespace POS_Server.Models
 {
     public class SupplierModel
     {
@@ -32,6 +32,74 @@ namespace Consumer_API.Models
         public string Notes { get; set; }
         public string PurchaseOrderNotes { get; set; }
         public string Image { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
+
+        public List<SupplierPhoneModel> SupplierPhones { get; set; }
+        public List<SupplierSectorModel> SupplierSectors { get; set; }
+        public List<SupNotAllowedTransModel> SupNotAllowedTrans { get; set; }
+    }
+
+    public class SupplierPhoneModel
+    {
+        public int SupPhoneId { get; set; }
+        public long SupId { get; set; }
+        public int PhoneTypeID { get; set; }
+        public string PhoneNumber { get; set; }
+        public string PersonName { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
+    }
+
+    public class SupplierSectorModel
+    {
+        public long SupSectorId { get; set; }
+        public Nullable<long> SupId { get; set; }
+        public string SupSectorName { get; set; }
+        public string Notes { get; set; }
+        public decimal FreePercentageMarkets { get; set; }
+        public Nullable<decimal> FreePercentageBranchs { get; set; }
+        public Nullable<decimal> FreePercentageStores { get; set; }
+        public decimal DiscountPercentageMarkets { get; set; }
+        public Nullable<decimal> DiscountPercentageBranchs { get; set; }
+        public Nullable<decimal> DiscountPercentageStores { get; set; }
+        public bool IsBlocked { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
+
+        public List<SupplierSectorSpecModel> supplierSectorSpecifies { get; set; }
+    }
+
+    public class SupplierSectorSpecModel
+    {
+        public long SupSectorSpecifyId { get; set; }
+        public long SupId { get; set; }
+        public long SupSectorId { get; set; }
+        public long BranchId { get; set; }
+        public decimal FreePercentage { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public string Notes { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
+    }
+
+    public class SupNotAllowedTransModel
+    {
+        public long Id { get; set; }
+        public long SupId { get; set; }
+        public int SubTransId { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

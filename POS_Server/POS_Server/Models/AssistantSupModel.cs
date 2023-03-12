@@ -5,9 +5,9 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class SupplierGroupModel
+    public class AssistantSupModel
     {
-        public int SupplierGroupId { get; set; }
+        public long AssistantSupId { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
         public bool IsBlocked { get; set; }
@@ -16,7 +16,5 @@ namespace POS_Server.Models
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
-
-        public bool HasSuppliers { get; set; }
     }
 }

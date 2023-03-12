@@ -447,7 +447,6 @@ namespace POS_Server.Controllers
             }
            
         }
-         
 
     }
 }

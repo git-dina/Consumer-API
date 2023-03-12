@@ -14,8 +14,8 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierType")]
-    public class SupplierTypeController : ApiController
+    [RoutePrefix("api/AssistantSup")]
+    public class AssistantSupController : ApiController
     {
         CountriesController cc = new CountriesController();
 
@@ -44,25 +44,25 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierTypes(isActive);
+                var supplierList = GetAssistantSup(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
+        public List<AssistantSupModel> GetAssistantSup(bool? isActive)
         {
             using (DBEntities entity = new DBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
+                var searchPredicate = PredicateBuilder.New<GEN_ASSISTANT_SUPPLIER>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierTypeList = entity.LST_SUPPLIER_TYPE
+                var AssistantSupplierList = entity.GEN_ASSISTANT_SUPPLIER
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierTypeModel
+                                .Select(p => new AssistantSupModel
                                 {
-                                    SupplierTypeId= p.SupplierTypeId,
+                                    AssistantSupId = p.AssistantSupId,
                                     Name = p.Name,
                                     Notes = p.Notes,
                                     IsBlocked = p.IsBlocked,
@@ -70,11 +70,11 @@ namespace POS_Server.Controllers
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
-                                    UpdateUserId = p.UpdateUserId,
+                                    UpdateUserId = p.UpdateUserId,                                  
                                 }).ToList();
 
 
-                return supplierTypeList;
+                return AssistantSupplierList;
             }
         }
 
@@ -92,7 +92,7 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_SUPPLIER_TYPE subObj = null;
+                GEN_ASSISTANT_SUPPLIER subObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
@@ -100,17 +100,17 @@ namespace POS_Server.Controllers
                     {
                         Object = c.Value.Replace("\\", string.Empty);
                         Object = Object.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        subObj = JsonConvert.DeserializeObject<GEN_ASSISTANT_SUPPLIER>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_TYPE sup;
+                    GEN_ASSISTANT_SUPPLIER sup;
                     using (DBEntities entity = new DBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
-                        if (subObj.SupplierTypeId == 0)
+                        var supEntity = entity.Set<GEN_ASSISTANT_SUPPLIER>();
+                        if (subObj.AssistantSupId == 0)
                         {
                             subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             subObj.UpdateDate = subObj.CreateDate;
@@ -121,7 +121,7 @@ namespace POS_Server.Controllers
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
+                            sup = entity.GEN_ASSISTANT_SUPPLIER.Find(subObj.AssistantSupId);
                             sup.Name = subObj.Name;
                             sup.IsBlocked = subObj.IsBlocked;
                             sup.Notes = subObj.Notes;
@@ -132,10 +132,10 @@ namespace POS_Server.Controllers
 
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetAssistantSup(true);
                     return TokenManager.GenerateToken(supList);
                 }
-                catch 
+                catch
                 {
                     return TokenManager.GenerateToken(null);
 
@@ -156,7 +156,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long supTypeId = 0;
+                long AssistantSupId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -164,7 +164,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        supTypeId = long.Parse(c.Value);
+                        AssistantSupId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -175,7 +175,7 @@ namespace POS_Server.Controllers
                 {
                     using (DBEntities entity = new DBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supTypeId).First();
+                        var tmpAgent = entity.GEN_ASSISTANT_SUPPLIER.Where(p => p.AssistantSupId == AssistantSupId).First();
                         tmpAgent.IsActive = false;
                         tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         tmpAgent.UpdateUserId = userId;
@@ -183,7 +183,7 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetAssistantSup(true);
                     return TokenManager.GenerateToken(supList);
                 }
                 catch
