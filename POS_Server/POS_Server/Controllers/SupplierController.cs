@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Consumer_API.Classes;
-using Consumer_API.Models;
-using Consumer_API.Models.VM;
+using POS_Server.Classes;
+using POS_Server.Models;
+using POS_Server.Models.VM;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +21,7 @@ using System.Web;
 using LinqKit;
 using POS_Server;
 
-namespace Consumer_API.Controllers
+namespace POS_Server.Controllers
 {
     [RoutePrefix("api/Supplier")]
     public class SupplierController : ApiController
@@ -34,7 +34,7 @@ namespace Consumer_API.Controllers
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
             bool? isActive = null;
-            Boolean canDelete = false;
+ 
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
             {
@@ -100,6 +100,50 @@ namespace Consumer_API.Controllers
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
+                                    SupplierPhones = entity.GEN_SUPPLIER_PHONE.Where(x => x.SupId == p.SupId && x.IsActive == true)
+                                                    .Select(x => new SupplierPhoneModel()
+                                                    {
+                                                        PhoneTypeID = x.PhoneTypeID,
+                                                        PersonName = x.PersonName,
+                                                        PhoneNumber = x.PhoneNumber,
+                                                        SupPhoneId = x.SupPhoneId,
+
+                                                    }).ToList(),
+                                    SupplierSectors = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == p.SupId && x.IsActive == true)
+                                                        .Select(x => new SupplierSectorModel()
+                                                        {
+                                                            SupSectorId = x.SupSectorId,
+                                                            SupSectorName = x.SupSectorName,
+                                                            Notes = x.Notes,
+                                                            DiscountPercentageBranchs = x.DiscountPercentageBranchs,
+                                                            DiscountPercentageMarkets = x.DiscountPercentageMarkets,
+                                                            DiscountPercentageStores = x.DiscountPercentageStores,
+                                                            FreePercentageBranchs = x.FreePercentageBranchs,
+                                                            FreePercentageMarkets = x.FreePercentageMarkets,
+                                                            FreePercentageStores = x.FreePercentageStores,
+                                                            IsBlocked = x.IsBlocked,
+                                                            SupId = x.SupId,
+                                                            supplierSectorSpecifies = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(m => m.SupSectorId == x.SupSectorId && m.IsActive == true)
+                                                                                        .Select(m => new SupplierSectorSpecModel()
+                                                                                        {
+                                                                                            SupSectorSpecifyId = m.SupSectorSpecifyId,
+                                                                                            FreePercentage = m.FreePercentage,
+                                                                                            DiscountPercentage = m.DiscountPercentage,
+                                                                                            Notes = m.Notes,
+                                                                                            BranchId = m.BranchId,
+                                                                                            SupSectorId = m.SupSectorId,
+                                                                                            SupId = m.SupId,
+                                                                                        }).ToList(),
+                                                        }).ToList(),
+                                                     
+                                                        SupNotAllowedTrans = entity.GEN_SUPPLIER_NOT_ALLOWED_TRANS.Where(x => x.SupId == p.SupId && x.IsActive == true)
+                                                                            .Select(x => new SupNotAllowedTransModel()
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                SubTransId= x.SubTransId,
+                                                                                SupId= x.SupId,
+                                                                            }).ToList(),
+                                                    
                                 }).ToList();
 
                 return supplierList;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
 
-namespace Consumer_API
+namespace POS_Server
 {
     public static class WebApiConfig
     {

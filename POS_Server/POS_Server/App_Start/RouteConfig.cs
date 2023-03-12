@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Consumer_API
+namespace POS_Server
 {
     public class RouteConfig
     {

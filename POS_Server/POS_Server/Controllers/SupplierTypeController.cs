@@ -1,9 +1,8 @@
-﻿using POS_Server.Controllers;
-using POS_Server.Models.VM;
-using LinqKit;
+﻿using LinqKit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using POS_Server.Models;
+using POS_Server.Models.VM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +11,14 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
-using System.Data.Entity.Validation;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierGroup")]
-    public class SupplierGroupController : ApiController
+    [RoutePrefix("api/SupplierType")]
+    public class SupplierTypeController : ApiController
     {
         CountriesController cc = new CountriesController();
+
         // GET api/<controller>
         [HttpPost]
         [Route("Get")]
@@ -27,7 +26,7 @@ namespace POS_Server.Controllers
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
             bool? isActive = null;
-  
+
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
             {
@@ -45,27 +44,27 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierGroups(isActive);
+                var supplierList = GetSupllierTypes(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierGroupModel> GetSupllierGroups(bool? isActive)
+        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
         {
             using (DBEntities entity = new DBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_GROUP>();
+                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierGroupList = entity.LST_SUPPLIER_GROUP
+                var supplierTypeList = entity.LST_SUPPLIER_TYPE
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierGroupModel
+                                .Select(p => new SupplierTypeModel
                                 {
-                                    SupplierGroupId=p.SupplierGroupId,
-                                    Name=p.Name,
-                                    Notes= p.Notes,
+                                    SupplierTypeId= p.SupplierTypeId,
+                                    Name = p.Name,
+                                    Notes = p.Notes,
                                     IsBlocked = p.IsBlocked,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
@@ -75,13 +74,7 @@ namespace POS_Server.Controllers
                                 }).ToList();
 
 
-                foreach(var row in supplierGroupList)
-                {
-                    var hasSupplier = entity.GEN_SUPPLIER.Where(x => x.IsActive == true).FirstOrDefault();
-                    if (hasSupplier != null)
-                        row.HasSuppliers = true;
-                }
-                return supplierGroupList;
+                return supplierTypeList;
             }
         }
 
@@ -98,26 +91,26 @@ namespace POS_Server.Controllers
             }
             else
             {
-                string groupObject = "";
-                LST_SUPPLIER_GROUP subObj = null;
+                string Object = "";
+                LST_SUPPLIER_TYPE subObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
-                        groupObject = c.Value.Replace("\\", string.Empty);
-                        groupObject = groupObject.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_GROUP>(groupObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        Object = c.Value.Replace("\\", string.Empty);
+                        Object = Object.Trim('"');
+                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_GROUP sup;
+                    LST_SUPPLIER_TYPE sup;
                     using (DBEntities entity = new DBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_GROUP>();
-                        if (subObj.SupplierGroupId == 0)
+                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
+                        if (subObj.SupplierTypeId == 0)
                         {
                             subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             subObj.UpdateDate = subObj.CreateDate;
@@ -128,7 +121,7 @@ namespace POS_Server.Controllers
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_GROUP.Find(subObj.SupplierGroupId);
+                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
                             sup.Name = subObj.Name;
                             sup.IsBlocked = subObj.IsBlocked;
                             sup.Notes = subObj.Notes;
@@ -139,12 +132,13 @@ namespace POS_Server.Controllers
 
                     }
 
-                    var supList = GetSupllierGroups(true);
+                    var supList = GetSupllierTypes(true);
                     return TokenManager.GenerateToken(supList);
                 }
-                catch (DbEntityValidationException e)
+                catch 
                 {
                     return TokenManager.GenerateToken(null);
+
                 }
             }
         }
@@ -181,7 +175,7 @@ namespace POS_Server.Controllers
                 {
                     using (DBEntities entity = new DBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_GROUP.Where(p => p.SupplierGroupId == supGroupId).First();
+                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supGroupId).First();
                         tmpAgent.IsActive = false;
                         tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         tmpAgent.UpdateUserId = userId;
@@ -189,7 +183,7 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierGroups(true);
+                    var supList = GetSupllierTypes(true);
                     return TokenManager.GenerateToken(supList);
                 }
                 catch

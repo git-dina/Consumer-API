@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Consumer_API.Classes
+namespace POS_Server.Classes
 {
     public class Calculate
     {

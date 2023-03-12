@@ -1,17 +1,17 @@
 ﻿using Newtonsoft.Json;
-using Consumer_API.Models;
+using POS_Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Consumer_API.Models.VM;
+using POS_Server.Models.VM;
 using System.Security.Claims;
 using System.Web;
 using POS_Server;
 
-namespace Consumer_API.Controllers
+namespace POS_Server.Controllers
 {
     [RoutePrefix("api/Countries")]
     public class CountriesController : ApiController

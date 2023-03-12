@@ -6,9 +6,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Consumer_API.Controllers;
+using POS_Server.Controllers;
 using System.Threading.Tasks;
-namespace Consumer_API
+namespace POS_Server
 {
     public class WebApiApplication : System.Web.HttpApplication
     { 
