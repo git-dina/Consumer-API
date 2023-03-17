@@ -20,6 +20,7 @@ using System.Web.Http;
 using System.Web;
 using LinqKit;
 using POS_Server;
+using System.Data.Entity.Validation;
 
 namespace POS_Server.Controllers
 {
@@ -59,7 +60,7 @@ namespace POS_Server.Controllers
 
         public List<SupplierModel> GetSuplliers(bool? isActive)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<GEN_SUPPLIER>();
                 searchPredicate = searchPredicate.And(x => true);
@@ -114,6 +115,19 @@ namespace POS_Server.Controllers
                                                         SupPhoneId = x.SupPhoneId,
 
                                                     }).ToList(),
+                                    SupplierDocuments = entity.GEN_SUPPLIER_DOCUMENT.Where(x => x.SupId == p.SupId && x.IsActive == true)
+                                                        .Select(x => new SupplierDocModel()
+                                                        {
+                                                            DocumentId= x.DocumentId,
+                                                            DocName=x.DocName,
+                                                            DocTitle = x.DocTitle,
+                                                            TypeId=x.TypeId,
+                                                            StartDate=x.StartDate,
+                                                            EndDate = x.EndDate,
+                                                            SupId=x.SupId,
+                                                            CreateDate=x.CreateDate,
+                                                            UpdateDate=x.UpdateDate,
+                                                        }).ToList(),
                                     SupplierSectors = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == p.SupId && x.IsActive == true)
                                                         .Select(x => new SupplierSectorModel()
                                                         {
@@ -179,7 +193,7 @@ namespace POS_Server.Controllers
                 try
                 {
                     GEN_SUPPLIER sup;
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var supEntity = entity.Set<GEN_SUPPLIER>();
                         if (subObj.SupId == 0)
@@ -187,7 +201,7 @@ namespace POS_Server.Controllers
                             subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             subObj.UpdateDate = subObj.CreateDate;
                             subObj.UpdateUserId = subObj.CreateUserId;
-
+                            subObj.IsActive = true;
                             sup = supEntity.Add(subObj);
                         }
                         else
@@ -229,128 +243,198 @@ namespace POS_Server.Controllers
 
                         SaveSupplierPhones(subModel.SupplierPhones, sup.SupId);
                         SaveSupplierSectors(subModel.SupplierSectors, sup.SupId);
-                        SaveSupplierDocuments(sup.SupId);
+                        SaveSupplierDocuments(subModel.SupplierDocuments, sup.SupId);
                     }
 
                     var supList = GetSuplliers(true);
                     return TokenManager.GenerateToken(supList);
                 }
-                catch
+catch (DbEntityValidationException dbEx)
                 {
-                    return TokenManager.GenerateToken(null);
+                    var sb = new StringBuilder();
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            sb.AppendLine(string.Format("Property: {0} Error: {1}",
+                            validationError.PropertyName, validationError.ErrorMessage));
+                        }
+                    }
+                   return sb.ToString();
                 }
             }
         }
 
         public void SaveSupplierPhones(List<SupplierPhoneModel> supplierPhones,long supId)
         {
-             using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
+
                 var phones = entity.GEN_SUPPLIER_PHONE.Where(x => x.SupId == supId).ToList();
                 if (phones.Count() > 0)
                 {
                     entity.GEN_SUPPLIER_PHONE.RemoveRange(phones);
+                    entity.SaveChanges();
                 }
                 GEN_SUPPLIER_PHONE phone;
-                foreach (var row in supplierPhones)
-                {
-                    phone = new GEN_SUPPLIER_PHONE()
+                if (supplierPhones != null)
+                { 
+                    foreach (var row in supplierPhones)
                     {
-                        PersonName = row.PhoneNumber,
-                        PhoneNumber = row.PhoneNumber,
-                        PhoneTypeID = row.PhoneTypeID,
-                        SupId = supId,
-                        IsActive = true,
-                        CreateDate = DateTime.Now,
-                        UpdateDate = DateTime.Now,
-                        CreateUserId= row.CreateUserId,
-                        UpdateUserId = row.UpdateUserId,                      
-                    };
+                        phone = new GEN_SUPPLIER_PHONE()
+                        {
+                            PersonName = row.PhoneNumber,
+                            PhoneNumber = row.PhoneNumber,
+                            PhoneTypeID = row.PhoneTypeID,
+                            SupId = supId,
+                            IsActive = true,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            CreateUserId = row.CreateUserId,
+                            UpdateUserId = row.UpdateUserId,
+                        };
 
-                    entity.GEN_SUPPLIER_PHONE.Add(phone);
+                        entity.GEN_SUPPLIER_PHONE.Add(phone);
+                    }
+                    entity.SaveChanges();
+
                 }
-                entity.SaveChanges();
 
             }
         }
 
         public void SaveSupplierSectors(List<SupplierSectorModel> supplierSectors,long supId)
         {
-             using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var supSectorIds = supplierSectors.Select(x => x.SupSectorId).ToList();
 
-                #region remove not existed sectors
-                var sectorsToRemove = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == supId
-                                && !supSectorIds.Contains( x.SupSectorId)).ToList();
-
-                foreach(var row in sectorsToRemove)
+                if (supplierSectors != null)
                 {
-                    row.IsActive = false;
-                    row.UpdateDate = DateTime.Now;
-                    row.UpdateUserId = row.UpdateUserId;
+                    var supSectorIds = supplierSectors.Select(x => x.SupSectorId).ToList();
+                    #region remove not existed sectors
 
-                    entity.SaveChanges();
-                }
-                #endregion
+                    var sectorsToRemove = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == supId
+                                && !supSectorIds.Contains(x.SupSectorId)).ToList();
 
-                #region edit existed sectors
-                var sectorsToEdit = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == supId
-                                && supSectorIds.Contains(x.SupSectorId)).ToList();
-
-                foreach (var row in sectorsToEdit)
-                {
-                    var sec = supplierSectors.Where(x => x.SupSectorId == row.SupSectorId).FirstOrDefault();
-                    row.SupSectorName = sec.SupSectorName;
-                    row.IsBlocked = sec.IsBlocked;
-                    row.Notes = sec.Notes;
-                    row.DiscountPercentageBranchs = sec.DiscountPercentageBranchs;
-                    row.DiscountPercentageMarkets = sec.DiscountPercentageMarkets;
-                    row.DiscountPercentageStores = sec.DiscountPercentageStores;
-                    row.FreePercentageBranchs = sec.FreePercentageBranchs;
-                    row.FreePercentageMarkets = sec.FreePercentageMarkets;
-                    row.FreePercentageStores = sec.FreePercentageStores;
-                    row.UpdateDate = DateTime.Now;
-                    row.UpdateUserId = sec.UpdateUserId;
-
-                    var sectorSpecify = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId && x.SupId == supId).ToList();
-                    foreach (var r in sectorSpecify)
+                    foreach (var row in sectorsToRemove)
                     {
-                        var supSectorSpecIds = sec.supplierSectorSpecifies.Select(x => x.SupSectorSpecifyId).ToList();
-                        
-                        #region remove not existed sectors specify
-                        var sectorsSpecToRemove = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId
-                                        && !supSectorSpecIds.Contains(x.SupSectorSpecifyId)).ToList();
+                        row.IsActive = false;
+                        row.UpdateDate = DateTime.Now;
+                        row.UpdateUserId = row.UpdateUserId;
 
-                        foreach (var rs in sectorsSpecToRemove)
+                        entity.SaveChanges();
+                    }
+                    #endregion
+
+                    #region edit existed sectors
+                    var sectorsToEdit = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == supId
+                                    && supSectorIds.Contains(x.SupSectorId)).ToList();
+
+                    foreach (var row in sectorsToEdit)
+                    {
+                        var sec = supplierSectors.Where(x => x.SupSectorId == row.SupSectorId).FirstOrDefault();
+                        row.SupSectorName = sec.SupSectorName;
+                        row.IsBlocked = sec.IsBlocked;
+                        row.Notes = sec.Notes;
+                        row.DiscountPercentageBranchs = sec.DiscountPercentageBranchs;
+                        row.DiscountPercentageMarkets = sec.DiscountPercentageMarkets;
+                        row.DiscountPercentageStores = sec.DiscountPercentageStores;
+                        row.FreePercentageBranchs = sec.FreePercentageBranchs;
+                        row.FreePercentageMarkets = sec.FreePercentageMarkets;
+                        row.FreePercentageStores = sec.FreePercentageStores;
+                        row.UpdateDate = DateTime.Now;
+                        row.UpdateUserId = sec.UpdateUserId;
+                        entity.SaveChanges();
+
+                        var sectorSpecify = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId && x.SupId == supId).ToList();
+                        foreach (var r in sectorSpecify)
                         {
-                            rs.IsActive = false;
-                            rs.UpdateDate = DateTime.Now;
-                            rs.UpdateUserId = row.UpdateUserId;
+                            var supSectorSpecIds = sec.supplierSectorSpecifies.Select(x => x.SupSectorSpecifyId).ToList();
 
+                            #region remove not existed sectors specify
+                            var sectorsSpecToRemove = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId
+                                            && !supSectorSpecIds.Contains(x.SupSectorSpecifyId)).ToList();
+
+                            foreach (var rs in sectorsSpecToRemove)
+                            {
+                                rs.IsActive = false;
+                                rs.UpdateDate = DateTime.Now;
+                                rs.UpdateUserId = row.UpdateUserId;
+
+                                entity.SaveChanges();
+                            }
+                            #endregion
+
+                            #region edit existed sectors specify
+                            var sectorsSpecToEdit = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId
+                                            && supSectorSpecIds.Contains(x.SupSectorSpecifyId)).ToList();
+
+                            foreach (var rs in sectorsSpecToEdit)
+                            {
+                                var secSpec = sec.supplierSectorSpecifies.Where(x => x.SupSectorSpecifyId == rs.SupSectorSpecifyId).FirstOrDefault();
+                                rs.Notes = secSpec.Notes;
+                                rs.BranchId = secSpec.BranchId;
+                                rs.DiscountPercentage = secSpec.DiscountPercentage;
+                                rs.FreePercentage = secSpec.FreePercentage;
+                                rs.UpdateDate = DateTime.Now;
+                                rs.UpdateUserId = sec.UpdateUserId;
+                            }
+                            #endregion
+
+                            #region add new sectors specify
+                            var newSecSpec = sec.supplierSectorSpecifies.Where(x => x.SupSectorSpecifyId == 0).ToList();
+                            foreach (var rs in newSecSpec)
+                            {
+                                var spec = new GEN_SUPPLIER_SECTOR_SPECIFY()
+                                {
+                                    IsActive = true,
+                                    BranchId = rs.BranchId,
+                                    DiscountPercentage = rs.DiscountPercentage,
+                                    FreePercentage = rs.FreePercentage,
+                                    Notes = rs.Notes,
+                                    CreateDate = DateTime.Now,
+                                    UpdateDate = DateTime.Now,
+                                    CreateUserId = sec.CreateUserId,
+                                    UpdateUserId = sec.UpdateUserId,
+                                    SupId = supId,
+                                    SupSectorId = sec.SupSectorId,
+                                };
+                                entity.GEN_SUPPLIER_SECTOR_SPECIFY.Add(spec);
+                            }
                             entity.SaveChanges();
+                            #endregion
                         }
-                        #endregion
+                    }
+                    #endregion
 
-                        #region edit existed sectors specify
-                        var sectorsSpecToEdit = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupSectorId == row.SupSectorId
-                                        && supSectorSpecIds.Contains(x.SupSectorSpecifyId)).ToList();
-
-                        foreach (var rs in sectorsSpecToEdit)
+                    #region add new sectors
+                    var newSectors = supplierSectors.Where(x => x.SupSectorId == 0).ToList();
+                    foreach (var row in newSectors)
+                    {
+                        var sec = new GEN_SUPPLIER_SECTOR()
                         {
-                            var secSpec = sec.supplierSectorSpecifies.Where(x => x.SupSectorSpecifyId == rs.SupSectorSpecifyId).FirstOrDefault();
-                            rs.Notes = secSpec.Notes;
-                            rs.BranchId = secSpec.BranchId;
-                            rs.DiscountPercentage = secSpec.DiscountPercentage;
-                            rs.FreePercentage = secSpec.FreePercentage;
-                            rs.UpdateDate = DateTime.Now;
-                            rs.UpdateUserId = sec.UpdateUserId;
-                        }
-                        #endregion
+                            SupSectorName = row.SupSectorName,
+                            DiscountPercentageBranchs = row.DiscountPercentageBranchs,
+                            DiscountPercentageMarkets = row.DiscountPercentageMarkets,
+                            DiscountPercentageStores = row.DiscountPercentageStores,
+                            FreePercentageBranchs = row.FreePercentageBranchs,
+                            FreePercentageMarkets = row.FreePercentageMarkets,
+                            FreePercentageStores = row.FreePercentageStores,
+                            IsActive = true,
+                            IsBlocked = row.IsBlocked,
+                            Notes = row.Notes,
+                            SupId = supId,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            CreateUserId = row.CreateUserId,
+                            UpdateUserId = row.CreateUserId,
 
-                        #region add new sectors specify
-                        var newSecSpec = sec.supplierSectorSpecifies.Where(x => x.SupSectorSpecifyId == 0).ToList();
-                        foreach (var rs in newSecSpec)
+                        };
+                        entity.GEN_SUPPLIER_SECTOR.Add(sec);
+
+                        long supSecId = entity.SaveChanges();
+
+                        foreach (var rs in row.supplierSectorSpecifies)
                         {
                             var spec = new GEN_SUPPLIER_SECTOR_SPECIFY()
                             {
@@ -364,73 +448,103 @@ namespace POS_Server.Controllers
                                 CreateUserId = sec.CreateUserId,
                                 UpdateUserId = sec.UpdateUserId,
                                 SupId = supId,
-                                SupSectorId = sec.SupSectorId,
+                                SupSectorId = supSecId,
                             };
                             entity.GEN_SUPPLIER_SECTOR_SPECIFY.Add(spec);
                         }
                         entity.SaveChanges();
-                        #endregion
                     }
+                    #endregion
                 }
-                #endregion
-
-                #region add new sectors
-                var newSectors = supplierSectors.Where(x => x.SupSectorId == 0).ToList();
-                foreach(var row in newSectors)
+                else
                 {
-                    var sec = new GEN_SUPPLIER_SECTOR()
+                    var sectorsToRemove = entity.GEN_SUPPLIER_SECTOR.Where(x => x.SupId == supId).ToList();
+                   if(sectorsToRemove.Count > 0)
+                    foreach (var row in sectorsToRemove)
                     {
-                         SupSectorName = row.SupSectorName,
-                        DiscountPercentageBranchs = row.DiscountPercentageBranchs,
-                        DiscountPercentageMarkets = row.DiscountPercentageMarkets,
-                        DiscountPercentageStores = row.DiscountPercentageStores,
-                        FreePercentageBranchs = row.FreePercentageBranchs,
-                        FreePercentageMarkets = row.FreePercentageMarkets,
-                        FreePercentageStores = row.FreePercentageStores,
-                        IsActive = true,
-                        IsBlocked = row.IsBlocked,
-                        Notes = row.Notes,
-                        SupId = supId,
-                        CreateDate = DateTime.Now,
-                        UpdateDate = DateTime.Now,
-                       CreateUserId= row.CreateUserId,
-                       UpdateUserId=row.CreateUserId,
-                       
-                    };
-                    entity.GEN_SUPPLIER_SECTOR.Add(sec);
-
-                    long supSecId = entity.SaveChanges();
-
-                    foreach(var rs in row.supplierSectorSpecifies)
-                    {
-                        var spec = new GEN_SUPPLIER_SECTOR_SPECIFY()
-                        {
-                            IsActive = true,
-                            BranchId = rs.BranchId,
-                            DiscountPercentage = rs.DiscountPercentage,
-                            FreePercentage = rs.FreePercentage,
-                            Notes = rs.Notes,
-                            CreateDate = DateTime.Now,
-                            UpdateDate = DateTime.Now,
-                            CreateUserId = sec.CreateUserId,
-                            UpdateUserId = sec.UpdateUserId,
-                            SupId = supId,
-                            SupSectorId = supSecId,
-                        };
-                        entity.GEN_SUPPLIER_SECTOR_SPECIFY.Add(spec);
+                        row.IsActive = false;
+                        entity.SaveChanges();
                     }
-                    entity.SaveChanges();
                 }
-                #endregion
-               
             }
+
         }
 
-        public void SaveSupplierDocuments( long supId)
+        public void SaveSupplierDocuments(List<SupplierDocModel> supplierDocuments, long supId)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-               
+                if (supplierDocuments != null)
+                {
+                    var supDocumnetsIds = supplierDocuments.Select(x => x.DocumentId).ToList();
+                    #region remove not existed documents
+
+                    var documentsToRemove = entity.GEN_SUPPLIER_DOCUMENT.Where(x => x.SupId == supId
+                                && !supDocumnetsIds.Contains(x.DocumentId)).ToList();
+
+                    foreach (var row in documentsToRemove)
+                    {
+                        row.IsActive = false;
+                        row.UpdateDate = DateTime.Now;
+                        row.UpdateUserId = row.UpdateUserId;
+
+                        entity.SaveChanges();
+                    }
+                    #endregion
+
+                    #region edit existed documents
+                    var documentsToEdit = entity.GEN_SUPPLIER_DOCUMENT.Where(x => x.SupId == supId
+                                    && supDocumnetsIds.Contains(x.DocumentId)).ToList();
+
+                    foreach (var row in documentsToEdit)
+                    {
+                        var sec = supplierDocuments.Where(x => x.DocumentId == row.DocumentId).FirstOrDefault();
+                        row.DocName = sec.DocName;
+                        row.DocTitle = sec.DocTitle;
+                        row.StartDate = row.EndDate;
+                        row.UpdateDate = DateTime.Now;
+                        row.UpdateUserId = sec.UpdateUserId;
+                        entity.SaveChanges();
+
+                    }
+                    #endregion
+
+                    #region add new documents
+                    var newDocuments = supplierDocuments.Where(x => x.DocumentId == 0).ToList();
+                    foreach (var row in newDocuments)
+                    {
+                        var doc = new GEN_SUPPLIER_DOCUMENT()
+                        {
+                            DocName = row.DocName,
+                            DocTitle = row.DocTitle,
+                            StartDate = row.StartDate,
+                            EndDate = row.EndDate,
+                            DocumentId = row.DocumentId,
+                            IsActive = true,
+                            SupId = supId,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            CreateUserId = row.CreateUserId,
+                            UpdateUserId = row.CreateUserId,
+
+                        };
+                        entity.GEN_SUPPLIER_DOCUMENT.Add(doc);
+
+                        long supSecId = entity.SaveChanges();
+
+                        entity.SaveChanges();
+                    }
+                    #endregion
+                }
+                else
+                {
+                    var documentsToRemove = entity.GEN_SUPPLIER_DOCUMENT.Where(x => x.SupId == supId).ToList();
+                    foreach (var row in documentsToRemove)
+                    {
+                        row.IsActive = false;
+                        entity.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -464,7 +578,7 @@ namespace POS_Server.Controllers
                 }
                 try
                 {
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var tmpAgent = entity.GEN_SUPPLIER.Where(p => p.SupId == subId).First();
                         tmpAgent.IsActive = false;
@@ -627,7 +741,7 @@ namespace POS_Server.Controllers
                 try
                 {
                     GEN_SUPPLIER supplier;
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var agentEntity = entity.Set<GEN_SUPPLIER>();                      
                         supplier = entity.GEN_SUPPLIER.Find(subObj.SupId);

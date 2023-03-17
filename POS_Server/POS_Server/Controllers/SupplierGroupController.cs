@@ -52,7 +52,7 @@ namespace POS_Server.Controllers
 
         public List<SupplierGroupModel> GetSupllierGroups(bool? isActive)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_GROUP>();
                 searchPredicate = searchPredicate.And(x => true);
@@ -114,7 +114,7 @@ namespace POS_Server.Controllers
                 try
                 {
                     LST_SUPPLIER_GROUP sup;
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var supEntity = entity.Set<LST_SUPPLIER_GROUP>();
                         if (subObj.SupplierGroupId == 0)
@@ -179,7 +179,7 @@ namespace POS_Server.Controllers
                 }
                 try
                 {
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var tmpAgent = entity.LST_SUPPLIER_GROUP.Where(p => p.SupplierGroupId == supGroupId).First();
                         tmpAgent.IsActive = false;

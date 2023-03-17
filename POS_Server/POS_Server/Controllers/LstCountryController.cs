@@ -14,12 +14,10 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierType")]
-    public class SupplierTypeController : ApiController
+    [RoutePrefix("api/LstCountry")]
+    public class LstCountryController : ApiController
     {
         CountriesController cc = new CountriesController();
-
-        // GET api/<controller>
         [HttpPost]
         [Route("Get")]
         public string Get(string token)
@@ -44,27 +42,26 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierTypes(isActive);
+                var supplierList = GetLstCountries(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
+        public List<LstCountryModel> GetLstCountries(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
+                var searchPredicate = PredicateBuilder.New<LST_COUNTRY>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierTypeList = entity.LST_SUPPLIER_TYPE
+                var countriesList = entity.LST_COUNTRY
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierTypeModel
+                                .Select(p => new LstCountryModel
                                 {
-                                    SupplierTypeId= p.SupplierTypeId,
-                                    Name = p.Name,
-                                    Notes = p.Notes,
+                                    CountryId = p.CountryId,
+                                    CountryName = p.CountryName,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
@@ -73,9 +70,10 @@ namespace POS_Server.Controllers
                                 }).ToList();
 
 
-                return supplierTypeList;
+                return countriesList;
             }
         }
+
 
         [HttpPost]
         [Route("Save")]
@@ -91,25 +89,24 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_SUPPLIER_TYPE subObj = null;
+                LST_COUNTRY subObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
-                        Object = c.Value.Replace("\\", string.Empty);
-                        Object = Object.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        Object = c.Value;
+                        subObj = JsonConvert.DeserializeObject<LST_COUNTRY>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_TYPE sup;
+                    LST_COUNTRY sup;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
-                        if (subObj.SupplierTypeId == 0)
+                        var supEntity = entity.Set<LST_COUNTRY>();
+                        if (subObj.CountryId == 0)
                         {
                             subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             subObj.UpdateDate = subObj.CreateDate;
@@ -120,9 +117,8 @@ namespace POS_Server.Controllers
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
-                            sup.Name = subObj.Name;
-                            sup.Notes = subObj.Notes;
+                            sup = entity.LST_COUNTRY.Find(subObj.CountryId);
+                            sup.CountryName = subObj.CountryName;
                             sup.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             sup.UpdateUserId = subObj.UpdateUserId;
                         }
@@ -130,10 +126,10 @@ namespace POS_Server.Controllers
 
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetLstCountries(true);
                     return TokenManager.GenerateToken(supList);
                 }
-                catch 
+                catch
                 {
                     return TokenManager.GenerateToken(null);
 
@@ -154,7 +150,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long supTypeId = 0;
+                long countryId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -162,7 +158,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        supTypeId = long.Parse(c.Value);
+                        countryId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -173,7 +169,7 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supTypeId).First();
+                        var tmpAgent = entity.LST_COUNTRY.Where(p => p.CountryId == countryId).First();
                         tmpAgent.IsActive = false;
                         tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         tmpAgent.UpdateUserId = userId;
@@ -181,7 +177,7 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetLstCountries(true);
                     return TokenManager.GenerateToken(supList);
                 }
                 catch

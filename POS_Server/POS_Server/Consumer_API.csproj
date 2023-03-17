@@ -232,17 +232,28 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Classes\Calculate.cs" />
     <Compile Include="Controllers\AssistantSupController.cs" />
+    <Compile Include="Controllers\BankController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\ItemCategoryController.cs" />
+    <Compile Include="Controllers\LstCountryController.cs" />
+    <Compile Include="Controllers\PhoneTypeController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\SupplierDocTypeController.cs" />
     <Compile Include="Controllers\SupplierGroupController.cs" />
     <Compile Include="Controllers\SupplierTypeController.cs" />
     <Compile Include="GEN_ASSISTANT_SUPPLIER.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="GEN_BANK.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_ITEM_CATEGORY.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="GEN_SUPPLIER.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="GEN_SUPPLIER_NOT_ALLOWED_TRANS.cs">
+    <Compile Include="GEN_SUPPLIER_DOCUMENT.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="GEN_SUPPLIER_PHONE.cs">
@@ -254,19 +265,22 @@
     <Compile Include="GEN_SUPPLIER_SECTOR_SPECIFY.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="GEN_SUPPLIER_TRANSACTION.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="LST_CountriesCodes.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="LST_COUNTRY.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="LST_PHONE_TYPE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="LST_REQUEST_TOKEN.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LST_SUPPLIER_DOCUMENT_TYPE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="LST_SUPPLIER_GROUP.cs">
@@ -291,7 +305,12 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AssistantSupModel.cs" />
+    <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
+    <Compile Include="Models\ItemCategoryModel.cs" />
+    <Compile Include="Models\LstCountryModel.cs" />
+    <Compile Include="Models\PhoneTypeModel.cs" />
+    <Compile Include="Models\SupplierDocTypeModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
     <Compile Include="Models\SupplierTypeModel.cs" />

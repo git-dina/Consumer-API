@@ -57,7 +57,7 @@ namespace POS_Server.Controllers
         {
                 try
                 {
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                     CountryModel item = entity.LST_CountriesCodes
                    .Where(c => c.isDefault == 1)

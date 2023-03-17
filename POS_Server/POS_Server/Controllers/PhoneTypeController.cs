@@ -14,12 +14,10 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierType")]
-    public class SupplierTypeController : ApiController
+    [RoutePrefix("api/PhoneType")]
+    public class PhoneTypeController : ApiController
     {
         CountriesController cc = new CountriesController();
-
-        // GET api/<controller>
         [HttpPost]
         [Route("Get")]
         public string Get(string token)
@@ -44,27 +42,26 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierTypes(isActive);
+                var supplierList = GetPhoneTypes(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
+        public List<PhoneTypeModel> GetPhoneTypes(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
+                var searchPredicate = PredicateBuilder.New<LST_PHONE_TYPE>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierTypeList = entity.LST_SUPPLIER_TYPE
+                var phoneTypeList = entity.LST_PHONE_TYPE
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierTypeModel
+                                .Select(p => new PhoneTypeModel
                                 {
-                                    SupplierTypeId= p.SupplierTypeId,
-                                    Name = p.Name,
-                                    Notes = p.Notes,
+                                    PhoneTypeId = p.PhoneTypeId,
+                                    Name = p.Name,                                 
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
@@ -73,7 +70,7 @@ namespace POS_Server.Controllers
                                 }).ToList();
 
 
-                return supplierTypeList;
+                return phoneTypeList;
             }
         }
 
@@ -91,7 +88,7 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_SUPPLIER_TYPE subObj = null;
+                LST_PHONE_TYPE phoneObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
@@ -99,41 +96,40 @@ namespace POS_Server.Controllers
                     {
                         Object = c.Value.Replace("\\", string.Empty);
                         Object = Object.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        phoneObj = JsonConvert.DeserializeObject<LST_PHONE_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_TYPE sup;
+                    LST_PHONE_TYPE phone;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
-                        if (subObj.SupplierTypeId == 0)
+                        var phoneEntity = entity.Set<LST_PHONE_TYPE>();
+                        if (phoneObj.PhoneTypeId == 0)
                         {
-                            subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            subObj.UpdateDate = subObj.CreateDate;
-                            subObj.UpdateUserId = subObj.CreateUserId;
-                            subObj.IsActive = true;
+                            phoneObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            phoneObj.UpdateDate = phoneObj.CreateDate;
+                            phoneObj.UpdateUserId = phoneObj.CreateUserId;
+                            phoneObj.IsActive = true;
 
-                            sup = supEntity.Add(subObj);
+                            phone = phoneEntity.Add(phoneObj);
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
-                            sup.Name = subObj.Name;
-                            sup.Notes = subObj.Notes;
-                            sup.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            sup.UpdateUserId = subObj.UpdateUserId;
+                            phone = entity.LST_PHONE_TYPE.Find(phoneObj.PhoneTypeId);
+                            phone.Name = phoneObj.Name;
+                            phone.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            phone.UpdateUserId = phoneObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var supList = GetSupllierTypes(true);
-                    return TokenManager.GenerateToken(supList);
+                    var phoneList = GetPhoneTypes(true);
+                    return TokenManager.GenerateToken(phoneList);
                 }
-                catch 
+                catch
                 {
                     return TokenManager.GenerateToken(null);
 
@@ -154,7 +150,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long supTypeId = 0;
+                long phoneTypeId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -162,7 +158,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        supTypeId = long.Parse(c.Value);
+                        phoneTypeId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -173,16 +169,16 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supTypeId).First();
-                        tmpAgent.IsActive = false;
-                        tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                        tmpAgent.UpdateUserId = userId;
+                        var tmpPhone = entity.LST_PHONE_TYPE.Where(p => p.PhoneTypeId == phoneTypeId).First();
+                        tmpPhone.IsActive = false;
+                        tmpPhone.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        tmpPhone.UpdateUserId = userId;
 
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierTypes(true);
-                    return TokenManager.GenerateToken(supList);
+                    var phoneList = GetPhoneTypes(true);
+                    return TokenManager.GenerateToken(phoneList);
                 }
                 catch
                 {

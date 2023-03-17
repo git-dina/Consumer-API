@@ -14,12 +14,10 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierType")]
-    public class SupplierTypeController : ApiController
+    [RoutePrefix("api/Bank")]
+    public class BankController : ApiController
     {
         CountriesController cc = new CountriesController();
-
-        // GET api/<controller>
         [HttpPost]
         [Route("Get")]
         public string Get(string token)
@@ -44,27 +42,28 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierTypes(isActive);
+                var supplierList = GetBanks(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
+        public List<BankModel> GetBanks(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
+                var searchPredicate = PredicateBuilder.New<GEN_BANK>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierTypeList = entity.LST_SUPPLIER_TYPE
+                var banksList = entity.GEN_BANK
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierTypeModel
+                                .Select(p => new BankModel
                                 {
-                                    SupplierTypeId= p.SupplierTypeId,
-                                    Name = p.Name,
-                                    Notes = p.Notes,
+                                    BankId = p.BankId,
+                                    BankName = p.BankName,
+                                    IsBlocked=p.IsBlocked,
+                                    Notes=p.Notes,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
@@ -73,7 +72,7 @@ namespace POS_Server.Controllers
                                 }).ToList();
 
 
-                return supplierTypeList;
+                return banksList;
             }
         }
 
@@ -91,49 +90,49 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_SUPPLIER_TYPE subObj = null;
+                GEN_BANK bankObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
-                        Object = c.Value.Replace("\\", string.Empty);
-                        Object = Object.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        Object = c.Value;
+                        bankObj = JsonConvert.DeserializeObject<GEN_BANK>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_TYPE sup;
+                    GEN_BANK bank;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
-                        if (subObj.SupplierTypeId == 0)
+                        var phoneEntity = entity.Set<GEN_BANK>();
+                        if (bankObj.BankId == 0)
                         {
-                            subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            subObj.UpdateDate = subObj.CreateDate;
-                            subObj.UpdateUserId = subObj.CreateUserId;
-                            subObj.IsActive = true;
+                            bankObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            bankObj.UpdateDate = bankObj.CreateDate;
+                            bankObj.UpdateUserId = bankObj.CreateUserId;
+                            bankObj.IsActive = true;
 
-                            sup = supEntity.Add(subObj);
+                            bank = phoneEntity.Add(bankObj);
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
-                            sup.Name = subObj.Name;
-                            sup.Notes = subObj.Notes;
-                            sup.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            sup.UpdateUserId = subObj.UpdateUserId;
+                            bank = entity.GEN_BANK.Find(bankObj.BankId);
+                            bank.BankName = bankObj.BankName;
+                            bank.Notes = bankObj.Notes;
+                            bank.IsBlocked = bankObj.IsBlocked;
+                            bank.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            bank.UpdateUserId = bankObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var supList = GetSupllierTypes(true);
-                    return TokenManager.GenerateToken(supList);
+                    var phoneList = GetBanks(true);
+                    return TokenManager.GenerateToken(phoneList);
                 }
-                catch 
+                catch
                 {
                     return TokenManager.GenerateToken(null);
 
@@ -154,7 +153,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long supTypeId = 0;
+                long bankId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -162,7 +161,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        supTypeId = long.Parse(c.Value);
+                        bankId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -173,16 +172,16 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supTypeId).First();
-                        tmpAgent.IsActive = false;
-                        tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                        tmpAgent.UpdateUserId = userId;
+                        var tmpPhone = entity.GEN_BANK.Where(p => p.BankId == bankId).First();
+                        tmpPhone.IsActive = false;
+                        tmpPhone.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        tmpPhone.UpdateUserId = userId;
 
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierTypes(true);
-                    return TokenManager.GenerateToken(supList);
+                    var phoneList = GetBanks(true);
+                    return TokenManager.GenerateToken(phoneList);
                 }
                 catch
                 {

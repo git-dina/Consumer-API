@@ -51,7 +51,7 @@ namespace POS_Server.Controllers
 
         public List<AssistantSupModel> GetAssistantSup(bool? isActive)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<GEN_ASSISTANT_SUPPLIER>();
                 searchPredicate = searchPredicate.And(x => true);
@@ -107,7 +107,7 @@ namespace POS_Server.Controllers
                 try
                 {
                     GEN_ASSISTANT_SUPPLIER sup;
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var supEntity = entity.Set<GEN_ASSISTANT_SUPPLIER>();
                         if (subObj.AssistantSupId == 0)
@@ -173,7 +173,7 @@ namespace POS_Server.Controllers
                 }
                 try
                 {
-                    using (DBEntities entity = new DBEntities())
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var tmpAgent = entity.GEN_ASSISTANT_SUPPLIER.Where(p => p.AssistantSupId == AssistantSupId).First();
                         tmpAgent.IsActive = false;

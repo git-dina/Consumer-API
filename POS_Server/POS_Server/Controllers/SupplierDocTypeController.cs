@@ -14,12 +14,10 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/SupplierType")]
-    public class SupplierTypeController : ApiController
+    [RoutePrefix("api/SupplierDocType")]
+    public class SupplierDocTypeController : ApiController
     {
         CountriesController cc = new CountriesController();
-
-        // GET api/<controller>
         [HttpPost]
         [Route("Get")]
         public string Get(string token)
@@ -44,25 +42,25 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var supplierList = GetSupllierTypes(isActive);
+                var supplierList = GetTypes(isActive);
                 return TokenManager.GenerateToken(supplierList);
             }
         }
 
-        public List<SupplierTypeModel> GetSupllierTypes(bool? isActive)
+        public List<SupplierDocTypeModel> GetTypes(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_TYPE>();
+                var searchPredicate = PredicateBuilder.New<LST_SUPPLIER_DOCUMENT_TYPE>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var supplierTypeList = entity.LST_SUPPLIER_TYPE
+                var countriesList = entity.LST_SUPPLIER_DOCUMENT_TYPE
                                     .Where(searchPredicate)
-                                .Select(p => new SupplierTypeModel
+                                .Select(p => new SupplierDocTypeModel
                                 {
-                                    SupplierTypeId= p.SupplierTypeId,
+                                    TypeId = p.TypeId,
                                     Name = p.Name,
                                     Notes = p.Notes,
                                     IsActive = p.IsActive,
@@ -70,12 +68,14 @@ namespace POS_Server.Controllers
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
+                                    DocumentsNumber = entity.GEN_SUPPLIER_DOCUMENT.Where(x => x.TypeId == p.TypeId && x.IsActive == true).Count(),
                                 }).ToList();
 
 
-                return supplierTypeList;
+                return countriesList;
             }
         }
+
 
         [HttpPost]
         [Route("Save")]
@@ -91,49 +91,48 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_SUPPLIER_TYPE subObj = null;
+                LST_SUPPLIER_DOCUMENT_TYPE typeObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
-                        Object = c.Value.Replace("\\", string.Empty);
-                        Object = Object.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<LST_SUPPLIER_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        Object = c.Value;
+                        typeObj = JsonConvert.DeserializeObject<LST_SUPPLIER_DOCUMENT_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_SUPPLIER_TYPE sup;
+                    LST_SUPPLIER_DOCUMENT_TYPE sup;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var supEntity = entity.Set<LST_SUPPLIER_TYPE>();
-                        if (subObj.SupplierTypeId == 0)
+                        var typeEntity = entity.Set<LST_SUPPLIER_DOCUMENT_TYPE>();
+                        if (typeObj.TypeId == 0)
                         {
-                            subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            subObj.UpdateDate = subObj.CreateDate;
-                            subObj.UpdateUserId = subObj.CreateUserId;
-                            subObj.IsActive = true;
+                            typeObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            typeObj.UpdateDate = typeObj.CreateDate;
+                            typeObj.UpdateUserId = typeObj.CreateUserId;
+                            typeObj.IsActive = true;
 
-                            sup = supEntity.Add(subObj);
+                            sup = typeEntity.Add(typeObj);
                         }
                         else
                         {
-                            sup = entity.LST_SUPPLIER_TYPE.Find(subObj.SupplierTypeId);
-                            sup.Name = subObj.Name;
-                            sup.Notes = subObj.Notes;
+                            sup = entity.LST_SUPPLIER_DOCUMENT_TYPE.Find(typeObj.TypeId);
+                            sup.Name = typeObj.Name;
+                            sup.Notes = typeObj.Notes;
                             sup.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            sup.UpdateUserId = subObj.UpdateUserId;
+                            sup.UpdateUserId = typeObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetTypes(true);
                     return TokenManager.GenerateToken(supList);
                 }
-                catch 
+                catch
                 {
                     return TokenManager.GenerateToken(null);
 
@@ -154,7 +153,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long supTypeId = 0;
+                long typeId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -162,7 +161,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        supTypeId = long.Parse(c.Value);
+                        typeId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -173,7 +172,7 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpAgent = entity.LST_SUPPLIER_TYPE.Where(p => p.SupplierTypeId == supTypeId).First();
+                        var tmpAgent = entity.LST_SUPPLIER_DOCUMENT_TYPE.Where(p => p.TypeId == typeId).First();
                         tmpAgent.IsActive = false;
                         tmpAgent.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         tmpAgent.UpdateUserId = userId;
@@ -181,7 +180,7 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSupllierTypes(true);
+                    var supList = GetTypes(true);
                     return TokenManager.GenerateToken(supList);
                 }
                 catch
