@@ -336,7 +336,7 @@ namespace POS_Server.Models.VM
 
         private static void removeTokenFromBlackList(string requestToken)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var token = entity.LST_REQUEST_TOKEN.Where(x => x.Token == requestToken).FirstOrDefault();
                 if (token != null)
@@ -349,7 +349,7 @@ namespace POS_Server.Models.VM
         }
         private static bool requestExecuted(string requestToken)
         {
-            using (DBEntities entity = new DBEntities())
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var token = entity.LST_REQUEST_TOKEN.Where(x => x.Token == requestToken).FirstOrDefault();
                

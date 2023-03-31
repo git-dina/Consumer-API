@@ -62,6 +62,7 @@ namespace POS_Server.Controllers
                                     CategoryId = p.CategoryId,
                                     CategoryParentId = p.CategoryParentId,
                                     Name = p.Name,
+                                    CategoryParentName = entity.GEN_ITEM_CATEGORY.Where(x => x.CategoryParentId == p.CategoryId).Select(x => x.Name).FirstOrDefault(),
                                     WholesalePercentage = p.WholesalePercentage,
                                     DiscountPercentage = p.DiscountPercentage,
                                     FreePercentage = p.FreePercentage,
@@ -244,7 +245,7 @@ namespace POS_Server.Controllers
 
                     }
 
-                    var phoneList = GetCategoriesTree(true);
+                    var phoneList = GetCategories(true);
                     return TokenManager.GenerateToken(phoneList);
                 }
                 catch

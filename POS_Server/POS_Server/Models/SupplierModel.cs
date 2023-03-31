@@ -12,18 +12,18 @@ namespace POS_Server.Models
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string Address { get; set; }
-        public int SupplierTypeId { get; set; }
-        public int SupplierGroupId { get; set; }
+        public Nullable<int> SupplierTypeId { get; set; }
+        public Nullable<int> SupplierGroupId { get; set; }
         public Nullable<long> AssistantSupId { get; set; }
         public Nullable<decimal> AssistantAccountNumber { get; set; }
         public string AssistantAccountName { get; set; }
         public Nullable<System.DateTime> AssistantStartDate { get; set; }
-        public int DiscountPercentage { get; set; }
-        public int FreePercentag { get; set; }
-        public Nullable<int> BankId { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public decimal FreePercentag { get; set; }
+        public Nullable<long> BankId { get; set; }
         public string BankAccount { get; set; }
         public Nullable<int> SupNODays { get; set; }
-        public int AccountCode { get; set; }
+        public Nullable<int> AccountCode { get; set; }
         public string Email { get; set; }
         public string BOX { get; set; }
         public bool IsBlocked { get; set; }
@@ -36,15 +36,21 @@ namespace POS_Server.Models
         public bool IsAllowedReceipt { get; set; }
         public bool IsAllowedDirectReturn { get; set; }
         public bool IsAllowedReturnDiscount { get; set; }
-        public bool IsAllowCashingChecks { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
+        public bool IsAllowCashingChecks { get; set; }
 
+        #region Extra
+        public string SupplierGroup { get; set; }
+        public string SupplierType { get; set; }
         public List<SupplierPhoneModel> SupplierPhones { get; set; }
         public List<SupplierSectorModel> SupplierSectors { get; set; }
+        public List<SupplierSectorSpecModel> supplierSectorSpecifies { get; set; }
+        public List<SupplierDocModel> SupplierDocuments { get; set; }
+        #endregion
     }
 
     public class SupplierPhoneModel
@@ -80,15 +86,14 @@ namespace POS_Server.Models
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
 
-        public List<SupplierSectorSpecModel> supplierSectorSpecifies { get; set; }
     }
 
     public class SupplierSectorSpecModel
     {
         public long SupSectorSpecifyId { get; set; }
-        public long SupId { get; set; }
-        public long SupSectorId { get; set; }
-        public long BranchId { get; set; }
+        public Nullable<long> SupId { get; set; }
+        public Nullable<long> SupSectorId { get; set; }
+        public Nullable<long> BranchId { get; set; }
         public decimal FreePercentage { get; set; }
         public decimal DiscountPercentage { get; set; }
         public string Notes { get; set; }
@@ -99,5 +104,19 @@ namespace POS_Server.Models
         public Nullable<long> UpdateUserId { get; set; }
     }
 
-   
+    public class SupplierDocModel
+    {
+        public long DocumentId { get; set; }
+        public Nullable<long> SupId { get; set; }
+        public Nullable<long> TypeId { get; set; }
+        public string DocName { get; set; }
+        public string DocTitle { get; set; }
+        public Nullable<System.DateTime> StartDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
+    }
 }

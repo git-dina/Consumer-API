@@ -5,11 +5,10 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class SupplierTypeModel
+    public class LstCountryModel
     {
-        public int SupplierTypeId { get; set; }
-        public string Name { get; set; }
-        public string Notes { get; set; }
+        public long CountryId { get; set; }
+        public string CountryName { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
