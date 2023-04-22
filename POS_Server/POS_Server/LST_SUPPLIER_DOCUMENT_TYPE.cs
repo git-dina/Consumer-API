@@ -12,14 +12,16 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_SUPPLIER_SECTOR_SPECIFY
+    public partial class LST_SUPPLIER_DOCUMENT_TYPE
     {
-        public long SupSectorSpecifyId { get; set; }
-        public Nullable<long> SupId { get; set; }
-        public Nullable<long> SupSectorId { get; set; }
-        public Nullable<long> BranchId { get; set; }
-        public decimal FreePercentage { get; set; }
-        public decimal DiscountPercentage { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public LST_SUPPLIER_DOCUMENT_TYPE()
+        {
+            this.GEN_SUPPLIER_DOCUMENT = new HashSet<GEN_SUPPLIER_DOCUMENT>();
+        }
+    
+        public long TypeId { get; set; }
+        public string Name { get; set; }
         public string Notes { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
@@ -27,7 +29,7 @@ namespace POS_Server
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
-        public virtual GEN_SUPPLIER GEN_SUPPLIER { get; set; }
-        public virtual GEN_SUPPLIER_SECTOR GEN_SUPPLIER_SECTOR { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_SUPPLIER_DOCUMENT> GEN_SUPPLIER_DOCUMENT { get; set; }
     }
 }

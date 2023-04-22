@@ -12,18 +12,28 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_SUPPLIER_NOT_ALLOWED_TRANS
+    public partial class GEN_UNIT
     {
-        public long Id { get; set; }
-        public long SupId { get; set; }
-        public int SubTransId { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public GEN_UNIT()
+        {
+            this.GEN_UNIT1 = new HashSet<GEN_UNIT>();
+        }
+    
+        public long UnitId { get; set; }
+        public string Name { get; set; }
+        public Nullable<long> MinUnitId { get; set; }
+        public int UnitValue { get; set; }
+        public string Notes { get; set; }
+        public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
-        public virtual GEN_SUPPLIER GEN_SUPPLIER { get; set; }
-        public virtual GEN_SUPPLIER_TRANSACTION GEN_SUPPLIER_TRANSACTION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_UNIT> GEN_UNIT1 { get; set; }
+        public virtual GEN_UNIT GEN_UNIT2 { get; set; }
     }
 }

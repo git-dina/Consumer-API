@@ -17,7 +17,8 @@ namespace POS_Server
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GEN_SUPPLIER()
         {
-            this.GEN_SUPPLIER_NOT_ALLOWED_TRANS = new HashSet<GEN_SUPPLIER_NOT_ALLOWED_TRANS>();
+            this.GEN_ITEM = new HashSet<GEN_ITEM>();
+            this.GEN_SUPPLIER_DOCUMENT = new HashSet<GEN_SUPPLIER_DOCUMENT>();
             this.GEN_SUPPLIER_PHONE = new HashSet<GEN_SUPPLIER_PHONE>();
             this.GEN_SUPPLIER_SECTOR = new HashSet<GEN_SUPPLIER_SECTOR>();
             this.GEN_SUPPLIER_SECTOR_SPECIFY = new HashSet<GEN_SUPPLIER_SECTOR_SPECIFY>();
@@ -28,18 +29,18 @@ namespace POS_Server
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string Address { get; set; }
-        public int SupplierTypeId { get; set; }
-        public int SupplierGroupId { get; set; }
+        public Nullable<int> SupplierTypeId { get; set; }
+        public Nullable<int> SupplierGroupId { get; set; }
         public Nullable<long> AssistantSupId { get; set; }
         public Nullable<decimal> AssistantAccountNumber { get; set; }
         public string AssistantAccountName { get; set; }
         public Nullable<System.DateTime> AssistantStartDate { get; set; }
-        public int DiscountPercentage { get; set; }
-        public int FreePercentag { get; set; }
-        public Nullable<int> BankId { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public decimal FreePercentag { get; set; }
+        public Nullable<long> BankId { get; set; }
         public string BankAccount { get; set; }
         public Nullable<int> SupNODays { get; set; }
-        public int AccountCode { get; set; }
+        public Nullable<int> AccountCode { get; set; }
         public string Email { get; set; }
         public string BOX { get; set; }
         public bool IsBlocked { get; set; }
@@ -48,17 +49,25 @@ namespace POS_Server
         public string Notes { get; set; }
         public string PurchaseOrderNotes { get; set; }
         public string Image { get; set; }
+        public bool IsAllowedPO { get; set; }
+        public bool IsAllowedReceipt { get; set; }
+        public bool IsAllowedDirectReturn { get; set; }
+        public bool IsAllowedReturnDiscount { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
+        public bool IsAllowCashingChecks { get; set; }
     
         public virtual GEN_ASSISTANT_SUPPLIER GEN_ASSISTANT_SUPPLIER { get; set; }
+        public virtual GEN_BANK GEN_BANK { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM> GEN_ITEM { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_SUPPLIER_DOCUMENT> GEN_SUPPLIER_DOCUMENT { get; set; }
         public virtual LST_SUPPLIER_GROUP LST_SUPPLIER_GROUP { get; set; }
         public virtual LST_SUPPLIER_TYPE LST_SUPPLIER_TYPE { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_SUPPLIER_NOT_ALLOWED_TRANS> GEN_SUPPLIER_NOT_ALLOWED_TRANS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_SUPPLIER_PHONE> GEN_SUPPLIER_PHONE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

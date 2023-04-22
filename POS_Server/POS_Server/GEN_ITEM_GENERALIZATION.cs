@@ -12,22 +12,18 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_SUPPLIER_SECTOR_SPECIFY
+    public partial class GEN_ITEM_GENERALIZATION
     {
-        public long SupSectorSpecifyId { get; set; }
-        public Nullable<long> SupId { get; set; }
-        public Nullable<long> SupSectorId { get; set; }
-        public Nullable<long> BranchId { get; set; }
-        public decimal FreePercentage { get; set; }
-        public decimal DiscountPercentage { get; set; }
-        public string Notes { get; set; }
+        public long Id { get; set; }
+        public Nullable<long> ItemId { get; set; }
+        public Nullable<int> GeneralizationYear { get; set; }
+        public Nullable<int> GeneralizationNo { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
-        public virtual GEN_SUPPLIER GEN_SUPPLIER { get; set; }
-        public virtual GEN_SUPPLIER_SECTOR GEN_SUPPLIER_SECTOR { get; set; }
+        public virtual GEN_ITEM GEN_ITEM { get; set; }
     }
 }

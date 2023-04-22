@@ -12,17 +12,26 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class LST_SUPPLIER_TYPE
+    public partial class GEN_ITEM_CATEGORY
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LST_SUPPLIER_TYPE()
+        public GEN_ITEM_CATEGORY()
         {
-            this.GEN_SUPPLIER = new HashSet<GEN_SUPPLIER>();
+            this.GEN_ITEM = new HashSet<GEN_ITEM>();
+            this.GEN_ITEM_CATEGORY1 = new HashSet<GEN_ITEM_CATEGORY>();
         }
     
-        public int SupplierTypeId { get; set; }
+        public long CategoryId { get; set; }
+        public Nullable<long> CategoryParentId { get; set; }
         public string Name { get; set; }
+        public decimal ProfitPercentage { get; set; }
+        public decimal WholesalePercentage { get; set; }
+        public decimal FreePercentage { get; set; }
+        public decimal DiscountPercentage { get; set; }
         public string Notes { get; set; }
+        public bool CanContainItems { get; set; }
+        public string Image { get; set; }
+        public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
@@ -30,6 +39,9 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
+        public virtual ICollection<GEN_ITEM> GEN_ITEM { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM_CATEGORY> GEN_ITEM_CATEGORY1 { get; set; }
+        public virtual GEN_ITEM_CATEGORY GEN_ITEM_CATEGORY2 { get; set; }
     }
 }

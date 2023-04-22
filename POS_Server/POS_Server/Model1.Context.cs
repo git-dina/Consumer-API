@@ -15,10 +15,10 @@ namespace POS_Server
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class DBEntities : DbContext
+    public partial class ConsumerAssociationDBEntities : DbContext
     {
-        public DBEntities()
-            : base("name=DBEntities")
+        public ConsumerAssociationDBEntities()
+            : base("name=ConsumerAssociationDBEntities")
         {
         }
     
@@ -28,17 +28,25 @@ namespace POS_Server
         }
     
         public virtual DbSet<GEN_ASSISTANT_SUPPLIER> GEN_ASSISTANT_SUPPLIER { get; set; }
+        public virtual DbSet<GEN_BANK> GEN_BANK { get; set; }
+        public virtual DbSet<GEN_BRAND> GEN_BRAND { get; set; }
+        public virtual DbSet<GEN_ITEM> GEN_ITEM { get; set; }
+        public virtual DbSet<GEN_ITEM_CATEGORY> GEN_ITEM_CATEGORY { get; set; }
+        public virtual DbSet<GEN_ITEM_GENERALIZATION> GEN_ITEM_GENERALIZATION { get; set; }
         public virtual DbSet<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
-        public virtual DbSet<GEN_SUPPLIER_NOT_ALLOWED_TRANS> GEN_SUPPLIER_NOT_ALLOWED_TRANS { get; set; }
+        public virtual DbSet<GEN_SUPPLIER_DOCUMENT> GEN_SUPPLIER_DOCUMENT { get; set; }
         public virtual DbSet<GEN_SUPPLIER_PHONE> GEN_SUPPLIER_PHONE { get; set; }
         public virtual DbSet<GEN_SUPPLIER_SECTOR> GEN_SUPPLIER_SECTOR { get; set; }
         public virtual DbSet<GEN_SUPPLIER_SECTOR_SPECIFY> GEN_SUPPLIER_SECTOR_SPECIFY { get; set; }
-        public virtual DbSet<GEN_SUPPLIER_TRANSACTION> GEN_SUPPLIER_TRANSACTION { get; set; }
         public virtual DbSet<LST_CountriesCodes> LST_CountriesCodes { get; set; }
+        public virtual DbSet<LST_COUNTRY> LST_COUNTRY { get; set; }
         public virtual DbSet<LST_PHONE_TYPE> LST_PHONE_TYPE { get; set; }
+        public virtual DbSet<LST_REQUEST_TOKEN> LST_REQUEST_TOKEN { get; set; }
+        public virtual DbSet<LST_SUPPLIER_DOCUMENT_TYPE> LST_SUPPLIER_DOCUMENT_TYPE { get; set; }
         public virtual DbSet<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP { get; set; }
         public virtual DbSet<LST_SUPPLIER_TYPE> LST_SUPPLIER_TYPE { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<GEN_UNIT> GEN_UNIT { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

@@ -12,22 +12,23 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_SUPPLIER_SECTOR_SPECIFY
+    public partial class LST_COUNTRY
     {
-        public long SupSectorSpecifyId { get; set; }
-        public Nullable<long> SupId { get; set; }
-        public Nullable<long> SupSectorId { get; set; }
-        public Nullable<long> BranchId { get; set; }
-        public decimal FreePercentage { get; set; }
-        public decimal DiscountPercentage { get; set; }
-        public string Notes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public LST_COUNTRY()
+        {
+            this.GEN_ITEM = new HashSet<GEN_ITEM>();
+        }
+    
+        public long CountryId { get; set; }
+        public string CountryName { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
-        public virtual GEN_SUPPLIER GEN_SUPPLIER { get; set; }
-        public virtual GEN_SUPPLIER_SECTOR GEN_SUPPLIER_SECTOR { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM> GEN_ITEM { get; set; }
     }
 }
