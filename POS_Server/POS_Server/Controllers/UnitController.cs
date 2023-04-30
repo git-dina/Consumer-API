@@ -73,11 +73,54 @@ namespace POS_Server.Controllers
                                     UpdateUserId = p.UpdateUserId,
                                 }).ToList();
 
-
+                foreach (var row in unitsList)
+                    row.Factor = getUnitFactor(row.UnitId);
                 return unitsList;
             }
         }
 
+
+        //calculate factor of unit (from specific unit with unitId to smallest unit)
+        private int getUnitFactor(long unitId)
+        {
+            int amount = 0;
+
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var unit = entity.GEN_UNIT.Where(x => x.UnitId == unitId).FirstOrDefault();
+
+                amount = unit.UnitValue;
+                var smallerUnit = entity.GEN_UNIT.Where(x => x.UnitId == unit.MinUnitId  && x.IsActive == true)
+                    .Select(x => new UnitModel()
+                    {
+                        UnitValue = x.UnitValue,
+                        UnitId = x.UnitId
+                    }).FirstOrDefault();
+               
+                while (smallerUnit != null)
+                {
+                    //try
+                    //{
+                    //    amount = (int)smallerUnit.UnitValue;
+                    //}
+                    //catch { }
+
+                    //if (unitId == smallerUnit.UnitId)
+                    //    return amount;
+                    amount = amount * smallerUnit.UnitValue;
+                     smallerUnit = entity.GEN_UNIT.Where(x => x.UnitId == smallerUnit.MinUnitId && x.IsActive == true)
+                   .Select(x => new UnitModel()
+                   {
+                       UnitValue = x.UnitValue,
+                       UnitId = x.UnitId
+                   }).FirstOrDefault();
+                    //amount += (int)unit.UnitValue * getUnitFactor(smallerUnit.UnitId);
+                }
+                if (amount == 0)
+                    amount = 1;
+                return amount;
+            }
+        }
         [HttpPost]
         [Route("Save")]
         public string Save(string token)
