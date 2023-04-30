@@ -5,7 +5,7 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class Item
+    public class ItemModel
     {
         public long ItemId { get; set; }
         public string Code { get; set; }
@@ -39,6 +39,8 @@ namespace POS_Server.Models
         public Nullable<int> QtyMax { get; set; }
         public Nullable<decimal> PackageWeight { get; set; }
         public Nullable<long> PackageUnit { get; set; }
+        public bool IsSpecialOffer { get; set; }
+        public Nullable<System.DateTime> OfferEndDate { get; set; }
         public bool IsWeight { get; set; }
         public bool IsContainExpiryDate { get; set; }
         public bool IsSellNotAllow { get; set; }
@@ -49,5 +51,10 @@ namespace POS_Server.Models
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
         public string OldId { get; set; }
+
+
+        #region extra attributes
+        public List<ItemUnitModel> ItemUnits { get; set; }
+        #endregion
     }
 }
