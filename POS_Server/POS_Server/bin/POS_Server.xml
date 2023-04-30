@@ -481,15 +481,5 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="M:POS_Server.Controllers.CashTransferController.GetbySourcId(System.String)">
-            
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:POS_Server.Controllers.CashTransferController.payShippingCompanyByAmount(System.String)" -->
-        <member name="M:POS_Server.Controllers.StatisticsController.SumInvCommission(System.Int32)">
-            /////
-        </member>
-        <member name="M:POS_Server.Controllers.UsersLogsController.Save(POS_Server.usersLogs)">
-            
-        </member>
     </members>
 </doc>

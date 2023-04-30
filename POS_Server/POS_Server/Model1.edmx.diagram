@@ -4,26 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="93c5d52eeeaf4c6c89df1d353dfe2c1e" Name="Diagram1">
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ASSISTANT_SUPPLIER" Width="1.5" PointX="0.75" PointY="13.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BANK" Width="1.5" PointX="0.75" PointY="9" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BRAND" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM" Width="1.5" PointX="5.25" PointY="10.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_CATEGORY" Width="1.5" PointX="3" PointY="20.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_GENERALIZATION" Width="1.5" PointX="7.5" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER" Width="1.5" PointX="3" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_DOCUMENT" Width="1.5" PointX="8.25" PointY="13.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_PHONE" Width="1.5" PointX="8.25" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR" Width="1.5" PointX="5.25" PointY="32" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR_SPECIFY" Width="1.5" PointX="7.5" PointY="21.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_CountriesCodes" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_COUNTRY" Width="1.5" PointX="3" PointY="26.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_PHONE_TYPE" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_REQUEST_TOKEN" Width="1.5" PointX="2.75" PointY="2" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_DOCUMENT_TYPE" Width="1.5" PointX="6" PointY="26.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_GROUP" Width="1.5" PointX="0.75" PointY="17.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_TYPE" Width="1.5" PointX="0.75" PointY="21.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="2" IsExpanded="true" />
+      <Diagram DiagramId="76e4f789bfac4252828ea36a25746935" Name="Diagram1">
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ASSISTANT_SUPPLIER" Width="1.5" PointX="0.75" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BANK" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BRAND" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_CATEGORY" Width="1.5" PointX="3" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_GENERALIZATION" Width="1.5" PointX="7.5" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_UNIT" Width="1.5" PointX="10.5" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER" Width="1.5" PointX="3" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_DOCUMENT" Width="1.5" PointX="8.25" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_PHONE" Width="1.5" PointX="8.25" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR" Width="1.5" PointX="5.25" PointY="34.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR_SPECIFY" Width="1.5" PointX="7.5" PointY="23.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_UNIT" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_CountriesCodes" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_COUNTRY" Width="1.5" PointX="3" PointY="27.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_PHONE_TYPE" Width="1.5" PointX="6" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_REQUEST_TOKEN" Width="1.5" PointX="2.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_DOCUMENT_TYPE" Width="1.5" PointX="6" PointY="28.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_GROUP" Width="1.5" PointX="0.75" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.LST_SUPPLIER_TYPE" Width="1.5" PointX="0.75" PointY="22.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="6.125" IsExpanded="true" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_GEN_BANK" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_GEN_BRAND" ManuallyRouted="false" />
@@ -31,7 +33,9 @@
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_GEN_SUPPLIER" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_GENERALIZATION_GEN_ITEM" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_LST_COUNTRY" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_UNIT_GEN_ITEM" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_Category_GEN_ITEM_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_UNIT_GEN_UNIT" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE" ManuallyRouted="false" />
@@ -41,8 +45,7 @@
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_UNIT" Width="1.5" PointX="10.375" PointY="4.75" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_UNIT_GEN_UNIT" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_UNIT_GEN_UNIT" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

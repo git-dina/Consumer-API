@@ -1,0 +1,413 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ConsumerAssociationDBModelStoreContainer" CdmEntityContainer="ConsumerAssociationDBEntities">
+    <EntitySetMapping Name="GEN_ASSISTANT_SUPPLIER">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ASSISTANT_SUPPLIER">
+        <MappingFragment StoreEntitySet="GEN_ASSISTANT_SUPPLIER">
+          <ScalarProperty Name="AssistantSupId" ColumnName="AssistantSupId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_BANK">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_BANK">
+        <MappingFragment StoreEntitySet="GEN_BANK">
+          <ScalarProperty Name="BankId" ColumnName="BankId" />
+          <ScalarProperty Name="BankName" ColumnName="BankName" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_BRAND">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_BRAND">
+        <MappingFragment StoreEntitySet="GEN_BRAND">
+          <ScalarProperty Name="BrandId" ColumnName="BrandId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_ITEM">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM">
+        <MappingFragment StoreEntitySet="GEN_ITEM">
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+          <ScalarProperty Name="EngName" ColumnName="EngName" />
+          <ScalarProperty Name="ItemStatus" ColumnName="ItemStatus" />
+          <ScalarProperty Name="ItemReceiptType" ColumnName="ItemReceiptType" />
+          <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+          <ScalarProperty Name="ItemTransactionType" ColumnName="ItemTransactionType" />
+          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+          <ScalarProperty Name="BrandId" ColumnName="BrandId" />
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="SupSectorId" ColumnName="SupSectorId" />
+          <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+          <ScalarProperty Name="CommitteeNo" ColumnName="CommitteeNo" />
+          <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+          <ScalarProperty Name="Factor" ColumnName="Factor" />
+          <ScalarProperty Name="MainCost" ColumnName="MainCost" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="ConsumerProfitPerc" ColumnName="ConsumerProfitPerc" />
+          <ScalarProperty Name="WholesaleProfitPerc" ColumnName="WholesaleProfitPerc" />
+          <ScalarProperty Name="ConsumerDiscPerc" ColumnName="ConsumerDiscPerc" />
+          <ScalarProperty Name="WholesaleDiscPerc" ColumnName="WholesaleDiscPerc" />
+          <ScalarProperty Name="FreePerc" ColumnName="FreePerc" />
+          <ScalarProperty Name="DiscPerc" ColumnName="DiscPerc" />
+          <ScalarProperty Name="MainPrice" ColumnName="MainPrice" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="WholesalePrice" ColumnName="WholesalePrice" />
+          <ScalarProperty Name="QtyMin" ColumnName="QtyMin" />
+          <ScalarProperty Name="QtyMax" ColumnName="QtyMax" />
+          <ScalarProperty Name="PackageWeight" ColumnName="PackageWeight" />
+          <ScalarProperty Name="PackageUnit" ColumnName="PackageUnit" />
+          <ScalarProperty Name="IsSpecialOffer" ColumnName="IsSpecialOffer" />
+          <ScalarProperty Name="OfferEndDate" ColumnName="OfferEndDate" />
+          <ScalarProperty Name="IsWeight" ColumnName="IsWeight" />
+          <ScalarProperty Name="IsContainExpiryDate" ColumnName="IsContainExpiryDate" />
+          <ScalarProperty Name="IsSellNotAllow" ColumnName="IsSellNotAllow" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+          <ScalarProperty Name="OldId" ColumnName="OldId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_ITEM_CATEGORY">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_CATEGORY">
+        <MappingFragment StoreEntitySet="GEN_ITEM_CATEGORY">
+          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+          <ScalarProperty Name="CategoryParentId" ColumnName="CategoryParentId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ProfitPercentage" ColumnName="ProfitPercentage" />
+          <ScalarProperty Name="WholesalePercentage" ColumnName="WholesalePercentage" />
+          <ScalarProperty Name="FreePercentage" ColumnName="FreePercentage" />
+          <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="CanContainItems" ColumnName="CanContainItems" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_ITEM_GENERALIZATION">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_GENERALIZATION">
+        <MappingFragment StoreEntitySet="GEN_ITEM_GENERALIZATION">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="GeneralizationYear" ColumnName="GeneralizationYear" />
+          <ScalarProperty Name="GeneralizationNo" ColumnName="GeneralizationNo" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_ITEM_UNIT">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_UNIT">
+        <MappingFragment StoreEntitySet="GEN_ITEM_UNIT">
+          <ScalarProperty Name="ItemUnitId" ColumnName="ItemUnitId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="BarcodeType" ColumnName="BarcodeType" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_SUPPLIER">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_SUPPLIER">
+        <MappingFragment StoreEntitySet="GEN_SUPPLIER">
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="SupRef" ColumnName="SupRef" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="SupplierTypeId" ColumnName="SupplierTypeId" />
+          <ScalarProperty Name="SupplierGroupId" ColumnName="SupplierGroupId" />
+          <ScalarProperty Name="AssistantSupId" ColumnName="AssistantSupId" />
+          <ScalarProperty Name="AssistantAccountNumber" ColumnName="AssistantAccountNumber" />
+          <ScalarProperty Name="AssistantAccountName" ColumnName="AssistantAccountName" />
+          <ScalarProperty Name="AssistantStartDate" ColumnName="AssistantStartDate" />
+          <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+          <ScalarProperty Name="FreePercentag" ColumnName="FreePercentag" />
+          <ScalarProperty Name="BankId" ColumnName="BankId" />
+          <ScalarProperty Name="BankAccount" ColumnName="BankAccount" />
+          <ScalarProperty Name="SupNODays" ColumnName="SupNODays" />
+          <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="BOX" ColumnName="BOX" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
+          <ScalarProperty Name="LicenseDate" ColumnName="LicenseDate" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="PurchaseOrderNotes" ColumnName="PurchaseOrderNotes" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
+          <ScalarProperty Name="IsAllowedPO" ColumnName="IsAllowedPO" />
+          <ScalarProperty Name="IsAllowedReceipt" ColumnName="IsAllowedReceipt" />
+          <ScalarProperty Name="IsAllowedDirectReturn" ColumnName="IsAllowedDirectReturn" />
+          <ScalarProperty Name="IsAllowedReturnDiscount" ColumnName="IsAllowedReturnDiscount" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+          <ScalarProperty Name="IsAllowCashingChecks" ColumnName="IsAllowCashingChecks" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_SUPPLIER_DOCUMENT">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_SUPPLIER_DOCUMENT">
+        <MappingFragment StoreEntitySet="GEN_SUPPLIER_DOCUMENT">
+          <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="DocName" ColumnName="DocName" />
+          <ScalarProperty Name="DocTitle" ColumnName="DocTitle" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_SUPPLIER_PHONE">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_SUPPLIER_PHONE">
+        <MappingFragment StoreEntitySet="GEN_SUPPLIER_PHONE">
+          <ScalarProperty Name="SupPhoneId" ColumnName="SupPhoneId" />
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="PhoneTypeID" ColumnName="PhoneTypeID" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="PersonName" ColumnName="PersonName" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_SUPPLIER_SECTOR">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR">
+        <MappingFragment StoreEntitySet="GEN_SUPPLIER_SECTOR">
+          <ScalarProperty Name="SupSectorId" ColumnName="SupSectorId" />
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="SupSectorName" ColumnName="SupSectorName" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="FreePercentageMarkets" ColumnName="FreePercentageMarkets" />
+          <ScalarProperty Name="FreePercentageBranchs" ColumnName="FreePercentageBranchs" />
+          <ScalarProperty Name="FreePercentageStores" ColumnName="FreePercentageStores" />
+          <ScalarProperty Name="DiscountPercentageMarkets" ColumnName="DiscountPercentageMarkets" />
+          <ScalarProperty Name="DiscountPercentageBranchs" ColumnName="DiscountPercentageBranchs" />
+          <ScalarProperty Name="DiscountPercentageStores" ColumnName="DiscountPercentageStores" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_SUPPLIER_SECTOR_SPECIFY">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_SUPPLIER_SECTOR_SPECIFY">
+        <MappingFragment StoreEntitySet="GEN_SUPPLIER_SECTOR_SPECIFY">
+          <ScalarProperty Name="SupSectorSpecifyId" ColumnName="SupSectorSpecifyId" />
+          <ScalarProperty Name="SupId" ColumnName="SupId" />
+          <ScalarProperty Name="SupSectorId" ColumnName="SupSectorId" />
+          <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+          <ScalarProperty Name="FreePercentage" ColumnName="FreePercentage" />
+          <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GEN_UNIT">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_UNIT">
+        <MappingFragment StoreEntitySet="GEN_UNIT">
+          <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="MinUnitId" ColumnName="MinUnitId" />
+          <ScalarProperty Name="UnitValue" ColumnName="UnitValue" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_CountriesCodes">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_CountriesCodes">
+        <MappingFragment StoreEntitySet="LST_CountriesCodes">
+          <ScalarProperty Name="countryId" ColumnName="countryId" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="currency" ColumnName="currency" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="isDefault" ColumnName="isDefault" />
+          <ScalarProperty Name="currencyId" ColumnName="currencyId" />
+          <ScalarProperty Name="timeZoneName" ColumnName="timeZoneName" />
+          <ScalarProperty Name="timeZoneOffset" ColumnName="timeZoneOffset" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_COUNTRY">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_COUNTRY">
+        <MappingFragment StoreEntitySet="LST_COUNTRY">
+          <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_PHONE_TYPE">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_PHONE_TYPE">
+        <MappingFragment StoreEntitySet="LST_PHONE_TYPE">
+          <ScalarProperty Name="PhoneTypeId" ColumnName="PhoneTypeId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_REQUEST_TOKEN">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_REQUEST_TOKEN">
+        <MappingFragment StoreEntitySet="LST_REQUEST_TOKEN">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Token" ColumnName="Token" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_SUPPLIER_DOCUMENT_TYPE">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_SUPPLIER_DOCUMENT_TYPE">
+        <MappingFragment StoreEntitySet="LST_SUPPLIER_DOCUMENT_TYPE">
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_SUPPLIER_GROUP">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_SUPPLIER_GROUP">
+        <MappingFragment StoreEntitySet="LST_SUPPLIER_GROUP">
+          <ScalarProperty Name="SupplierGroupId" ColumnName="SupplierGroupId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LST_SUPPLIER_TYPE">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_SUPPLIER_TYPE">
+        <MappingFragment StoreEntitySet="LST_SUPPLIER_TYPE">
+          <ScalarProperty Name="SupplierTypeId" ColumnName="SupplierTypeId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="ConsumerAssociationDBModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="ConsumerAssociationDBModel.Store.sp_alterdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="ConsumerAssociationDBModel.Store.sp_creatediagram" />
+    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="ConsumerAssociationDBModel.Store.sp_dropdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="ConsumerAssociationDBModel.Store.sp_helpdiagramdefinition">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ConsumerAssociationDBModel.sp_helpdiagramdefinition_Result">
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="ConsumerAssociationDBModel.Store.sp_helpdiagrams">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ConsumerAssociationDBModel.sp_helpdiagrams_Result">
+          <ScalarProperty Name="Database" ColumnName="Database" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ConsumerAssociationDBModel.Store.sp_renamediagram" />
+    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ConsumerAssociationDBModel.Store.sp_upgraddiagrams" />
+  </EntityContainerMapping>
+</Mapping>

@@ -18,6 +18,7 @@ namespace POS_Server
         public GEN_ITEM()
         {
             this.GEN_ITEM_GENERALIZATION = new HashSet<GEN_ITEM_GENERALIZATION>();
+            this.GEN_ITEM_UNIT = new HashSet<GEN_ITEM_UNIT>();
         }
     
         public long ItemId { get; set; }
@@ -51,6 +52,9 @@ namespace POS_Server
         public Nullable<int> QtyMin { get; set; }
         public Nullable<int> QtyMax { get; set; }
         public Nullable<decimal> PackageWeight { get; set; }
+        public Nullable<long> PackageUnit { get; set; }
+        public bool IsSpecialOffer { get; set; }
+        public Nullable<System.DateTime> OfferEndDate { get; set; }
         public bool IsWeight { get; set; }
         public bool IsContainExpiryDate { get; set; }
         public bool IsSellNotAllow { get; set; }
@@ -61,8 +65,6 @@ namespace POS_Server
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
         public string OldId { get; set; }
-        public Nullable<long> PackageUnit { get; set; }
-        public bool IsSpecialOffer { get; set; }
     
         public virtual GEN_BRAND GEN_BRAND { get; set; }
         public virtual GEN_ITEM_CATEGORY GEN_ITEM_CATEGORY { get; set; }
@@ -70,5 +72,7 @@ namespace POS_Server
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_ITEM_GENERALIZATION> GEN_ITEM_GENERALIZATION { get; set; }
         public virtual LST_COUNTRY LST_COUNTRY { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM_UNIT> GEN_ITEM_UNIT { get; set; }
     }
 }

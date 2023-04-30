@@ -1,0 +1,790 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ConsumerAssociationDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="GEN_ASSISTANT_SUPPLIER">
+    <Key>
+      <PropertyRef Name="AssistantSupId" />
+    </Key>
+    <Property Name="AssistantSupId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER" FromRole="GEN_ASSISTANT_SUPPLIER" ToRole="GEN_SUPPLIER" />
+  </EntityType>
+  <EntityType Name="GEN_BANK">
+    <Key>
+      <PropertyRef Name="BankId" />
+    </Key>
+    <Property Name="BankId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BankName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_GEN_BANK" FromRole="GEN_BANK" ToRole="GEN_SUPPLIER" />
+  </EntityType>
+  <EntityType Name="GEN_BRAND">
+    <Key>
+      <PropertyRef Name="BrandId" />
+    </Key>
+    <Property Name="BrandId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_GEN_BRAND" FromRole="GEN_BRAND" ToRole="GEN_ITEM" />
+  </EntityType>
+  <EntityType Name="GEN_ITEM">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="ShortName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EngName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="ItemStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ItemReceiptType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ItemType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ItemTransactionType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CategoryId" Type="Int64" />
+    <Property Name="BrandId" Type="Int32" />
+    <Property Name="SupId" Type="Int64" />
+    <Property Name="SupSectorId" Type="Int64" />
+    <Property Name="CountryId" Type="Int64" />
+    <Property Name="CommitteeNo" Type="Int32" />
+    <Property Name="UnitId" Type="Int64" />
+    <Property Name="Factor" Type="Int32" />
+    <Property Name="MainCost" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="Cost" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="ConsumerProfitPerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="WholesaleProfitPerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="ConsumerDiscPerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="WholesaleDiscPerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="FreePerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="DiscPerc" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="MainPrice" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="WholesalePrice" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="QtyMin" Type="Int32" />
+    <Property Name="QtyMax" Type="Int32" />
+    <Property Name="PackageWeight" Type="Decimal" Precision="18" Scale="3" />
+    <Property Name="PackageUnit" Type="Int64" />
+    <Property Name="IsSpecialOffer" Type="Boolean" Nullable="false" />
+    <Property Name="OfferEndDate" Type="DateTime" Precision="7" />
+    <Property Name="IsWeight" Type="Boolean" Nullable="false" />
+    <Property Name="IsContainExpiryDate" Type="Boolean" Nullable="false" />
+    <Property Name="IsSellNotAllow" Type="Boolean" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <Property Name="OldId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="GEN_BRAND" Relationship="Self.FK_GEN_ITEM_GEN_BRAND" FromRole="GEN_ITEM" ToRole="GEN_BRAND" />
+    <NavigationProperty Name="GEN_ITEM_CATEGORY" Relationship="Self.FK_GEN_ITEM_GEN_ITEM_Category" FromRole="GEN_ITEM" ToRole="GEN_ITEM_CATEGORY" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_ITEM_GEN_SUPPLIER" FromRole="GEN_ITEM" ToRole="GEN_SUPPLIER" />
+    <NavigationProperty Name="GEN_ITEM_GENERALIZATION" Relationship="Self.FK_GEN_ITEM_GENERALIZATION_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_GENERALIZATION" />
+    <NavigationProperty Name="LST_COUNTRY" Relationship="Self.FK_GEN_ITEM_LST_COUNTRY" FromRole="GEN_ITEM" ToRole="LST_COUNTRY" />
+    <NavigationProperty Name="GEN_ITEM_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_UNIT" />
+  </EntityType>
+  <EntityType Name="GEN_ITEM_CATEGORY">
+    <Key>
+      <PropertyRef Name="CategoryId" />
+    </Key>
+    <Property Name="CategoryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryParentId" Type="Int64" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ProfitPercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="WholesalePercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="FreePercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="DiscountPercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CanContainItems" Type="Boolean" Nullable="false" />
+    <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_GEN_ITEM_Category" FromRole="GEN_ITEM_CATEGORY" ToRole="GEN_ITEM" />
+    <NavigationProperty Name="GEN_ITEM_CATEGORY1" Relationship="Self.FK_GEN_ITEM_Category_GEN_ITEM_Category" FromRole="GEN_ITEM_CATEGORY" ToRole="GEN_ITEM_CATEGORY1" />
+    <NavigationProperty Name="GEN_ITEM_CATEGORY2" Relationship="Self.FK_GEN_ITEM_Category_GEN_ITEM_Category" FromRole="GEN_ITEM_CATEGORY1" ToRole="GEN_ITEM_CATEGORY" />
+  </EntityType>
+  <EntityType Name="GEN_ITEM_GENERALIZATION">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemId" Type="Int64" />
+    <Property Name="GeneralizationYear" Type="Int32" />
+    <Property Name="GeneralizationNo" Type="Int32" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_GENERALIZATION_GEN_ITEM" FromRole="GEN_ITEM_GENERALIZATION" ToRole="GEN_ITEM" />
+  </EntityType>
+  <EntityType Name="GEN_ITEM_UNIT">
+    <Key>
+      <PropertyRef Name="ItemUnitId" />
+    </Key>
+    <Property Name="ItemUnitId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemId" Type="Int64" />
+    <Property Name="UnitId" Type="Int64" />
+    <Property Name="Barcode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="BarcodeType" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_ITEM" FromRole="GEN_ITEM_UNIT" ToRole="GEN_ITEM" />
+    <NavigationProperty Name="GEN_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_UNIT" FromRole="GEN_ITEM_UNIT" ToRole="GEN_UNIT" />
+  </EntityType>
+  <EntityType Name="GEN_SUPPLIER">
+    <Key>
+      <PropertyRef Name="SupId" />
+    </Key>
+    <Property Name="SupId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupRef" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ShortName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SupplierTypeId" Type="Int32" />
+    <Property Name="SupplierGroupId" Type="Int32" />
+    <Property Name="AssistantSupId" Type="Int64" />
+    <Property Name="AssistantAccountNumber" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="AssistantAccountName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="AssistantStartDate" Type="DateTime" Precision="0" />
+    <Property Name="DiscountPercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="FreePercentag" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="BankId" Type="Int64" />
+    <Property Name="BankAccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SupNODays" Type="Int32" />
+    <Property Name="AccountCode" Type="Int32" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BOX" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="LicenseId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LicenseDate" Type="DateTime" Precision="0" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PurchaseOrderNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsAllowedPO" Type="Boolean" Nullable="false" />
+    <Property Name="IsAllowedReceipt" Type="Boolean" Nullable="false" />
+    <Property Name="IsAllowedDirectReturn" Type="Boolean" Nullable="false" />
+    <Property Name="IsAllowedReturnDiscount" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <Property Name="IsAllowCashingChecks" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="GEN_ASSISTANT_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_ASSISTANT_SUPPLIER" />
+    <NavigationProperty Name="GEN_BANK" Relationship="Self.FK_GEN_SUPPLIER_GEN_BANK" FromRole="GEN_SUPPLIER" ToRole="GEN_BANK" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_GEN_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_ITEM" />
+    <NavigationProperty Name="GEN_SUPPLIER_DOCUMENT" Relationship="Self.FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_SUPPLIER_DOCUMENT" />
+    <NavigationProperty Name="LST_SUPPLIER_GROUP" Relationship="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP" FromRole="GEN_SUPPLIER" ToRole="LST_SUPPLIER_GROUP" />
+    <NavigationProperty Name="LST_SUPPLIER_TYPE" Relationship="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE" FromRole="GEN_SUPPLIER" ToRole="LST_SUPPLIER_TYPE" />
+    <NavigationProperty Name="GEN_SUPPLIER_PHONE" Relationship="Self.FK_GEN_SUPPLIER_PHONE_GEN_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_SUPPLIER_PHONE" />
+    <NavigationProperty Name="GEN_SUPPLIER_SECTOR" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_GEN_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_SUPPLIER_SECTOR" />
+    <NavigationProperty Name="GEN_SUPPLIER_SECTOR_SPECIFY" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER" FromRole="GEN_SUPPLIER" ToRole="GEN_SUPPLIER_SECTOR_SPECIFY" />
+  </EntityType>
+  <EntityType Name="GEN_SUPPLIER_DOCUMENT">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupId" Type="Int64" />
+    <Property Name="TypeId" Type="Int64" />
+    <Property Name="DocName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="DocTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StartDate" Type="DateTime" Precision="7" />
+    <Property Name="EndDate" Type="DateTime" Precision="7" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER" FromRole="GEN_SUPPLIER_DOCUMENT" ToRole="GEN_SUPPLIER" />
+    <NavigationProperty Name="LST_SUPPLIER_DOCUMENT_TYPE" Relationship="Self.FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE" FromRole="GEN_SUPPLIER_DOCUMENT" ToRole="LST_SUPPLIER_DOCUMENT_TYPE" />
+  </EntityType>
+  <EntityType Name="GEN_SUPPLIER_PHONE">
+    <Key>
+      <PropertyRef Name="SupPhoneId" />
+    </Key>
+    <Property Name="SupPhoneId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupId" Type="Int64" Nullable="false" />
+    <Property Name="PhoneTypeID" Type="Int32" Nullable="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PersonName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_PHONE_GEN_SUPPLIER" FromRole="GEN_SUPPLIER_PHONE" ToRole="GEN_SUPPLIER" />
+    <NavigationProperty Name="LST_PHONE_TYPE" Relationship="Self.FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE" FromRole="GEN_SUPPLIER_PHONE" ToRole="LST_PHONE_TYPE" />
+  </EntityType>
+  <EntityType Name="GEN_SUPPLIER_SECTOR">
+    <Key>
+      <PropertyRef Name="SupSectorId" />
+    </Key>
+    <Property Name="SupSectorId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupId" Type="Int64" />
+    <Property Name="SupSectorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FreePercentageMarkets" Type="Decimal" Precision="10" Scale="3" Nullable="false" />
+    <Property Name="FreePercentageBranchs" Type="Decimal" Precision="10" Scale="3" />
+    <Property Name="FreePercentageStores" Type="Decimal" Precision="10" Scale="3" />
+    <Property Name="DiscountPercentageMarkets" Type="Decimal" Precision="10" Scale="3" Nullable="false" />
+    <Property Name="DiscountPercentageBranchs" Type="Decimal" Precision="10" Scale="3" />
+    <Property Name="DiscountPercentageStores" Type="Decimal" Precision="10" Scale="3" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_GEN_SUPPLIER" FromRole="GEN_SUPPLIER_SECTOR" ToRole="GEN_SUPPLIER" />
+    <NavigationProperty Name="GEN_SUPPLIER_SECTOR_SPECIFY" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR" FromRole="GEN_SUPPLIER_SECTOR" ToRole="GEN_SUPPLIER_SECTOR_SPECIFY" />
+  </EntityType>
+  <EntityType Name="GEN_SUPPLIER_SECTOR_SPECIFY">
+    <Key>
+      <PropertyRef Name="SupSectorSpecifyId" />
+    </Key>
+    <Property Name="SupSectorSpecifyId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupId" Type="Int64" />
+    <Property Name="SupSectorId" Type="Int64" />
+    <Property Name="BranchId" Type="Int64" />
+    <Property Name="FreePercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="DiscountPercentage" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER" FromRole="GEN_SUPPLIER_SECTOR_SPECIFY" ToRole="GEN_SUPPLIER" />
+    <NavigationProperty Name="GEN_SUPPLIER_SECTOR" Relationship="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR" FromRole="GEN_SUPPLIER_SECTOR_SPECIFY" ToRole="GEN_SUPPLIER_SECTOR" />
+  </EntityType>
+  <EntityType Name="GEN_UNIT">
+    <Key>
+      <PropertyRef Name="UnitId" />
+    </Key>
+    <Property Name="UnitId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MinUnitId" Type="Int64" />
+    <Property Name="UnitValue" Type="Int32" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_ITEM_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_UNIT" FromRole="GEN_UNIT" ToRole="GEN_ITEM_UNIT" />
+    <NavigationProperty Name="GEN_UNIT1" Relationship="Self.FK_GEN_UNIT_GEN_UNIT" FromRole="GEN_UNIT" ToRole="GEN_UNIT1" />
+    <NavigationProperty Name="GEN_UNIT2" Relationship="Self.FK_GEN_UNIT_GEN_UNIT" FromRole="GEN_UNIT1" ToRole="GEN_UNIT" />
+  </EntityType>
+  <EntityType Name="LST_CountriesCodes">
+    <Key>
+      <PropertyRef Name="countryId" />
+    </Key>
+    <Property Name="countryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="currency" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="isDefault" Type="Byte" Nullable="false" />
+    <Property Name="currencyId" Type="Int32" Nullable="false" />
+    <Property Name="timeZoneName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="timeZoneOffset" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="LST_COUNTRY">
+    <Key>
+      <PropertyRef Name="CountryId" />
+    </Key>
+    <Property Name="CountryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_LST_COUNTRY" FromRole="LST_COUNTRY" ToRole="GEN_ITEM" />
+  </EntityType>
+  <EntityType Name="LST_PHONE_TYPE">
+    <Key>
+      <PropertyRef Name="PhoneTypeId" />
+    </Key>
+    <Property Name="PhoneTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER_PHONE" Relationship="Self.FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE" FromRole="LST_PHONE_TYPE" ToRole="GEN_SUPPLIER_PHONE" />
+  </EntityType>
+  <EntityType Name="LST_REQUEST_TOKEN">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Token" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+  </EntityType>
+  <EntityType Name="LST_SUPPLIER_DOCUMENT_TYPE">
+    <Key>
+      <PropertyRef Name="TypeId" />
+    </Key>
+    <Property Name="TypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER_DOCUMENT" Relationship="Self.FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE" FromRole="LST_SUPPLIER_DOCUMENT_TYPE" ToRole="GEN_SUPPLIER_DOCUMENT" />
+  </EntityType>
+  <EntityType Name="LST_SUPPLIER_GROUP">
+    <Key>
+      <PropertyRef Name="SupplierGroupId" />
+    </Key>
+    <Property Name="SupplierGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP" FromRole="LST_SUPPLIER_GROUP" ToRole="GEN_SUPPLIER" />
+  </EntityType>
+  <EntityType Name="LST_SUPPLIER_TYPE">
+    <Key>
+      <PropertyRef Name="SupplierTypeId" />
+    </Key>
+    <Property Name="SupplierTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="7" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+    <Property Name="CreateUserId" Type="Int64" />
+    <Property Name="UpdateUserId" Type="Int64" />
+    <NavigationProperty Name="GEN_SUPPLIER" Relationship="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE" FromRole="LST_SUPPLIER_TYPE" ToRole="GEN_SUPPLIER" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER">
+    <End Role="GEN_ASSISTANT_SUPPLIER" Type="Self.GEN_ASSISTANT_SUPPLIER" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_ASSISTANT_SUPPLIER">
+        <PropertyRef Name="AssistantSupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER">
+        <PropertyRef Name="AssistantSupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_GEN_BANK">
+    <End Role="GEN_BANK" Type="Self.GEN_BANK" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_BANK">
+        <PropertyRef Name="BankId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER">
+        <PropertyRef Name="BankId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_GEN_BRAND">
+    <End Role="GEN_BRAND" Type="Self.GEN_BRAND" Multiplicity="0..1" />
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_BRAND">
+        <PropertyRef Name="BrandId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM">
+        <PropertyRef Name="BrandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_GEN_ITEM_Category">
+    <End Role="GEN_ITEM_CATEGORY" Type="Self.GEN_ITEM_CATEGORY" Multiplicity="0..1" />
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_ITEM_CATEGORY">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_GEN_SUPPLIER">
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="0..1" />
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM">
+        <PropertyRef Name="SupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_GENERALIZATION_GEN_ITEM">
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="0..1" />
+    <End Role="GEN_ITEM_GENERALIZATION" Type="Self.GEN_ITEM_GENERALIZATION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_ITEM">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM_GENERALIZATION">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_LST_COUNTRY">
+    <End Role="LST_COUNTRY" Type="Self.LST_COUNTRY" Multiplicity="0..1" />
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LST_COUNTRY">
+        <PropertyRef Name="CountryId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_UNIT_GEN_ITEM">
+    <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="0..1" />
+    <End Role="GEN_ITEM_UNIT" Type="Self.GEN_ITEM_UNIT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_ITEM">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM_UNIT">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_Category_GEN_ITEM_Category">
+    <End Role="GEN_ITEM_CATEGORY" Type="Self.GEN_ITEM_CATEGORY" Multiplicity="0..1" />
+    <End Role="GEN_ITEM_CATEGORY1" Type="Self.GEN_ITEM_CATEGORY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_ITEM_CATEGORY">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM_CATEGORY1">
+        <PropertyRef Name="CategoryParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_ITEM_UNIT_GEN_UNIT">
+    <End Role="GEN_UNIT" Type="Self.GEN_UNIT" Multiplicity="0..1" />
+    <End Role="GEN_ITEM_UNIT" Type="Self.GEN_ITEM_UNIT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_UNIT">
+        <PropertyRef Name="UnitId" />
+      </Principal>
+      <Dependent Role="GEN_ITEM_UNIT">
+        <PropertyRef Name="UnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER">
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER_DOCUMENT" Type="Self.GEN_SUPPLIER_DOCUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_DOCUMENT">
+        <PropertyRef Name="SupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP">
+    <End Role="LST_SUPPLIER_GROUP" Type="Self.LST_SUPPLIER_GROUP" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LST_SUPPLIER_GROUP">
+        <PropertyRef Name="SupplierGroupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupplierGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE">
+    <End Role="LST_SUPPLIER_TYPE" Type="Self.LST_SUPPLIER_TYPE" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LST_SUPPLIER_TYPE">
+        <PropertyRef Name="SupplierTypeId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupplierTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_PHONE_GEN_SUPPLIER">
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="1" />
+    <End Role="GEN_SUPPLIER_PHONE" Type="Self.GEN_SUPPLIER_PHONE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_PHONE">
+        <PropertyRef Name="SupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_SECTOR_GEN_SUPPLIER">
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER_SECTOR" Type="Self.GEN_SUPPLIER_SECTOR" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_SECTOR">
+        <PropertyRef Name="SupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER">
+    <End Role="GEN_SUPPLIER" Type="Self.GEN_SUPPLIER" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" Type="Self.GEN_SUPPLIER_SECTOR_SPECIFY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER">
+        <PropertyRef Name="SupId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_SECTOR_SPECIFY">
+        <PropertyRef Name="SupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE">
+    <End Role="LST_SUPPLIER_DOCUMENT_TYPE" Type="Self.LST_SUPPLIER_DOCUMENT_TYPE" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER_DOCUMENT" Type="Self.GEN_SUPPLIER_DOCUMENT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LST_SUPPLIER_DOCUMENT_TYPE">
+        <PropertyRef Name="TypeId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_DOCUMENT">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE">
+    <End Role="LST_PHONE_TYPE" Type="Self.LST_PHONE_TYPE" Multiplicity="1" />
+    <End Role="GEN_SUPPLIER_PHONE" Type="Self.GEN_SUPPLIER_PHONE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LST_PHONE_TYPE">
+        <PropertyRef Name="PhoneTypeId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_PHONE">
+        <PropertyRef Name="PhoneTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR">
+    <End Role="GEN_SUPPLIER_SECTOR" Type="Self.GEN_SUPPLIER_SECTOR" Multiplicity="0..1" />
+    <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" Type="Self.GEN_SUPPLIER_SECTOR_SPECIFY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_SUPPLIER_SECTOR">
+        <PropertyRef Name="SupSectorId" />
+      </Principal>
+      <Dependent Role="GEN_SUPPLIER_SECTOR_SPECIFY">
+        <PropertyRef Name="SupSectorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GEN_UNIT_GEN_UNIT">
+    <End Role="GEN_UNIT" Type="Self.GEN_UNIT" Multiplicity="0..1" />
+    <End Role="GEN_UNIT1" Type="Self.GEN_UNIT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GEN_UNIT">
+        <PropertyRef Name="UnitId" />
+      </Principal>
+      <Dependent Role="GEN_UNIT1">
+        <PropertyRef Name="MinUnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ConsumerAssociationDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="GEN_ASSISTANT_SUPPLIER" EntityType="Self.GEN_ASSISTANT_SUPPLIER" />
+    <EntitySet Name="GEN_BANK" EntityType="Self.GEN_BANK" />
+    <EntitySet Name="GEN_BRAND" EntityType="Self.GEN_BRAND" />
+    <EntitySet Name="GEN_ITEM" EntityType="Self.GEN_ITEM" />
+    <EntitySet Name="GEN_ITEM_CATEGORY" EntityType="Self.GEN_ITEM_CATEGORY" />
+    <EntitySet Name="GEN_ITEM_GENERALIZATION" EntityType="Self.GEN_ITEM_GENERALIZATION" />
+    <EntitySet Name="GEN_ITEM_UNIT" EntityType="Self.GEN_ITEM_UNIT" />
+    <EntitySet Name="GEN_SUPPLIER" EntityType="Self.GEN_SUPPLIER" />
+    <EntitySet Name="GEN_SUPPLIER_DOCUMENT" EntityType="Self.GEN_SUPPLIER_DOCUMENT" />
+    <EntitySet Name="GEN_SUPPLIER_PHONE" EntityType="Self.GEN_SUPPLIER_PHONE" />
+    <EntitySet Name="GEN_SUPPLIER_SECTOR" EntityType="Self.GEN_SUPPLIER_SECTOR" />
+    <EntitySet Name="GEN_SUPPLIER_SECTOR_SPECIFY" EntityType="Self.GEN_SUPPLIER_SECTOR_SPECIFY" />
+    <EntitySet Name="GEN_UNIT" EntityType="Self.GEN_UNIT" />
+    <EntitySet Name="LST_CountriesCodes" EntityType="Self.LST_CountriesCodes" />
+    <EntitySet Name="LST_COUNTRY" EntityType="Self.LST_COUNTRY" />
+    <EntitySet Name="LST_PHONE_TYPE" EntityType="Self.LST_PHONE_TYPE" />
+    <EntitySet Name="LST_REQUEST_TOKEN" EntityType="Self.LST_REQUEST_TOKEN" />
+    <EntitySet Name="LST_SUPPLIER_DOCUMENT_TYPE" EntityType="Self.LST_SUPPLIER_DOCUMENT_TYPE" />
+    <EntitySet Name="LST_SUPPLIER_GROUP" EntityType="Self.LST_SUPPLIER_GROUP" />
+    <EntitySet Name="LST_SUPPLIER_TYPE" EntityType="Self.LST_SUPPLIER_TYPE" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <AssociationSet Name="FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_GEN_ASSISTANT_SUPPLIER">
+      <End Role="GEN_ASSISTANT_SUPPLIER" EntitySet="GEN_ASSISTANT_SUPPLIER" />
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_GEN_BANK" Association="Self.FK_GEN_SUPPLIER_GEN_BANK">
+      <End Role="GEN_BANK" EntitySet="GEN_BANK" />
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_GEN_BRAND" Association="Self.FK_GEN_ITEM_GEN_BRAND">
+      <End Role="GEN_BRAND" EntitySet="GEN_BRAND" />
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_GEN_ITEM_Category" Association="Self.FK_GEN_ITEM_GEN_ITEM_Category">
+      <End Role="GEN_ITEM_CATEGORY" EntitySet="GEN_ITEM_CATEGORY" />
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_GEN_SUPPLIER" Association="Self.FK_GEN_ITEM_GEN_SUPPLIER">
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_GENERALIZATION_GEN_ITEM" Association="Self.FK_GEN_ITEM_GENERALIZATION_GEN_ITEM">
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+      <End Role="GEN_ITEM_GENERALIZATION" EntitySet="GEN_ITEM_GENERALIZATION" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_LST_COUNTRY" Association="Self.FK_GEN_ITEM_LST_COUNTRY">
+      <End Role="LST_COUNTRY" EntitySet="LST_COUNTRY" />
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_UNIT_GEN_ITEM" Association="Self.FK_GEN_ITEM_UNIT_GEN_ITEM">
+      <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+      <End Role="GEN_ITEM_UNIT" EntitySet="GEN_ITEM_UNIT" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_Category_GEN_ITEM_Category" Association="Self.FK_GEN_ITEM_Category_GEN_ITEM_Category">
+      <End Role="GEN_ITEM_CATEGORY" EntitySet="GEN_ITEM_CATEGORY" />
+      <End Role="GEN_ITEM_CATEGORY1" EntitySet="GEN_ITEM_CATEGORY" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_ITEM_UNIT_GEN_UNIT" Association="Self.FK_GEN_ITEM_UNIT_GEN_UNIT">
+      <End Role="GEN_UNIT" EntitySet="GEN_UNIT" />
+      <End Role="GEN_ITEM_UNIT" EntitySet="GEN_ITEM_UNIT" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER">
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+      <End Role="GEN_SUPPLIER_DOCUMENT" EntitySet="GEN_SUPPLIER_DOCUMENT" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP" Association="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_GROUP">
+      <End Role="LST_SUPPLIER_GROUP" EntitySet="LST_SUPPLIER_GROUP" />
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE" Association="Self.FK_GEN_SUPPLIER_LST_SUPPLIER_TYPE">
+      <End Role="LST_SUPPLIER_TYPE" EntitySet="LST_SUPPLIER_TYPE" />
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_PHONE_GEN_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_PHONE_GEN_SUPPLIER">
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+      <End Role="GEN_SUPPLIER_PHONE" EntitySet="GEN_SUPPLIER_PHONE" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_SECTOR_GEN_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_SECTOR_GEN_SUPPLIER">
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+      <End Role="GEN_SUPPLIER_SECTOR" EntitySet="GEN_SUPPLIER_SECTOR" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER">
+      <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
+      <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" EntitySet="GEN_SUPPLIER_SECTOR_SPECIFY" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE" Association="Self.FK_GEN_SUPPLIER_DOCUMENT_LST_SUPPLIER_DOCUMENT_TYPE">
+      <End Role="LST_SUPPLIER_DOCUMENT_TYPE" EntitySet="LST_SUPPLIER_DOCUMENT_TYPE" />
+      <End Role="GEN_SUPPLIER_DOCUMENT" EntitySet="GEN_SUPPLIER_DOCUMENT" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE" Association="Self.FK_GEN_SUPPLIER_PHONE_LST_PHONE_TYPE">
+      <End Role="LST_PHONE_TYPE" EntitySet="LST_PHONE_TYPE" />
+      <End Role="GEN_SUPPLIER_PHONE" EntitySet="GEN_SUPPLIER_PHONE" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR" Association="Self.FK_GEN_SUPPLIER_SECTOR_SPECIFY_GEN_SUPPLIER_SECTOR">
+      <End Role="GEN_SUPPLIER_SECTOR" EntitySet="GEN_SUPPLIER_SECTOR" />
+      <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" EntitySet="GEN_SUPPLIER_SECTOR_SPECIFY" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GEN_UNIT_GEN_UNIT" Association="Self.FK_GEN_UNIT_GEN_UNIT">
+      <End Role="GEN_UNIT" EntitySet="GEN_UNIT" />
+      <End Role="GEN_UNIT1" EntitySet="GEN_UNIT" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(ConsumerAssociationDBModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(ConsumerAssociationDBModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>

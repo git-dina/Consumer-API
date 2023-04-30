@@ -279,6 +279,7 @@
     <Property Name="deserved" Type="Decimal" Precision="20" Scale="3" />
     <Property Name="purpose" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="isInvPurpose" Type="Boolean" Nullable="false" />
+    <Property Name="otherSide" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="categories">
     <Key>
@@ -620,6 +621,7 @@
     <NavigationProperty Name="itemsLocations" Relationship="Self.FK_itemsLocations_invoices" FromRole="invoices" ToRole="itemsLocations" />
     <NavigationProperty Name="itemsTransfer" Relationship="Self.FK_itemsTransfer_invoices" FromRole="invoices" ToRole="itemsTransfer" />
     <Property Name="isFreeShip" Type="Int32" Nullable="false" />
+    <Property Name="taxValue" Type="Decimal" Precision="20" Scale="3" />
   </EntityType>
   <EntityType Name="invoiceStatus">
     <Key>
@@ -1078,6 +1080,8 @@
     <Property Name="printfor" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="sizeValue" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="posSetting" Relationship="Self.FK_posSetting_paperSize" FromRole="paperSize" ToRole="posSetting" />
+    <NavigationProperty Name="invoiceTypesPrinters" Relationship="PosModel.FK_invoiceTypesPrinters_paperSize" FromRole="paperSize" ToRole="invoiceTypesPrinters" />
+    <NavigationProperty Name="posPrinters" Relationship="PosModel.FK_posPrinters_paperSize" FromRole="paperSize" ToRole="posPrinters" />
   </EntityType>
   <EntityType Name="Points">
     <Key>
@@ -1135,6 +1139,7 @@
     <NavigationProperty Name="posSetting" Relationship="Self.FK_posSetting_pos" FromRole="pos" ToRole="posSetting" />
     <NavigationProperty Name="posUsers" Relationship="Self.FK_posUsers_pos" FromRole="pos" ToRole="posUsers" />
     <NavigationProperty Name="usersLogs" Relationship="Self.FK_usersLogs_pos" FromRole="pos" ToRole="usersLogs" />
+    <NavigationProperty Name="posPrinters" Relationship="PosModel.FK_posPrinters_pos" FromRole="pos" ToRole="posPrinters" />
   </EntityType>
   <EntityType Name="posSerials">
     <Key>
@@ -1758,6 +1763,10 @@
     <NavigationProperty Name="sliceUser" Relationship="PosModel.FK_sliceUser_users" FromRole="users" ToRole="sliceUser" />
     <NavigationProperty Name="sliceUser1" Relationship="PosModel.FK_sliceUser_users1" FromRole="users" ToRole="sliceUser" />
     <NavigationProperty Name="sliceUser2" Relationship="PosModel.FK_sliceUser_users2" FromRole="users" ToRole="sliceUser" />
+    <NavigationProperty Name="invoiceTypesPrinters" Relationship="PosModel.FK_invoiceTypesPrinters_users" FromRole="users" ToRole="invoiceTypesPrinters" />
+    <NavigationProperty Name="invoiceTypesPrinters1" Relationship="PosModel.FK_invoiceTypesPrinters_users1" FromRole="users" ToRole="invoiceTypesPrinters" />
+    <NavigationProperty Name="posPrinters" Relationship="PosModel.FK_posPrinters_users" FromRole="users" ToRole="posPrinters" />
+    <NavigationProperty Name="posPrinters1" Relationship="PosModel.FK_posPrinters_users1" FromRole="users" ToRole="posPrinters" />
   </EntityType>
   <EntityType Name="userSetValues">
     <Key>
@@ -5695,6 +5704,45 @@
       <End Role="users" EntitySet="users" />
       <End Role="sliceUser" EntitySet="sliceUser" />
     </AssociationSet>
+    <EntitySet Name="InvoiceTypes" EntityType="PosModel.InvoiceTypes" />
+    <EntitySet Name="invoiceTypesPrinters" EntityType="PosModel.invoiceTypesPrinters" />
+    <EntitySet Name="posPrinters" EntityType="PosModel.posPrinters" />
+    <AssociationSet Name="FK_invoiceTypesPrinters_InvoiceTypes" Association="PosModel.FK_invoiceTypesPrinters_InvoiceTypes">
+      <End Role="InvoiceTypes" EntitySet="InvoiceTypes" />
+      <End Role="invoiceTypesPrinters" EntitySet="invoiceTypesPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceTypesPrinters_paperSize" Association="PosModel.FK_invoiceTypesPrinters_paperSize">
+      <End Role="paperSize" EntitySet="paperSize" />
+      <End Role="invoiceTypesPrinters" EntitySet="invoiceTypesPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceTypesPrinters_posPrinters" Association="PosModel.FK_invoiceTypesPrinters_posPrinters">
+      <End Role="posPrinters" EntitySet="posPrinters" />
+      <End Role="invoiceTypesPrinters" EntitySet="invoiceTypesPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceTypesPrinters_users" Association="PosModel.FK_invoiceTypesPrinters_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="invoiceTypesPrinters" EntitySet="invoiceTypesPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_invoiceTypesPrinters_users1" Association="PosModel.FK_invoiceTypesPrinters_users1">
+      <End Role="users" EntitySet="users" />
+      <End Role="invoiceTypesPrinters" EntitySet="invoiceTypesPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posPrinters_pos" Association="PosModel.FK_posPrinters_pos">
+      <End Role="pos" EntitySet="pos" />
+      <End Role="posPrinters" EntitySet="posPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posPrinters_users" Association="PosModel.FK_posPrinters_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="posPrinters" EntitySet="posPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posPrinters_users1" Association="PosModel.FK_posPrinters_users1">
+      <End Role="users" EntitySet="users" />
+      <End Role="posPrinters" EntitySet="posPrinters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_posPrinters_paperSize" Association="PosModel.FK_posPrinters_paperSize">
+      <End Role="paperSize" EntitySet="paperSize" />
+      <End Role="posPrinters" EntitySet="posPrinters" />
+    </AssociationSet>
   </EntityContainer>
   <Association Name="FK_storeProperties_branches">
     <End Type="PosModel.branches" Role="branches" Multiplicity="0..1" />
@@ -5771,6 +5819,170 @@
       </Principal>
       <Dependent Role="sliceUser">
         <PropertyRef Name="updateUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="InvoiceTypes">
+    <Key>
+      <PropertyRef Name="invoiceTypeId" />
+    </Key>
+    <Property Name="invoiceTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="invoiceType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="department" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="allowPaperSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="isActive" Type="Boolean" />
+    <NavigationProperty Name="invoiceTypesPrinters" Relationship="PosModel.FK_invoiceTypesPrinters_InvoiceTypes" FromRole="InvoiceTypes" ToRole="invoiceTypesPrinters" />
+    <Property Name="sequence" Type="Int32" />
+  </EntityType>
+  <EntityType Name="invoiceTypesPrinters">
+    <Key>
+      <PropertyRef Name="invTypePrinterId" />
+    </Key>
+    <Property Name="invTypePrinterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="printerId" Type="Int32" />
+    <Property Name="invoiceTypeId" Type="Int32" />
+    <Property Name="sizeId" Type="Int32" />
+    <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="copyCount" Type="Int32" Nullable="false" />
+    <Property Name="createDate" Type="DateTime" Precision="7" />
+    <Property Name="updateDate" Type="DateTime" Precision="7" />
+    <Property Name="createUserId" Type="Int32" />
+    <Property Name="updateUserId" Type="Int32" />
+    <NavigationProperty Name="InvoiceTypes" Relationship="PosModel.FK_invoiceTypesPrinters_InvoiceTypes" FromRole="invoiceTypesPrinters" ToRole="InvoiceTypes" />
+    <NavigationProperty Name="paperSize" Relationship="PosModel.FK_invoiceTypesPrinters_paperSize" FromRole="invoiceTypesPrinters" ToRole="paperSize" />
+    <NavigationProperty Name="posPrinters" Relationship="PosModel.FK_invoiceTypesPrinters_posPrinters" FromRole="invoiceTypesPrinters" ToRole="posPrinters" />
+    <NavigationProperty Name="users" Relationship="PosModel.FK_invoiceTypesPrinters_users" FromRole="invoiceTypesPrinters" ToRole="users" />
+    <NavigationProperty Name="users1" Relationship="PosModel.FK_invoiceTypesPrinters_users1" FromRole="invoiceTypesPrinters" ToRole="users" />
+  </EntityType>
+  <EntityType Name="posPrinters">
+    <Key>
+      <PropertyRef Name="printerId" />
+    </Key>
+    <Property Name="printerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="printerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="posId" Type="Int32" />
+    <Property Name="createDate" Type="DateTime" Precision="7" />
+    <Property Name="updateDate" Type="DateTime" Precision="7" />
+    <Property Name="createUserId" Type="Int32" />
+    <Property Name="updateUserId" Type="Int32" />
+    <Property Name="purpose" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="isActive" Type="Byte" Nullable="false" />
+    <Property Name="copiesCount" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="invoiceTypesPrinters" Relationship="PosModel.FK_invoiceTypesPrinters_posPrinters" FromRole="posPrinters" ToRole="invoiceTypesPrinters" />
+    <NavigationProperty Name="pos" Relationship="PosModel.FK_posPrinters_pos" FromRole="posPrinters" ToRole="pos" />
+    <NavigationProperty Name="users" Relationship="PosModel.FK_posPrinters_users" FromRole="posPrinters" ToRole="users" />
+    <NavigationProperty Name="users1" Relationship="PosModel.FK_posPrinters_users1" FromRole="posPrinters" ToRole="users" />
+    <Property Name="sizeId" Type="Int32" />
+    <NavigationProperty Name="paperSize" Relationship="PosModel.FK_posPrinters_paperSize" FromRole="posPrinters" ToRole="paperSize" />
+  </EntityType>
+  <Association Name="FK_invoiceTypesPrinters_InvoiceTypes">
+    <End Type="PosModel.InvoiceTypes" Role="InvoiceTypes" Multiplicity="0..1" />
+    <End Type="PosModel.invoiceTypesPrinters" Role="invoiceTypesPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InvoiceTypes">
+        <PropertyRef Name="invoiceTypeId" />
+      </Principal>
+      <Dependent Role="invoiceTypesPrinters">
+        <PropertyRef Name="invoiceTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceTypesPrinters_paperSize">
+    <End Type="PosModel.paperSize" Role="paperSize" Multiplicity="0..1" />
+    <End Type="PosModel.invoiceTypesPrinters" Role="invoiceTypesPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="paperSize">
+        <PropertyRef Name="sizeId" />
+      </Principal>
+      <Dependent Role="invoiceTypesPrinters">
+        <PropertyRef Name="sizeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceTypesPrinters_posPrinters">
+    <End Type="PosModel.posPrinters" Role="posPrinters" Multiplicity="0..1" />
+    <End Type="PosModel.invoiceTypesPrinters" Role="invoiceTypesPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="posPrinters">
+        <PropertyRef Name="printerId" />
+      </Principal>
+      <Dependent Role="invoiceTypesPrinters">
+        <PropertyRef Name="printerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceTypesPrinters_users">
+    <End Type="PosModel.users" Role="users" Multiplicity="0..1" />
+    <End Type="PosModel.invoiceTypesPrinters" Role="invoiceTypesPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userId" />
+      </Principal>
+      <Dependent Role="invoiceTypesPrinters">
+        <PropertyRef Name="createUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_invoiceTypesPrinters_users1">
+    <End Type="PosModel.users" Role="users" Multiplicity="0..1" />
+    <End Type="PosModel.invoiceTypesPrinters" Role="invoiceTypesPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userId" />
+      </Principal>
+      <Dependent Role="invoiceTypesPrinters">
+        <PropertyRef Name="updateUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posPrinters_pos">
+    <End Type="PosModel.pos" Role="pos" Multiplicity="0..1" />
+    <End Type="PosModel.posPrinters" Role="posPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pos">
+        <PropertyRef Name="posId" />
+      </Principal>
+      <Dependent Role="posPrinters">
+        <PropertyRef Name="posId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posPrinters_users">
+    <End Type="PosModel.users" Role="users" Multiplicity="0..1" />
+    <End Type="PosModel.posPrinters" Role="posPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userId" />
+      </Principal>
+      <Dependent Role="posPrinters">
+        <PropertyRef Name="createUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posPrinters_users1">
+    <End Type="PosModel.users" Role="users" Multiplicity="0..1" />
+    <End Type="PosModel.posPrinters" Role="posPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userId" />
+      </Principal>
+      <Dependent Role="posPrinters">
+        <PropertyRef Name="updateUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_posPrinters_paperSize">
+    <End Type="PosModel.paperSize" Role="paperSize" Multiplicity="0..1" />
+    <End Type="PosModel.posPrinters" Role="posPrinters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="paperSize">
+        <PropertyRef Name="sizeId" />
+      </Principal>
+      <Dependent Role="posPrinters">
+        <PropertyRef Name="sizeId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

@@ -325,6 +325,18 @@
         <AssociationConnector Association="PosModel.FK_sliceUser_users" />
         <AssociationConnector Association="PosModel.FK_sliceUser_users1" />
         <AssociationConnector Association="PosModel.FK_sliceUser_users2" />
+        <EntityTypeShape EntityType="PosModel.InvoiceTypes" Width="1.5" PointX="16.25" PointY="100" />
+        <EntityTypeShape EntityType="PosModel.invoiceTypesPrinters" Width="1.5" PointX="18.5" PointY="103.625" />
+        <EntityTypeShape EntityType="PosModel.posPrinters" Width="1.5" PointX="16.25" PointY="95.125" />
+        <AssociationConnector Association="PosModel.FK_invoiceTypesPrinters_InvoiceTypes" />
+        <AssociationConnector Association="PosModel.FK_invoiceTypesPrinters_paperSize" />
+        <AssociationConnector Association="PosModel.FK_invoiceTypesPrinters_posPrinters" />
+        <AssociationConnector Association="PosModel.FK_invoiceTypesPrinters_users" />
+        <AssociationConnector Association="PosModel.FK_invoiceTypesPrinters_users1" />
+        <AssociationConnector Association="PosModel.FK_posPrinters_pos" />
+        <AssociationConnector Association="PosModel.FK_posPrinters_users" />
+        <AssociationConnector Association="PosModel.FK_posPrinters_users1" />
+        <AssociationConnector Association="PosModel.FK_posPrinters_paperSize" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

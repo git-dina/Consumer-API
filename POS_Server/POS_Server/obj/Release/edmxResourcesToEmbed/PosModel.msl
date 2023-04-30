@@ -186,6 +186,7 @@
     <EntitySetMapping Name="cashTransfer">
       <EntityTypeMapping TypeName="PosModel.cashTransfer">
         <MappingFragment StoreEntitySet="cashTransfer">
+          <ScalarProperty Name="otherSide" ColumnName="otherSide" />
           <ScalarProperty Name="isInvPurpose" ColumnName="isInvPurpose" />
           <ScalarProperty Name="purpose" ColumnName="purpose" />
           <ScalarProperty Name="deserved" ColumnName="deserved" />
@@ -460,6 +461,7 @@
     <EntitySetMapping Name="invoices">
       <EntityTypeMapping TypeName="PosModel.invoices">
         <MappingFragment StoreEntitySet="invoices">
+          <ScalarProperty Name="taxValue" ColumnName="taxValue" />
           <ScalarProperty Name="isFreeShip" ColumnName="isFreeShip" />
           <ScalarProperty Name="invoiceId" ColumnName="invoiceId" />
           <ScalarProperty Name="invNumber" ColumnName="invNumber" />
@@ -1432,6 +1434,54 @@
           <ScalarProperty Name="userId" ColumnName="userId" />
           <ScalarProperty Name="sliceId" ColumnName="sliceId" />
           <ScalarProperty Name="sliceUserId" ColumnName="sliceUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InvoiceTypes">
+      <EntityTypeMapping TypeName="PosModel.InvoiceTypes">
+        <MappingFragment StoreEntitySet="InvoiceTypes">
+          <ScalarProperty Name="sequence" ColumnName="sequence" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="allowPaperSize" ColumnName="allowPaperSize" />
+          <ScalarProperty Name="notes" ColumnName="notes" />
+          <ScalarProperty Name="department" ColumnName="department" />
+          <ScalarProperty Name="invoiceType" ColumnName="invoiceType" />
+          <ScalarProperty Name="invoiceTypeId" ColumnName="invoiceTypeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="invoiceTypesPrinters">
+      <EntityTypeMapping TypeName="PosModel.invoiceTypesPrinters">
+        <MappingFragment StoreEntitySet="invoiceTypesPrinters">
+          <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+          <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+          <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+          <ScalarProperty Name="createDate" ColumnName="createDate" />
+          <ScalarProperty Name="copyCount" ColumnName="copyCount" />
+          <ScalarProperty Name="notes" ColumnName="notes" />
+          <ScalarProperty Name="sizeId" ColumnName="sizeId" />
+          <ScalarProperty Name="invoiceTypeId" ColumnName="invoiceTypeId" />
+          <ScalarProperty Name="printerId" ColumnName="printerId" />
+          <ScalarProperty Name="invTypePrinterId" ColumnName="invTypePrinterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="posPrinters">
+      <EntityTypeMapping TypeName="PosModel.posPrinters">
+        <MappingFragment StoreEntitySet="posPrinters">
+          <ScalarProperty Name="sizeId" ColumnName="sizeId" />
+          <ScalarProperty Name="copiesCount" ColumnName="copiesCount" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="purpose" ColumnName="purpose" />
+          <ScalarProperty Name="updateUserId" ColumnName="updateUserId" />
+          <ScalarProperty Name="createUserId" ColumnName="createUserId" />
+          <ScalarProperty Name="updateDate" ColumnName="updateDate" />
+          <ScalarProperty Name="createDate" ColumnName="createDate" />
+          <ScalarProperty Name="posId" ColumnName="posId" />
+          <ScalarProperty Name="notes" ColumnName="notes" />
+          <ScalarProperty Name="printerName" ColumnName="printerName" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="printerId" ColumnName="printerId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -19,8 +19,7 @@ namespace POS_Server
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //UsersLogsController  usctrlr = new UsersLogsController();
-            //usctrlr.startapp();
+
         }
         protected void Application_PostAuthorizeRequest()
         {
