@@ -12,24 +12,20 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_ITEM_UNIT
+    public partial class GEN_ITEM_LOCATION
     {
-        public long ItemUnitId { get; set; }
+        public long ItemLocationId { get; set; }
         public Nullable<long> ItemId { get; set; }
-        public Nullable<long> UnitId { get; set; }
-        public string Barcode { get; set; }
-        public string BarcodeType { get; set; }
-        public bool IsBlocked { get; set; }
+        public Nullable<long> LocationId { get; set; }
+        public int Min_Qty { get; set; }
+        public int Max_Qty { get; set; }
         public bool IsActive { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public decimal Cost { get; set; }
-        public decimal SalePrice { get; set; }
-        public Nullable<int> Factor { get; set; }
     
         public virtual GEN_ITEM GEN_ITEM { get; set; }
-        public virtual GEN_UNIT GEN_UNIT { get; set; }
+        public virtual GEN_LOCATION GEN_LOCATION { get; set; }
     }
 }

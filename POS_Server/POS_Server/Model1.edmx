@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ConsumerAssociationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ConsumerAssociationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GEN_ASSISTANT_SUPPLIER">
           <Key>
             <PropertyRef Name="AssistantSupId" />
@@ -96,6 +96,19 @@
           <Property Name="UpdateUserId" Type="bigint" />
           <Property Name="OldId" Type="nvarchar" MaxLength="10" />
         </EntityType>
+        <EntityType Name="GEN_ITEM_ALLOWED_TRANSACTION">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="bigint" />
+          <Property Name="Transaction" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+        </EntityType>
         <EntityType Name="GEN_ITEM_CATEGORY">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -131,6 +144,21 @@
           <Property Name="CreateUserId" Type="bigint" />
           <Property Name="UpdateUserId" Type="bigint" />
         </EntityType>
+        <EntityType Name="GEN_ITEM_LOCATION">
+          <Key>
+            <PropertyRef Name="ItemLocationId" />
+          </Key>
+          <Property Name="ItemLocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemId" Type="bigint" />
+          <Property Name="LocationId" Type="bigint" />
+          <Property Name="Min_Qty" Type="int" Nullable="false" />
+          <Property Name="Max_Qty" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+        </EntityType>
         <EntityType Name="GEN_ITEM_UNIT">
           <Key>
             <PropertyRef Name="ItemUnitId" />
@@ -140,7 +168,52 @@
           <Property Name="UnitId" Type="bigint" />
           <Property Name="Barcode" Type="nvarchar" MaxLength="100" />
           <Property Name="BarcodeType" Type="nchar" MaxLength="15" />
+          <Property Name="Cost" Type="decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="SalePrice" Type="decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="Factor" Type="int" />
           <Property Name="IsBlocked" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="GEN_LOCATION">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LocationNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="LocationTypeId" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address" Type="ntext" />
+          <Property Name="Notes" Type="ntext" />
+          <Property Name="IsReadOnly" Type="bit" />
+          <Property Name="IsBlocked" Type="bit" Nullable="false" />
+          <Property Name="PurCode" Type="int" />
+          <Property Name="DiscCode" Type="int" />
+          <Property Name="FreeCode" Type="int" />
+          <Property Name="SaleCode" Type="int" />
+          <Property Name="ReturnCode" Type="int" />
+          <Property Name="DamageCode" Type="int" />
+          <Property Name="AsjustmentCode" Type="int" />
+          <Property Name="ServiceCode" Type="int" />
+          <Property Name="SaleCashCode" Type="int" />
+          <Property Name="SaleVISACode" Type="int" />
+          <Property Name="ACC_09" Type="int" />
+          <Property Name="ACC_10" Type="int" />
+          <Property Name="IsContainTecs" Type="bit" />
+          <Property Name="Teccode" Type="int" />
+          <Property Name="SalesReturnCode" Type="int" />
+          <Property Name="PLocationID" Type="bigint" />
+          <Property Name="IsDirectReceive" Type="bit" />
+          <Property Name="PurCashCode" Type="int" Nullable="false" />
+          <Property Name="IsDirectItemConnect" Type="bit" Nullable="false" />
+          <Property Name="CustodyAccount" Type="int" Nullable="false" />
+          <Property Name="CustodyControlAccount" Type="int" Nullable="false" />
+          <Property Name="ZReadExtrasCode" Type="int" Nullable="false" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="SupClearanceStartDate" Type="date" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreateUserId" Type="bigint" />
           <Property Name="UpdateUserId" Type="bigint" />
@@ -263,8 +336,6 @@
           </Key>
           <Property Name="UnitId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="MinUnitId" Type="bigint" />
-          <Property Name="UnitValue" Type="int" Nullable="false" />
           <Property Name="Notes" Type="nvarchar" MaxLength="250" />
           <Property Name="IsBlocked" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -292,6 +363,18 @@
           </Key>
           <Property Name="CountryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CountryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="LST_LOCATION_TYPE">
+          <Key>
+            <PropertyRef Name="LocationTypeId" />
+          </Key>
+          <Property Name="LocationTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" />
           <Property Name="UpdateDate" Type="datetime2" Precision="7" />
@@ -368,6 +451,18 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <Association Name="FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM">
+          <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="0..1" />
+          <End Role="GEN_ITEM_ALLOWED_TRANSACTION" Type="Self.GEN_ITEM_ALLOWED_TRANSACTION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ITEM">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_ALLOWED_TRANSACTION">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GEN_ITEM_Category_GEN_ITEM_Category">
           <End Role="GEN_ITEM_CATEGORY" Type="Self.GEN_ITEM_CATEGORY" Multiplicity="0..1" />
           <End Role="GEN_ITEM_CATEGORY1" Type="Self.GEN_ITEM_CATEGORY" Multiplicity="*" />
@@ -428,6 +523,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GEN_ITEM_LOCATION_GEN_ITEM">
+          <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="0..1" />
+          <End Role="GEN_ITEM_LOCATION" Type="Self.GEN_ITEM_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ITEM">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_LOCATION">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_ITEM_LOCATION_GEN_LOCATION">
+          <End Role="GEN_LOCATION" Type="Self.GEN_LOCATION" Multiplicity="0..1" />
+          <End Role="GEN_ITEM_LOCATION" Type="Self.GEN_ITEM_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_LOCATION">
+              <PropertyRef Name="LocationId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_LOCATION">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GEN_ITEM_LST_COUNTRY">
           <End Role="LST_COUNTRY" Type="Self.LST_COUNTRY" Multiplicity="0..1" />
           <End Role="GEN_ITEM" Type="Self.GEN_ITEM" Multiplicity="*" />
@@ -461,6 +580,18 @@
             </Principal>
             <Dependent Role="GEN_ITEM_UNIT">
               <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_LOCATION_LST_LOCATION_TYPE">
+          <End Role="LST_LOCATION_TYPE" Type="Self.LST_LOCATION_TYPE" Multiplicity="0..1" />
+          <End Role="GEN_LOCATION" Type="Self.GEN_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LST_LOCATION_TYPE">
+              <PropertyRef Name="LocationTypeId" />
+            </Principal>
+            <Dependent Role="GEN_LOCATION">
+              <PropertyRef Name="LocationTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -596,18 +727,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_GEN_UNIT_GEN_UNIT">
-          <End Role="GEN_UNIT" Type="Self.GEN_UNIT" Multiplicity="0..1" />
-          <End Role="GEN_UNIT1" Type="Self.GEN_UNIT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_UNIT">
-              <PropertyRef Name="UnitId" />
-            </Principal>
-            <Dependent Role="GEN_UNIT1">
-              <PropertyRef Name="MinUnitId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -644,9 +763,12 @@
           <EntitySet Name="GEN_BANK" EntityType="Self.GEN_BANK" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_BRAND" EntityType="Self.GEN_BRAND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_ITEM" EntityType="Self.GEN_ITEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_ITEM_ALLOWED_TRANSACTION" EntityType="Self.GEN_ITEM_ALLOWED_TRANSACTION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_ITEM_CATEGORY" EntityType="Self.GEN_ITEM_CATEGORY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_ITEM_GENERALIZATION" EntityType="Self.GEN_ITEM_GENERALIZATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_ITEM_LOCATION" EntityType="Self.GEN_ITEM_LOCATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_ITEM_UNIT" EntityType="Self.GEN_ITEM_UNIT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_LOCATION" EntityType="Self.GEN_LOCATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_SUPPLIER" EntityType="Self.GEN_SUPPLIER" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_SUPPLIER_DOCUMENT" EntityType="Self.GEN_SUPPLIER_DOCUMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_SUPPLIER_PHONE" EntityType="Self.GEN_SUPPLIER_PHONE" Schema="dbo" store:Type="Tables" />
@@ -655,12 +777,17 @@
           <EntitySet Name="GEN_UNIT" EntityType="Self.GEN_UNIT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_CountriesCodes" EntityType="Self.LST_CountriesCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_COUNTRY" EntityType="Self.LST_COUNTRY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LST_LOCATION_TYPE" EntityType="Self.LST_LOCATION_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_PHONE_TYPE" EntityType="Self.LST_PHONE_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_REQUEST_TOKEN" EntityType="Self.LST_REQUEST_TOKEN" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_SUPPLIER_DOCUMENT_TYPE" EntityType="Self.LST_SUPPLIER_DOCUMENT_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_SUPPLIER_GROUP" EntityType="Self.LST_SUPPLIER_GROUP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LST_SUPPLIER_TYPE" EntityType="Self.LST_SUPPLIER_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM" Association="Self.FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM">
+            <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+            <End Role="GEN_ITEM_ALLOWED_TRANSACTION" EntitySet="GEN_ITEM_ALLOWED_TRANSACTION" />
+          </AssociationSet>
           <AssociationSet Name="FK_GEN_ITEM_Category_GEN_ITEM_Category" Association="Self.FK_GEN_ITEM_Category_GEN_ITEM_Category">
             <End Role="GEN_ITEM_CATEGORY" EntitySet="GEN_ITEM_CATEGORY" />
             <End Role="GEN_ITEM_CATEGORY1" EntitySet="GEN_ITEM_CATEGORY" />
@@ -681,6 +808,14 @@
             <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
             <End Role="GEN_ITEM_GENERALIZATION" EntitySet="GEN_ITEM_GENERALIZATION" />
           </AssociationSet>
+          <AssociationSet Name="FK_GEN_ITEM_LOCATION_GEN_ITEM" Association="Self.FK_GEN_ITEM_LOCATION_GEN_ITEM">
+            <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+            <End Role="GEN_ITEM_LOCATION" EntitySet="GEN_ITEM_LOCATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_ITEM_LOCATION_GEN_LOCATION" Association="Self.FK_GEN_ITEM_LOCATION_GEN_LOCATION">
+            <End Role="GEN_LOCATION" EntitySet="GEN_LOCATION" />
+            <End Role="GEN_ITEM_LOCATION" EntitySet="GEN_ITEM_LOCATION" />
+          </AssociationSet>
           <AssociationSet Name="FK_GEN_ITEM_LST_COUNTRY" Association="Self.FK_GEN_ITEM_LST_COUNTRY">
             <End Role="LST_COUNTRY" EntitySet="LST_COUNTRY" />
             <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
@@ -692,6 +827,10 @@
           <AssociationSet Name="FK_GEN_ITEM_UNIT_GEN_UNIT" Association="Self.FK_GEN_ITEM_UNIT_GEN_UNIT">
             <End Role="GEN_UNIT" EntitySet="GEN_UNIT" />
             <End Role="GEN_ITEM_UNIT" EntitySet="GEN_ITEM_UNIT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_LOCATION_LST_LOCATION_TYPE" Association="Self.FK_GEN_LOCATION_LST_LOCATION_TYPE">
+            <End Role="LST_LOCATION_TYPE" EntitySet="LST_LOCATION_TYPE" />
+            <End Role="GEN_LOCATION" EntitySet="GEN_LOCATION" />
           </AssociationSet>
           <AssociationSet Name="FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER" Association="Self.FK_GEN_SUPPLIER_DOCUMENT_GEN_SUPPLIER">
             <End Role="GEN_SUPPLIER" EntitySet="GEN_SUPPLIER" />
@@ -737,13 +876,8 @@
             <End Role="GEN_SUPPLIER_SECTOR" EntitySet="GEN_SUPPLIER_SECTOR" />
             <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" EntitySet="GEN_SUPPLIER_SECTOR_SPECIFY" />
           </AssociationSet>
-          <AssociationSet Name="FK_GEN_UNIT_GEN_UNIT" Association="Self.FK_GEN_UNIT_GEN_UNIT">
-            <End Role="GEN_UNIT" EntitySet="GEN_UNIT" />
-            <End Role="GEN_UNIT1" EntitySet="GEN_UNIT" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ConsumerAssociationDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -846,6 +980,8 @@
           <NavigationProperty Name="GEN_ITEM_GENERALIZATION" Relationship="Self.FK_GEN_ITEM_GENERALIZATION_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_GENERALIZATION" />
           <NavigationProperty Name="LST_COUNTRY" Relationship="Self.FK_GEN_ITEM_LST_COUNTRY" FromRole="GEN_ITEM" ToRole="LST_COUNTRY" />
           <NavigationProperty Name="GEN_ITEM_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_UNIT" />
+          <NavigationProperty Name="GEN_ITEM_ALLOWED_TRANSACTION" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_ALLOWED_TRANSACTION" />
+          <NavigationProperty Name="GEN_ITEM_LOCATION" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_ITEM" FromRole="GEN_ITEM" ToRole="GEN_ITEM_LOCATION" />
         </EntityType>
         <EntityType Name="GEN_ITEM_CATEGORY">
           <Key>
@@ -903,6 +1039,9 @@
           <Property Name="UpdateDate" Type="DateTime" Precision="7" />
           <NavigationProperty Name="GEN_ITEM" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_ITEM" FromRole="GEN_ITEM_UNIT" ToRole="GEN_ITEM" />
           <NavigationProperty Name="GEN_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_UNIT" FromRole="GEN_ITEM_UNIT" ToRole="GEN_UNIT" />
+          <Property Name="Cost" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="SalePrice" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="Factor" Type="Int32" />
         </EntityType>
         <EntityType Name="GEN_SUPPLIER">
           <Key>
@@ -1037,8 +1176,6 @@
           </Key>
           <Property Name="UnitId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MinUnitId" Type="Int64" />
-          <Property Name="UnitValue" Type="Int32" Nullable="false" />
           <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1047,8 +1184,6 @@
           <Property Name="CreateUserId" Type="Int64" />
           <Property Name="UpdateUserId" Type="Int64" />
           <NavigationProperty Name="GEN_ITEM_UNIT" Relationship="Self.FK_GEN_ITEM_UNIT_GEN_UNIT" FromRole="GEN_UNIT" ToRole="GEN_ITEM_UNIT" />
-          <NavigationProperty Name="GEN_UNIT1" Relationship="Self.FK_GEN_UNIT_GEN_UNIT" FromRole="GEN_UNIT" ToRole="GEN_UNIT1" />
-          <NavigationProperty Name="GEN_UNIT2" Relationship="Self.FK_GEN_UNIT_GEN_UNIT" FromRole="GEN_UNIT1" ToRole="GEN_UNIT" />
         </EntityType>
         <EntityType Name="LST_CountriesCodes">
           <Key>
@@ -1378,18 +1513,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_GEN_UNIT_GEN_UNIT">
-          <End Role="GEN_UNIT" Type="Self.GEN_UNIT" Multiplicity="0..1" />
-          <End Role="GEN_UNIT1" Type="Self.GEN_UNIT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_UNIT">
-              <PropertyRef Name="UnitId" />
-            </Principal>
-            <Dependent Role="GEN_UNIT1">
-              <PropertyRef Name="MinUnitId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ConsumerAssociationDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="GEN_ASSISTANT_SUPPLIER" EntityType="Self.GEN_ASSISTANT_SUPPLIER" />
           <EntitySet Name="GEN_BANK" EntityType="Self.GEN_BANK" />
@@ -1488,10 +1611,6 @@
             <End Role="GEN_SUPPLIER_SECTOR" EntitySet="GEN_SUPPLIER_SECTOR" />
             <End Role="GEN_SUPPLIER_SECTOR_SPECIFY" EntitySet="GEN_SUPPLIER_SECTOR_SPECIFY" />
           </AssociationSet>
-          <AssociationSet Name="FK_GEN_UNIT_GEN_UNIT" Association="Self.FK_GEN_UNIT_GEN_UNIT">
-            <End Role="GEN_UNIT" EntitySet="GEN_UNIT" />
-            <End Role="GEN_UNIT1" EntitySet="GEN_UNIT" />
-          </AssociationSet>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -1522,6 +1641,26 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="LST_LOCATION_TYPE" EntityType="ConsumerAssociationDBModel.LST_LOCATION_TYPE" />
+          <EntitySet Name="GEN_ITEM_ALLOWED_TRANSACTION" EntityType="ConsumerAssociationDBModel.GEN_ITEM_ALLOWED_TRANSACTION" />
+          <AssociationSet Name="FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM" Association="ConsumerAssociationDBModel.FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM">
+            <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+            <End Role="GEN_ITEM_ALLOWED_TRANSACTION" EntitySet="GEN_ITEM_ALLOWED_TRANSACTION" />
+          </AssociationSet>
+          <EntitySet Name="GEN_LOCATION" EntityType="ConsumerAssociationDBModel.GEN_LOCATION" />
+          <AssociationSet Name="FK_GEN_LOCATION_LST_LOCATION_TYPE" Association="ConsumerAssociationDBModel.FK_GEN_LOCATION_LST_LOCATION_TYPE">
+            <End Role="LST_LOCATION_TYPE" EntitySet="LST_LOCATION_TYPE" />
+            <End Role="GEN_LOCATION" EntitySet="GEN_LOCATION" />
+          </AssociationSet>
+          <EntitySet Name="GEN_ITEM_LOCATION" EntityType="ConsumerAssociationDBModel.GEN_ITEM_LOCATION" />
+          <AssociationSet Name="FK_GEN_ITEM_LOCATION_GEN_ITEM" Association="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_ITEM">
+            <End Role="GEN_ITEM" EntitySet="GEN_ITEM" />
+            <End Role="GEN_ITEM_LOCATION" EntitySet="GEN_ITEM_LOCATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_ITEM_LOCATION_GEN_LOCATION" Association="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_LOCATION">
+            <End Role="GEN_LOCATION" EntitySet="GEN_LOCATION" />
+            <End Role="GEN_ITEM_LOCATION" EntitySet="GEN_ITEM_LOCATION" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -1534,6 +1673,142 @@
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="LST_LOCATION_TYPE">
+          <Key>
+            <PropertyRef Name="LocationTypeId" />
+          </Key>
+          <Property Name="LocationTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="GEN_LOCATION" Relationship="ConsumerAssociationDBModel.FK_GEN_LOCATION_LST_LOCATION_TYPE" FromRole="LST_LOCATION_TYPE" ToRole="GEN_LOCATION" />
+        </EntityType>
+        <EntityType Name="GEN_ITEM_ALLOWED_TRANSACTION">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int64" />
+          <Property Name="Transaction" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="GEN_ITEM" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM" FromRole="GEN_ITEM_ALLOWED_TRANSACTION" ToRole="GEN_ITEM" />
+        </EntityType>
+        <Association Name="FK_GEN_ITEM_ALLOWED_TRANSACTION_GEN_ITEM">
+          <End Type="ConsumerAssociationDBModel.GEN_ITEM" Role="GEN_ITEM" Multiplicity="0..1" />
+          <End Type="ConsumerAssociationDBModel.GEN_ITEM_ALLOWED_TRANSACTION" Role="GEN_ITEM_ALLOWED_TRANSACTION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ITEM">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_ALLOWED_TRANSACTION">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GEN_LOCATION">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LocationTypeId" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsReadOnly" Type="Boolean" />
+          <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+          <Property Name="PurCode" Type="Int32" />
+          <Property Name="DiscCode" Type="Int32" />
+          <Property Name="FreeCode" Type="Int32" />
+          <Property Name="SaleCode" Type="Int32" />
+          <Property Name="ReturnCode" Type="Int32" />
+          <Property Name="DamageCode" Type="Int32" />
+          <Property Name="AsjustmentCode" Type="Int32" />
+          <Property Name="ServiceCode" Type="Int32" />
+          <Property Name="SaleCashCode" Type="Int32" />
+          <Property Name="SaleVISACode" Type="Int32" />
+          <Property Name="ACC_09" Type="Int32" />
+          <Property Name="ACC_10" Type="Int32" />
+          <Property Name="IsContainTecs" Type="Boolean" />
+          <Property Name="Teccode" Type="Int32" />
+          <Property Name="SalesReturnCode" Type="Int32" />
+          <Property Name="PLocationID" Type="Int64" />
+          <Property Name="IsDirectReceive" Type="Boolean" />
+          <Property Name="PurCashCode" Type="Int32" Nullable="false" />
+          <Property Name="IsDirectItemConnect" Type="Boolean" Nullable="false" />
+          <Property Name="CustodyAccount" Type="Int32" Nullable="false" />
+          <Property Name="CustodyControlAccount" Type="Int32" Nullable="false" />
+          <Property Name="ZReadExtrasCode" Type="Int32" Nullable="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <Property Name="SupClearanceStartDate" Type="DateTime" Precision="0" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="LST_LOCATION_TYPE" Relationship="ConsumerAssociationDBModel.FK_GEN_LOCATION_LST_LOCATION_TYPE" FromRole="GEN_LOCATION" ToRole="LST_LOCATION_TYPE" />
+          <NavigationProperty Name="GEN_ITEM_LOCATION" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_LOCATION" FromRole="GEN_LOCATION" ToRole="GEN_ITEM_LOCATION" />
+          <Property Name="LocationNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_GEN_LOCATION_LST_LOCATION_TYPE">
+          <End Type="ConsumerAssociationDBModel.LST_LOCATION_TYPE" Role="LST_LOCATION_TYPE" Multiplicity="0..1" />
+          <End Type="ConsumerAssociationDBModel.GEN_LOCATION" Role="GEN_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LST_LOCATION_TYPE">
+              <PropertyRef Name="LocationTypeId" />
+            </Principal>
+            <Dependent Role="GEN_LOCATION">
+              <PropertyRef Name="LocationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GEN_ITEM_LOCATION">
+          <Key>
+            <PropertyRef Name="ItemLocationId" />
+          </Key>
+          <Property Name="ItemLocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemId" Type="Int64" />
+          <Property Name="LocationId" Type="Int64" />
+          <Property Name="Min_Qty" Type="Int32" Nullable="false" />
+          <Property Name="Max_Qty" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="GEN_ITEM" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_ITEM" FromRole="GEN_ITEM_LOCATION" ToRole="GEN_ITEM" />
+          <NavigationProperty Name="GEN_LOCATION" Relationship="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_LOCATION" FromRole="GEN_ITEM_LOCATION" ToRole="GEN_LOCATION" />
+        </EntityType>
+        <Association Name="FK_GEN_ITEM_LOCATION_GEN_ITEM">
+          <End Type="ConsumerAssociationDBModel.GEN_ITEM" Role="GEN_ITEM" Multiplicity="0..1" />
+          <End Type="ConsumerAssociationDBModel.GEN_ITEM_LOCATION" Role="GEN_ITEM_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ITEM">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_LOCATION">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_ITEM_LOCATION_GEN_LOCATION">
+          <End Type="ConsumerAssociationDBModel.GEN_LOCATION" Role="GEN_LOCATION" Multiplicity="0..1" />
+          <End Type="ConsumerAssociationDBModel.GEN_ITEM_LOCATION" Role="GEN_ITEM_LOCATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_LOCATION">
+              <PropertyRef Name="LocationId" />
+            </Principal>
+            <Dependent Role="GEN_ITEM_LOCATION">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1675,6 +1950,9 @@
           <EntitySetMapping Name="GEN_ITEM_UNIT">
             <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_UNIT">
               <MappingFragment StoreEntitySet="GEN_ITEM_UNIT">
+                <ScalarProperty Name="Factor" ColumnName="Factor" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
                 <ScalarProperty Name="ItemUnitId" ColumnName="ItemUnitId" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
@@ -1809,8 +2087,6 @@
               <MappingFragment StoreEntitySet="GEN_UNIT">
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="MinUnitId" ColumnName="MinUnitId" />
-                <ScalarProperty Name="UnitValue" ColumnName="UnitValue" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -1948,6 +2224,92 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ConsumerAssociationDBModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ConsumerAssociationDBModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="LST_LOCATION_TYPE">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.LST_LOCATION_TYPE">
+              <MappingFragment StoreEntitySet="LST_LOCATION_TYPE">
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_ITEM_ALLOWED_TRANSACTION">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_ALLOWED_TRANSACTION">
+              <MappingFragment StoreEntitySet="GEN_ITEM_ALLOWED_TRANSACTION">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Transaction" ColumnName="Transaction" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_LOCATION">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_LOCATION">
+              <MappingFragment StoreEntitySet="GEN_LOCATION">
+                <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="SupClearanceStartDate" ColumnName="SupClearanceStartDate" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="ZReadExtrasCode" ColumnName="ZReadExtrasCode" />
+                <ScalarProperty Name="CustodyControlAccount" ColumnName="CustodyControlAccount" />
+                <ScalarProperty Name="CustodyAccount" ColumnName="CustodyAccount" />
+                <ScalarProperty Name="IsDirectItemConnect" ColumnName="IsDirectItemConnect" />
+                <ScalarProperty Name="PurCashCode" ColumnName="PurCashCode" />
+                <ScalarProperty Name="IsDirectReceive" ColumnName="IsDirectReceive" />
+                <ScalarProperty Name="PLocationID" ColumnName="PLocationID" />
+                <ScalarProperty Name="SalesReturnCode" ColumnName="SalesReturnCode" />
+                <ScalarProperty Name="Teccode" ColumnName="Teccode" />
+                <ScalarProperty Name="IsContainTecs" ColumnName="IsContainTecs" />
+                <ScalarProperty Name="ACC_10" ColumnName="ACC_10" />
+                <ScalarProperty Name="ACC_09" ColumnName="ACC_09" />
+                <ScalarProperty Name="SaleVISACode" ColumnName="SaleVISACode" />
+                <ScalarProperty Name="SaleCashCode" ColumnName="SaleCashCode" />
+                <ScalarProperty Name="ServiceCode" ColumnName="ServiceCode" />
+                <ScalarProperty Name="AsjustmentCode" ColumnName="AsjustmentCode" />
+                <ScalarProperty Name="DamageCode" ColumnName="DamageCode" />
+                <ScalarProperty Name="ReturnCode" ColumnName="ReturnCode" />
+                <ScalarProperty Name="SaleCode" ColumnName="SaleCode" />
+                <ScalarProperty Name="FreeCode" ColumnName="FreeCode" />
+                <ScalarProperty Name="DiscCode" ColumnName="DiscCode" />
+                <ScalarProperty Name="PurCode" ColumnName="PurCode" />
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="IsReadOnly" ColumnName="IsReadOnly" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_ITEM_LOCATION">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.GEN_ITEM_LOCATION">
+              <MappingFragment StoreEntitySet="GEN_ITEM_LOCATION">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Max_Qty" ColumnName="Max_Qty" />
+                <ScalarProperty Name="Min_Qty" ColumnName="Min_Qty" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="ItemLocationId" ColumnName="ItemLocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

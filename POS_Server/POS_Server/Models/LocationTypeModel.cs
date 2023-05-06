@@ -5,20 +5,14 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class UnitModel
+    public class LocationTypeModel
     {
-        public long UnitId { get; set; }
+        public int LocationTypeId { get; set; }
         public string Name { get; set; }
-
-        public string Notes { get; set; }
-        public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
-
-
-
     }
 }

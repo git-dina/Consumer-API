@@ -19,6 +19,8 @@ namespace POS_Server
         {
             this.GEN_ITEM_GENERALIZATION = new HashSet<GEN_ITEM_GENERALIZATION>();
             this.GEN_ITEM_UNIT = new HashSet<GEN_ITEM_UNIT>();
+            this.GEN_ITEM_ALLOWED_TRANSACTION = new HashSet<GEN_ITEM_ALLOWED_TRANSACTION>();
+            this.GEN_ITEM_LOCATION = new HashSet<GEN_ITEM_LOCATION>();
         }
     
         public long ItemId { get; set; }
@@ -74,5 +76,9 @@ namespace POS_Server
         public virtual LST_COUNTRY LST_COUNTRY { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_ITEM_UNIT> GEN_ITEM_UNIT { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM_ALLOWED_TRANSACTION> GEN_ITEM_ALLOWED_TRANSACTION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
     }
 }

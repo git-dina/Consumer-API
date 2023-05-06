@@ -14,8 +14,8 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/Unit")]
-    public class UnitController : ApiController
+    [RoutePrefix("api/LocationType")]
+    public class LocationTypeController : ApiController
     {
         CountriesController cc = new CountriesController();
         [HttpPost]
@@ -42,28 +42,26 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var unitsList = GetUnits(isActive);
-                return TokenManager.GenerateToken(unitsList);
+                var typeList = GetLocationTypes(isActive);
+                return TokenManager.GenerateToken(typeList);
             }
         }
 
-        public List<UnitModel> GetUnits(bool? isActive)
+        public List<LocationTypeModel> GetLocationTypes(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<GEN_UNIT>();
+                var searchPredicate = PredicateBuilder.New<LST_LOCATION_TYPE>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var unitsList = entity.GEN_UNIT
+                var locationTypeList = entity.LST_LOCATION_TYPE
                                     .Where(searchPredicate)
-                                .Select(p => new UnitModel
+                                .Select(p => new LocationTypeModel
                                 {
-                                    UnitId = p.UnitId,
+                                    LocationTypeId = p.LocationTypeId,
                                     Name = p.Name,
-                                    IsBlocked = p.IsBlocked,
-                                    Notes = p.Notes,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
@@ -71,13 +69,11 @@ namespace POS_Server.Controllers
                                     UpdateUserId = p.UpdateUserId,
                                 }).ToList();
 
-                return unitsList;
+
+                return locationTypeList;
             }
         }
 
-
-        //calculate factor of unit (from specific unit with unitId to smallest unit)
-      
         [HttpPost]
         [Route("Save")]
         public string Save(string token)
@@ -92,47 +88,46 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                GEN_UNIT unitObj = null;
+                LST_LOCATION_TYPE typeObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
-                        Object = c.Value;
-                        unitObj = JsonConvert.DeserializeObject<GEN_UNIT>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        Object = c.Value.Replace("\\", string.Empty);
+                        Object = Object.Trim('"');
+                        typeObj = JsonConvert.DeserializeObject<LST_LOCATION_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    GEN_UNIT unit;
+                    LST_LOCATION_TYPE type;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpEntity = entity.Set<GEN_UNIT>();
-                        if (unitObj.UnitId == 0)
+                        var typeEntity = entity.Set<LST_LOCATION_TYPE>();
+                        if (typeObj.LocationTypeId == 0)
                         {
-                            unitObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            unitObj.UpdateDate = unitObj.CreateDate;
-                            unitObj.UpdateUserId = unitObj.CreateUserId;
-                            unitObj.IsActive = true;
+                            typeObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            typeObj.UpdateDate = typeObj.CreateDate;
+                            typeObj.UpdateUserId = typeObj.CreateUserId;
+                            typeObj.IsActive = true;
 
-                            unit = tmpEntity.Add(unitObj);
+                            type = typeEntity.Add(typeObj);
                         }
                         else
                         {
-                            unit = entity.GEN_UNIT.Find(unitObj.UnitId);
-                            unit.Name = unitObj.Name;
-                            unit.Notes = unitObj.Notes;
-                            unit.IsBlocked = unitObj.IsBlocked;
-                            unit.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            unit.UpdateUserId = unitObj.UpdateUserId;
+                            type = entity.LST_LOCATION_TYPE.Find(typeObj.LocationTypeId);
+                            type.Name = typeObj.Name;
+                            type.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            type.UpdateUserId = typeObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var unitsList = GetUnits(true);
-                    return TokenManager.GenerateToken(unitsList);
+                    var typeList = GetLocationTypes(true);
+                    return TokenManager.GenerateToken(typeList);
                 }
                 catch
                 {
@@ -155,7 +150,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long unitId = 0;
+                long typeId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -163,7 +158,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        unitId = long.Parse(c.Value);
+                        typeId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -174,16 +169,16 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpUnit = entity.GEN_UNIT.Where(p => p.UnitId == unitId).First();
-                        tmpUnit.IsActive = false;
-                        tmpUnit.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                        tmpUnit.UpdateUserId = userId;
+                        var tmpType = entity.LST_LOCATION_TYPE.Where(p => p.LocationTypeId == typeId).First();
+                        tmpType.IsActive = false;
+                        tmpType.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        tmpType.UpdateUserId = userId;
 
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var unitsList = GetUnits(true);
-                    return TokenManager.GenerateToken(unitsList);
+                    var typeList = GetLocationTypes(true);
+                    return TokenManager.GenerateToken(typeList);
                 }
                 catch
                 {

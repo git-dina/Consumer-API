@@ -12,18 +12,16 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_UNIT
+    public partial class LST_LOCATION_TYPE
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public GEN_UNIT()
+        public LST_LOCATION_TYPE()
         {
-            this.GEN_ITEM_UNIT = new HashSet<GEN_ITEM_UNIT>();
+            this.GEN_LOCATION = new HashSet<GEN_LOCATION>();
         }
     
-        public long UnitId { get; set; }
+        public int LocationTypeId { get; set; }
         public string Name { get; set; }
-        public string Notes { get; set; }
-        public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
@@ -31,6 +29,6 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_ITEM_UNIT> GEN_ITEM_UNIT { get; set; }
+        public virtual ICollection<GEN_LOCATION> GEN_LOCATION { get; set; }
     }
 }

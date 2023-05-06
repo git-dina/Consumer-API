@@ -14,8 +14,8 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/Unit")]
-    public class UnitController : ApiController
+    [RoutePrefix("api/Location")]
+    public class LocationController : ApiController
     {
         CountriesController cc = new CountriesController();
         [HttpPost]
@@ -42,42 +42,70 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var unitsList = GetUnits(isActive);
-                return TokenManager.GenerateToken(unitsList);
+                var locationList = GetLocations(isActive);
+                return TokenManager.GenerateToken(locationList);
             }
         }
 
-        public List<UnitModel> GetUnits(bool? isActive)
+        public List<LocationModel> GetLocations(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<GEN_UNIT>();
+                var searchPredicate = PredicateBuilder.New<GEN_LOCATION>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var unitsList = entity.GEN_UNIT
+                var locationsList = entity.GEN_LOCATION
                                     .Where(searchPredicate)
-                                .Select(p => new UnitModel
+                                .Select(p => new LocationModel
                                 {
-                                    UnitId = p.UnitId,
+                                    LocationId = p.LocationId,
+                                    LocationNumber = p.LocationNumber,
+                                    LocationTypeId = p.LocationTypeId,
+                                    LocationTypeName = p.LST_LOCATION_TYPE.Name,
                                     Name = p.Name,
-                                    IsBlocked = p.IsBlocked,
+                                    Address = p.Address,
                                     Notes = p.Notes,
+                                    IsBlocked = p.IsBlocked,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
+
+                                    ACC_09=p.ACC_09,
+                                    ACC_10=p.ACC_10,
+                                    AsjustmentCode = p.AsjustmentCode,
+                                    CustodyAccount = p.CustodyAccount,
+                                    CustodyControlAccount = p.CustodyControlAccount,
+                                    DamageCode = p.DamageCode,
+                                    DiscCode = p.DiscCode,
+                                    DisplayOrder = p.DisplayOrder,
+                                    FreeCode = p.FreeCode,
+                                    IsContainTecs = p.IsContainTecs,
+                                    IsDirectItemConnect = p.IsDirectItemConnect,
+                                    IsDirectReceive = p.IsDirectReceive,
+                                    IsReadOnly = p.IsReadOnly,
+                                    PLocationID = p.PLocationID,
+                                    PurCashCode = p.PurCashCode,
+                                    PurCode = p.PurCode,
+                                    ReturnCode=p.ReturnCode,
+                                    SaleCashCode = p.SaleCashCode,
+                                    SaleCode= p.SaleCode,
+                                    SalesReturnCode = p.SalesReturnCode,
+                                    SaleVISACode = p.SaleVISACode,
+                                    ServiceCode = p.ServiceCode,
+                                    SupClearanceStartDate = p.SupClearanceStartDate,
+                                    Teccode= p.Teccode,
+                                    ZReadExtrasCode = p.ZReadExtrasCode,
                                 }).ToList();
 
-                return unitsList;
+
+                return locationsList;
             }
         }
 
-
-        //calculate factor of unit (from specific unit with unitId to smallest unit)
-      
         [HttpPost]
         [Route("Save")]
         public string Save(string token)
@@ -92,47 +120,50 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                GEN_UNIT unitObj = null;
+                GEN_LOCATION locationObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
                         Object = c.Value;
-                        unitObj = JsonConvert.DeserializeObject<GEN_UNIT>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        locationObj = JsonConvert.DeserializeObject<GEN_LOCATION>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    GEN_UNIT unit;
+                    GEN_LOCATION location;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpEntity = entity.Set<GEN_UNIT>();
-                        if (unitObj.UnitId == 0)
+                        var locEntity = entity.Set<GEN_LOCATION>();
+                        if (locationObj.LocationId == 0)
                         {
-                            unitObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            unitObj.UpdateDate = unitObj.CreateDate;
-                            unitObj.UpdateUserId = unitObj.CreateUserId;
-                            unitObj.IsActive = true;
+                            locationObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            locationObj.UpdateDate = locationObj.CreateDate;
+                            locationObj.UpdateUserId = locationObj.CreateUserId;
+                            locationObj.IsActive = true;
 
-                            unit = tmpEntity.Add(unitObj);
+                            location = locEntity.Add(locationObj);
                         }
                         else
                         {
-                            unit = entity.GEN_UNIT.Find(unitObj.UnitId);
-                            unit.Name = unitObj.Name;
-                            unit.Notes = unitObj.Notes;
-                            unit.IsBlocked = unitObj.IsBlocked;
-                            unit.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            unit.UpdateUserId = unitObj.UpdateUserId;
+                            location = entity.GEN_LOCATION.Find(locationObj.LocationId);
+                            location.Name = locationObj.Name;
+                            location.LocationNumber = locationObj.LocationNumber;
+                            location.Address = locationObj.Address;
+                            location.Notes = locationObj.Notes;
+                            location.IsBlocked = locationObj.IsBlocked;
+                            location.LocationTypeId = locationObj.LocationTypeId;
+                            location.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            location.UpdateUserId = locationObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var unitsList = GetUnits(true);
-                    return TokenManager.GenerateToken(unitsList);
+                    var locationsList = GetLocations(true);
+                    return TokenManager.GenerateToken(locationsList);
                 }
                 catch
                 {
@@ -155,7 +186,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long unitId = 0;
+                long locationId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -163,7 +194,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        unitId = long.Parse(c.Value);
+                        locationId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -174,16 +205,16 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpUnit = entity.GEN_UNIT.Where(p => p.UnitId == unitId).First();
-                        tmpUnit.IsActive = false;
-                        tmpUnit.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                        tmpUnit.UpdateUserId = userId;
+                        var tmpLoc = entity.GEN_LOCATION.Where(p => p.LocationId == locationId).First();
+                        tmpLoc.IsActive = false;
+                        tmpLoc.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        tmpLoc.UpdateUserId = userId;
 
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var unitsList = GetUnits(true);
-                    return TokenManager.GenerateToken(unitsList);
+                    var locationsList = GetLocations(true);
+                    return TokenManager.GenerateToken(locationsList);
                 }
                 catch
                 {

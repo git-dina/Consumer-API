@@ -5,17 +5,14 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class ItemUnitModel
+    public class ItemLocationModel
     {
-        public long ItemUnitId { get; set; }
+        public long ItemLocationId { get; set; }
         public Nullable<long> ItemId { get; set; }
-        public Nullable<long> UnitId { get; set; }
-        public string Barcode { get; set; }
-        public string BarcodeType { get; set; }
-        public decimal Cost { get; set; }
-        public decimal SalePrice { get; set; }
-        public int Factor { get; set; }
-        public bool IsBlocked { get; set; }
+        public Nullable<long> LocationId { get; set; }
+        public string LocationName { get; set; }
+        public int Min_Qty { get; set; }
+        public int Max_Qty { get; set; }
         public bool IsActive { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }

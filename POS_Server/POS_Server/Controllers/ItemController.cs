@@ -61,41 +61,42 @@ namespace POS_Server.Controllers
                                     .Where(searchPredicate)
                                 .Select(p => new ItemModel
                                 {
-                                    ItemId=p.ItemId,
-                                    EngName=p.EngName,
-                                    ShortName=p.ShortName,
+                                    ItemId = p.ItemId,
+                                    EngName = p.EngName,
+                                    ShortName = p.ShortName,
                                     Name = p.Name,
                                     Code = p.Code,
                                     CategoryId = p.CategoryId,
+                                    CategoryName = p.GEN_ITEM_CATEGORY.Name,
                                     CommitteeNo = p.CommitteeNo,
-                                    ConsumerDiscPerc=p.ConsumerDiscPerc,
+                                    ConsumerDiscPerc = p.ConsumerDiscPerc,
                                     ConsumerProfitPerc = p.ConsumerProfitPerc,
                                     Cost = p.Cost,
                                     MainCost = p.MainCost,
-                                    Price =p.Price,
+                                    Price = p.Price,
                                     MainPrice = p.MainPrice,
-                                    DiscPerc=p.DiscPerc,
-                                    UnitId=p.UnitId,
-                                    IsWeight=p.IsWeight,
-                                    ItemStatus=p.ItemStatus,
-                                    ItemReceiptType=p.ItemReceiptType,
-                                    ItemType=p.ItemType,
-                                    ItemTransactionType=p.ItemTransactionType,
-                                    PackageUnit=p.PackageUnit,
+                                    DiscPerc = p.DiscPerc,
+                                    UnitId = p.UnitId,
+                                    IsWeight = p.IsWeight,
+                                    ItemStatus = p.ItemStatus,
+                                    ItemReceiptType = p.ItemReceiptType,
+                                    ItemType = p.ItemType,
+                                    ItemTransactionType = p.ItemTransactionType,
+                                    PackageUnit = p.PackageUnit,
                                     PackageWeight = p.PackageWeight,
-                                    SupId=p.SupId,
+                                    SupId = p.SupId,
                                     SupSectorId = p.SupSectorId,
-                                    WholesaleDiscPerc=p.WholesaleDiscPerc,
+                                    WholesaleDiscPerc = p.WholesaleDiscPerc,
                                     WholesalePrice = p.WholesalePrice,
                                     WholesaleProfitPerc = p.WholesaleProfitPerc,
                                     QtyMax = p.QtyMax,
-                                    QtyMin =p.QtyMin,
-                                    IsContainExpiryDate=p.IsContainExpiryDate,
-                                    IsSellNotAllow=p.IsSellNotAllow,
+                                    QtyMin = p.QtyMin,
+                                    IsContainExpiryDate = p.IsContainExpiryDate,
+                                    IsSellNotAllow = p.IsSellNotAllow,
 
                                     Factor = p.Factor,
                                     FreePerc = p.FreePerc,
-                                    IsSpecialOffer=p.IsSpecialOffer,
+                                    IsSpecialOffer = p.IsSpecialOffer,
                                     OfferEndDate = p.OfferEndDate,
                                     CountryId = p.CountryId,
                                     BrandId = p.BrandId,
@@ -106,21 +107,50 @@ namespace POS_Server.Controllers
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
 
-                                    ItemUnits = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == p.ItemId)
+                                    ItemUnits = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
                                                 .Select(x => new ItemUnitModel()
                                                 {
-                                                    UnitId= x.UnitId,
-                                                    Barcode=x.Barcode,
-                                                    BarcodeType=x.BarcodeType,
-                                                    CreateDate=x.CreateDate,
-                                                    UpdateDate=x.UpdateDate,
-                                                    CreateUserId=x.CreateUserId,
-                                                    IsActive=x.IsActive,
-                                                    IsBlocked=x.IsBlocked,
-                                                    ItemId=x.ItemId,
-                                                    ItemUnitId=x.ItemUnitId,
-                                                    UpdateUserId=x.UpdateUserId,
+                                                    UnitId = x.UnitId,
+                                                    Barcode = x.Barcode,
+                                                    BarcodeType = x.BarcodeType,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                    CreateUserId = x.CreateUserId,
+                                                    IsActive = x.IsActive,
+                                                    IsBlocked = x.IsBlocked,
+                                                    ItemId = x.ItemId,
+                                                    ItemUnitId = x.ItemUnitId,
+                                                    UpdateUserId = x.UpdateUserId,
                                                 }).ToList(),
+                                    ItemGeneralizations = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemGeneralizationModel()
+                                                {
+                                                    Id = x.Id,
+                                                    ItemId = x.ItemId,
+                                                    GeneralizationYear =    x.GeneralizationYear,
+                                                    GeneralizationNo =  x.GeneralizationNo,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                }).ToList(),
+                                    ItemAllowedTransactions = entity.GEN_ITEM_ALLOWED_TRANSACTION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                            .Select(x => new ItemAllowedTransModel() { 
+                                                                Id = x.Id,
+                                                                ItemId = x.ItemId,
+                                                                 Transaction = x.Transaction,
+                                                            }).ToList(),
+                                    ItemLocations = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                    .Select(x => new ItemLocationModel()
+                                                    {
+                                                        ItemLocationId = x.ItemLocationId,
+                                                        LocationName = x.GEN_LOCATION.Name,
+                                                        LocationId = x.LocationId,
+                                                        ItemId = x.ItemId,
+                                                        Max_Qty = x.Max_Qty,
+                                                        Min_Qty = x.Min_Qty,
+                                                    }).ToList(),
+                                    Supplier = new SupplierModel() {
+                                        SupId = p.GEN_SUPPLIER.SupId,
+                                        Name = p.GEN_SUPPLIER.Name, },
                                 }).ToList();
 
 
@@ -159,6 +189,8 @@ namespace POS_Server.Controllers
                 try
                 {
                     GEN_ITEM item;
+                    long itemId = 0;
+
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var itemEntity = entity.Set<GEN_ITEM>();
@@ -172,6 +204,7 @@ namespace POS_Server.Controllers
                             itemObj.IsActive = true;
 
                             item = itemEntity.Add(itemObj);
+                            itemId = itemObj.ItemId;
                         }
                         else
                         {
@@ -202,10 +235,10 @@ namespace POS_Server.Controllers
                             item.WholesaleDiscPerc = itemObj.WholesaleDiscPerc;
                             item.WholesalePrice = itemObj.WholesalePrice;
                             item.WholesaleProfitPerc = itemObj.WholesaleProfitPerc;
-                            item.QtyMax = itemObj.QtyMax;
-                            item.QtyMin = itemObj.QtyMin;
-                            item.IsContainExpiryDate = itemObj.IsContainExpiryDate;
-                            item.IsSellNotAllow = itemObj.IsSellNotAllow;
+                           // item.QtyMax = itemObj.QtyMax;
+                            //item.QtyMin = itemObj.QtyMin;
+                            //item.IsContainExpiryDate = itemObj.IsContainExpiryDate;
+                            //item.IsSellNotAllow = itemObj.IsSellNotAllow;
 
                             item.Factor = itemObj.Factor;
                             item.FreePerc = itemObj.FreePerc;
@@ -218,7 +251,7 @@ namespace POS_Server.Controllers
                             item.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             item.UpdateUserId = itemObj.UpdateUserId;
                         }
-                       long itemId = entity.SaveChanges();
+                       itemId = entity.SaveChanges();
 
                         if (isNew)
                         {
@@ -231,7 +264,28 @@ namespace POS_Server.Controllers
                     #region save item units
                     if(itemModel.ItemUnits != null)
                     {
+                        saveItemUnits(itemModel.ItemUnits,itemId);
+                    }
+                    #endregion 
+                    
+                    #region save generalizations
+                    if(itemModel.ItemGeneralizations != null)
+                    {
+                        saveItemGeneralizations(itemModel.ItemGeneralizations,itemId);
+                    }
+                    #endregion
 
+                    #region save ItemAllowedTransactions
+                    if (itemModel.ItemAllowedTransactions != null)
+                    {
+                        saveItemAllowedTransactions(itemModel.ItemAllowedTransactions,itemId);
+                    }
+                    #endregion
+
+                    #region save ItemLocations
+                    if (itemModel.ItemLocations != null)
+                    {
+                        saveItemLocations(itemModel.ItemLocations,itemId);
                     }
                     #endregion
                     var itemsList = GetItems(true);
@@ -248,10 +302,208 @@ namespace POS_Server.Controllers
         [NonAction]
         private string generateItemCode(long supId,long itemId)
         {
-            var itemCode = supId.ToString().PadRight(4,'0')+itemId.ToString().PadRight(4,'0');
+            var itemCode = supId.ToString().PadLeft(4,'0')+itemId.ToString().PadLeft(4,'0');
             
             return itemCode;
         }
+        [NonAction]
+        private void saveItemUnits(List<ItemUnitModel> itemUnits,long itemId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var unitsIds = itemUnits.Select(x => x.ItemUnitId).ToList();
+                #region remove not existed units
+
+                var unitsToRemove = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == itemId
+                           && x.IsActive == true && !unitsIds.Contains(x.ItemUnitId)).ToList();
+
+                foreach (var row in unitsToRemove)
+                {
+                    row.IsActive = false;
+                    row.UpdateDate = DateTime.Now;
+                    row.UpdateUserId = row.UpdateUserId;
+
+                    entity.SaveChanges();
+                }
+                #endregion
+                #region edit existed item units
+                var unitsToEdit = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == itemId
+                                && unitsIds.Contains(x.ItemUnitId)).ToList();
+
+                foreach (var row in unitsToEdit)
+                {
+                    var sec = itemUnits.Where(x => x.ItemUnitId == row.ItemUnitId).FirstOrDefault();
+                    row.UnitId = sec.UnitId;
+                    row.IsBlocked = sec.IsBlocked;
+                    row.Barcode = sec.Barcode;
+                    row.BarcodeType = sec.BarcodeType;
+                    row.Factor = sec.Factor;
+                    row.Cost = sec.Cost;
+                    row.SalePrice = sec.SalePrice;
+                    row.UpdateDate = DateTime.Now;
+                    row.UpdateUserId = sec.UpdateUserId;
+                    entity.SaveChanges();
+                }
+                #endregion
+
+                #region add new sectors
+                var newUnits = itemUnits.Where(x => x.ItemUnitId == 0).ToList();
+                foreach (var row in newUnits)
+                {
+                    var itemUnit = new GEN_ITEM_UNIT()
+                    {
+                        ItemId = row.ItemId,
+                        UnitId = row.UnitId,
+                        Barcode = row.Barcode,
+                        BarcodeType = row.BarcodeType,
+                        Cost = row.Cost,
+                        SalePrice = row.SalePrice,
+                        Factor = row.Factor,
+                        IsActive = true,
+                        IsBlocked = row.IsBlocked,    
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        CreateUserId = row.CreateUserId,
+                        UpdateUserId = row.CreateUserId,
+
+                    };
+                    entity.GEN_ITEM_UNIT.Add(itemUnit);
+                }
+                #endregion
+                entity.SaveChanges();
+            }
+        }
+         [NonAction]
+        private void saveItemGeneralizations(List<ItemGeneralizationModel> itemGenalizations,long itemId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var Ids = itemGenalizations.Select(x => x.Id).ToList();
+                #region remove not existed genaralization
+
+                var toRemove = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == itemId
+                           && x.IsActive == true && !Ids.Contains(x.Id)).ToList();
+
+                foreach (var row in toRemove)
+                {
+                    row.IsActive = false;
+                    row.UpdateDate = DateTime.Now;
+                    row.UpdateUserId = row.UpdateUserId;
+
+                    entity.SaveChanges();
+                }
+                #endregion
+                #region edit existed item genaralization
+                var toEdit = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == itemId
+                                && Ids.Contains(x.Id)).ToList();
+
+                foreach (var row in toEdit)
+                {
+                    var sec = itemGenalizations.Where(x => x.Id == row.Id).FirstOrDefault();
+                    row.GeneralizationNo = sec.GeneralizationNo;
+                    row.GeneralizationYear = sec.GeneralizationYear;
+                    row.UpdateDate = DateTime.Now;
+                    row.UpdateUserId = sec.UpdateUserId;
+                    entity.SaveChanges();
+                }
+                #endregion
+
+                #region add new Genalizations
+                var newGen = itemGenalizations.Where(x => x.Id == 0).ToList();
+                foreach (var row in newGen)
+                {
+                    var itemGen = new GEN_ITEM_GENERALIZATION()
+                    {
+                        ItemId = itemId,
+                        GeneralizationYear = row.GeneralizationYear,
+                        GeneralizationNo = row.GeneralizationNo,                     
+                        IsActive = true, 
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        CreateUserId = row.CreateUserId,
+                        UpdateUserId = row.CreateUserId,
+
+                    };
+                    entity.GEN_ITEM_GENERALIZATION.Add(itemGen);
+                }
+                #endregion
+                entity.SaveChanges();
+            }
+        }
+
+        [NonAction]
+        private void saveItemAllowedTransactions(List<ItemAllowedTransModel> itemAllowedTrans,long itemId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var Ids = itemAllowedTrans.Select(x => x.Id).ToList();
+                #region remove not existed AllowedTrans
+
+                var toRemove = entity.GEN_ITEM_ALLOWED_TRANSACTION.Where(x => x.ItemId == itemId
+                           && x.IsActive == true && !Ids.Contains(x.Id)).ToList();
+
+                entity.GEN_ITEM_ALLOWED_TRANSACTION.RemoveRange(toRemove);
+                entity.SaveChanges();
+                #endregion
+
+                #region add new AllowedTrans
+                var newTrans = itemAllowedTrans.Where(x => x.Id == 0).ToList();
+                foreach (var row in newTrans)
+                {
+                    var itemTrans = new GEN_ITEM_ALLOWED_TRANSACTION()
+                    {
+                        ItemId = row.ItemId,
+                        Transaction = row.Transaction,
+                        IsActive = true,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        CreateUserId = row.CreateUserId,
+                        UpdateUserId = row.CreateUserId,
+
+                    };
+                    entity.GEN_ITEM_ALLOWED_TRANSACTION.Add(itemTrans);
+                }
+                #endregion
+            }
+        }
+
+          [NonAction]
+        private void saveItemLocations(List<ItemLocationModel> itemLocations,long itemId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var Ids = itemLocations.Select(x => x.ItemLocationId).ToList();
+                #region remove not existed AllowedTrans
+
+                var toRemove = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == itemId
+                           && x.IsActive == true && !Ids.Contains(x.ItemLocationId)).ToList();
+
+                entity.GEN_ITEM_LOCATION.RemoveRange(toRemove);
+                entity.SaveChanges();
+                #endregion
+
+                #region add new AllowedTrans
+                var newLoc = itemLocations.Where(x => x.ItemLocationId == 0).ToList();
+                foreach (var row in newLoc)
+                {
+                    var itemLocation = new GEN_ITEM_LOCATION()
+                    {
+                        ItemId = row.ItemId,
+                        LocationId = row.LocationId,                      
+                        IsActive = true,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
+                        CreateUserId = row.CreateUserId,
+                        UpdateUserId = row.CreateUserId,
+
+                    };
+                    entity.GEN_ITEM_LOCATION.Add(itemLocation);
+                }
+                #endregion
+            }
+        }
+
+
         [HttpPost]
         [Route("Delete")]
         public string Delete(string token)
