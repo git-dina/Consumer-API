@@ -113,6 +113,9 @@ namespace POS_Server.Controllers
                                                     UnitId = x.UnitId,
                                                     Barcode = x.Barcode,
                                                     BarcodeType = x.BarcodeType,
+                                                    Cost=x.Cost,
+                                                    Factor = x.Factor,
+                                                    SalePrice=x.SalePrice,
                                                     CreateDate = x.CreateDate,
                                                     UpdateDate = x.UpdateDate,
                                                     CreateUserId = x.CreateUserId,
@@ -186,7 +189,7 @@ namespace POS_Server.Controllers
                         break;
                     }
                 }
-               // try
+               try
                 {
                     GEN_ITEM item;
                     long itemId = 0;
@@ -204,7 +207,6 @@ namespace POS_Server.Controllers
                             itemObj.IsActive = true;
 
                             item = itemEntity.Add(itemObj);
-                            itemId = itemObj.ItemId;
                         }
                         else
                         {
@@ -250,8 +252,10 @@ namespace POS_Server.Controllers
 
                             item.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             item.UpdateUserId = itemObj.UpdateUserId;
+                            item.ItemId = itemObj.ItemId;
                         }
-                       itemId = entity.SaveChanges();
+                        entity.SaveChanges();
+                        itemId = item.ItemId;
 
                         if (isNew)
                         {
@@ -291,11 +295,11 @@ namespace POS_Server.Controllers
                     var itemsList = GetItems(true);
                     return TokenManager.GenerateToken(itemsList);
                 }
-                //catch
-                //{
-                //    return TokenManager.GenerateToken(null);
+                catch
+                {
+                    return TokenManager.GenerateToken(null);
 
-                //}
+                }
             }
         }
 

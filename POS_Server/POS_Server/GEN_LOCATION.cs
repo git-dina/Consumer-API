@@ -21,7 +21,6 @@ namespace POS_Server
         }
     
         public long LocationId { get; set; }
-        public string LocationNumber { get; set; }
         public Nullable<int> LocationTypeId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
@@ -57,6 +56,7 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
+        public string LocationNumber { get; set; }
     
         public virtual LST_LOCATION_TYPE LST_LOCATION_TYPE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

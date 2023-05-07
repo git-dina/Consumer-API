@@ -14,7 +14,7 @@ namespace POS_Server.Models
         public string BarcodeType { get; set; }
         public decimal Cost { get; set; }
         public decimal SalePrice { get; set; }
-        public int Factor { get; set; }
+        public int? Factor { get; set; }
         public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<long> CreateUserId { get; set; }
