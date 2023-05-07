@@ -186,7 +186,7 @@ namespace POS_Server.Controllers
                         break;
                     }
                 }
-                try
+               // try
                 {
                     GEN_ITEM item;
                     long itemId = 0;
@@ -291,11 +291,11 @@ namespace POS_Server.Controllers
                     var itemsList = GetItems(true);
                     return TokenManager.GenerateToken(itemsList);
                 }
-                catch
-                {
-                    return TokenManager.GenerateToken(null);
+                //catch
+                //{
+                //    return TokenManager.GenerateToken(null);
 
-                }
+                //}
             }
         }
 
@@ -452,7 +452,7 @@ namespace POS_Server.Controllers
                 {
                     var itemTrans = new GEN_ITEM_ALLOWED_TRANSACTION()
                     {
-                        ItemId = row.ItemId,
+                        ItemId = itemId,
                         Transaction = row.Transaction,
                         IsActive = true,
                         CreateDate = DateTime.Now,
@@ -463,6 +463,7 @@ namespace POS_Server.Controllers
                     };
                     entity.GEN_ITEM_ALLOWED_TRANSACTION.Add(itemTrans);
                 }
+                entity.SaveChanges();
                 #endregion
             }
         }
@@ -488,7 +489,7 @@ namespace POS_Server.Controllers
                 {
                     var itemLocation = new GEN_ITEM_LOCATION()
                     {
-                        ItemId = row.ItemId,
+                        ItemId = itemId,
                         LocationId = row.LocationId,                      
                         IsActive = true,
                         CreateDate = DateTime.Now,
@@ -499,6 +500,8 @@ namespace POS_Server.Controllers
                     };
                     entity.GEN_ITEM_LOCATION.Add(itemLocation);
                 }
+                entity.SaveChanges();
+
                 #endregion
             }
         }
