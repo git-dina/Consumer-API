@@ -65,6 +65,7 @@ namespace POS_Server.Controllers
                                 {
                                     SupplierGroupId=p.SupplierGroupId,
                                     Name=p.Name,
+                                    ParentGroupId = p.ParentGroupId,
                                     Notes= p.Notes,
                                     IsBlocked = p.IsBlocked,
                                     IsActive = p.IsActive,
@@ -130,6 +131,7 @@ namespace POS_Server.Controllers
                         {
                             sup = entity.LST_SUPPLIER_GROUP.Find(subObj.SupplierGroupId);
                             sup.Name = subObj.Name;
+                            sup.ParentGroupId = subObj.ParentGroupId;
                             sup.IsBlocked = subObj.IsBlocked;
                             sup.Notes = subObj.Notes;
                             sup.UpdateDate = cc.AddOffsetTodate(DateTime.Now);

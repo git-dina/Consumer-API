@@ -22,6 +22,7 @@ namespace POS_Server
             this.GEN_SUPPLIER_PHONE = new HashSet<GEN_SUPPLIER_PHONE>();
             this.GEN_SUPPLIER_SECTOR = new HashSet<GEN_SUPPLIER_SECTOR>();
             this.GEN_SUPPLIER_SECTOR_SPECIFY = new HashSet<GEN_SUPPLIER_SECTOR_SPECIFY>();
+            this.PUR_PURCHASE_INV = new HashSet<PUR_PURCHASE_INV>();
         }
     
         public long SupId { get; set; }
@@ -74,5 +75,7 @@ namespace POS_Server
         public virtual ICollection<GEN_SUPPLIER_SECTOR> GEN_SUPPLIER_SECTOR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_SUPPLIER_SECTOR_SPECIFY> GEN_SUPPLIER_SECTOR_SPECIFY { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PUR_PURCHASE_INV> PUR_PURCHASE_INV { get; set; }
     }
 }

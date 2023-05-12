@@ -177,7 +177,7 @@ namespace POS_Server.Controllers
                 string Object = "";
                 GEN_ITEM itemObj = null;
                 ItemModel itemModel = null;
-                bool isNew = false;
+               // bool isNew = false;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
@@ -199,7 +199,7 @@ namespace POS_Server.Controllers
                         var itemEntity = entity.Set<GEN_ITEM>();
                         if (itemObj.ItemId == 0)
                         {
-                            isNew = true;
+                            //isNew = true;
 
                             itemObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             itemObj.UpdateDate = itemObj.CreateDate;
@@ -257,12 +257,12 @@ namespace POS_Server.Controllers
                         entity.SaveChanges();
                         itemId = item.ItemId;
 
-                        if (isNew)
-                        {
+                        //if (isNew)
+                        //{
 
-                            item.Code = generateItemCode((long)itemObj.SupId, itemId);
-                            entity.SaveChanges();
-                        }
+                        //    item.Code = generateItemCode((long)itemObj.SupId, itemId);
+                        //    entity.SaveChanges();
+                        //}
                     }
 
                     #region save item units

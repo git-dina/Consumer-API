@@ -18,6 +18,7 @@ namespace POS_Server
         public GEN_LOCATION()
         {
             this.GEN_ITEM_LOCATION = new HashSet<GEN_ITEM_LOCATION>();
+            this.PUR_PURCHASE_INV = new HashSet<PUR_PURCHASE_INV>();
         }
     
         public long LocationId { get; set; }
@@ -61,5 +62,7 @@ namespace POS_Server
         public virtual LST_LOCATION_TYPE LST_LOCATION_TYPE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PUR_PURCHASE_INV> PUR_PURCHASE_INV { get; set; }
     }
 }

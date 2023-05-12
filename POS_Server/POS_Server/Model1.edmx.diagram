@@ -53,6 +53,10 @@
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_LOCATION" Width="1.5" PointX="14.875" PointY="16.375" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_ITEM" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_ITEM_LOCATION_GEN_LOCATION" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.PUR_PURCHASE_INV" Width="1.5" PointX="17.875" PointY="15.875" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_PUR_PURCHASE_INV_GEN_LOCATION" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_PUR_PURCHASE_INV_GEN_SUPPLIER" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_LST_SUPPLIER_GROUP_LST_SUPPLIER_GROUP" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

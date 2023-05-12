@@ -18,6 +18,7 @@ namespace POS_Server
         public LST_SUPPLIER_GROUP()
         {
             this.GEN_SUPPLIER = new HashSet<GEN_SUPPLIER>();
+            this.LST_SUPPLIER_GROUP1 = new HashSet<LST_SUPPLIER_GROUP>();
         }
     
         public int SupplierGroupId { get; set; }
@@ -29,8 +30,12 @@ namespace POS_Server
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
+        public Nullable<int> ParentGroupId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP1 { get; set; }
+        public virtual LST_SUPPLIER_GROUP LST_SUPPLIER_GROUP2 { get; set; }
     }
 }

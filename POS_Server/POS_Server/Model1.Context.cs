@@ -52,6 +52,7 @@ namespace POS_Server
         public virtual DbSet<GEN_ITEM_ALLOWED_TRANSACTION> GEN_ITEM_ALLOWED_TRANSACTION { get; set; }
         public virtual DbSet<GEN_LOCATION> GEN_LOCATION { get; set; }
         public virtual DbSet<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
+        public virtual DbSet<PUR_PURCHASE_INV> PUR_PURCHASE_INV { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
