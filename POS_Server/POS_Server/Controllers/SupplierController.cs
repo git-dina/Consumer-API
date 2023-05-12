@@ -177,7 +177,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                string agentObject = "";
+                string supObject = "";
                 GEN_SUPPLIER subObj = null;
                 SupplierModel subModel = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -185,10 +185,9 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemObject")
                     {
-                        agentObject = c.Value.Replace("\\", string.Empty);
-                        agentObject = agentObject.Trim('"');
-                        subObj = JsonConvert.DeserializeObject<GEN_SUPPLIER>(agentObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
-                        subModel = JsonConvert.DeserializeObject<SupplierModel>(agentObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        supObject = c.Value;
+                        subObj = JsonConvert.DeserializeObject<GEN_SUPPLIER>(supObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        subModel = JsonConvert.DeserializeObject<SupplierModel>(supObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
@@ -247,6 +246,67 @@ namespace POS_Server.Controllers
                         SaveSupplierSectors(subModel.SupplierSectors, sup.SupId);
                         SaveSupplierSectorsSpecify(subModel.supplierSectorSpecifies, sup.SupId);
                         SaveSupplierDocuments(subModel.SupplierDocuments, sup.SupId);
+                    }
+
+                    var supList = GetSuplliers(true);
+                    return TokenManager.GenerateToken(supList);
+                }
+            catch (DbEntityValidationException dbEx)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            sb.AppendLine(string.Format("Property: {0} Error: {1}",
+                            validationError.PropertyName, validationError.ErrorMessage));
+                        }
+                    }
+                   return sb.ToString();
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("EditBlocked")]
+        public string EditBlocked(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+               List< GEN_SUPPLIER> subObj = null;
+                long userId = 0;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        subObj = JsonConvert.DeserializeObject<List<GEN_SUPPLIER>>(c.Value, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                    else if(c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        foreach(var row in subObj)
+                        {
+                            var sup = entity.GEN_SUPPLIER.Find(row.SupId);
+                            sup.IsBlocked = row.IsBlocked;
+                        }
+                        
+                        entity.SaveChanges();
+        
                     }
 
                     var supList = GetSuplliers(true);
