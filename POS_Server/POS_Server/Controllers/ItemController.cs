@@ -77,7 +77,7 @@ namespace POS_Server.Controllers
                                     MainPrice = p.MainPrice,
                                     DiscPerc = p.DiscPerc,
                                     UnitId = p.UnitId,
-                                    IsWeight = p.IsWeight,
+                                    ItemUnit = entity.GEN_UNIT.Where(x => x.UnitId == p.UnitId).Select(x => x.Name).FirstOrDefault(),                                    IsWeight = p.IsWeight,
                                     ItemStatus = p.ItemStatus,
                                     ItemReceiptType = p.ItemReceiptType,
                                     ItemType = p.ItemType,
