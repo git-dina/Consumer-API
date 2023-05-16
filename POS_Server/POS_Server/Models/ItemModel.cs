@@ -55,6 +55,7 @@ namespace POS_Server.Models
 
         #region extra attributes
         public string CategoryName { get; set; }
+        public string ItemUnit { get; set; }
 
         
         public List<ItemUnitModel> ItemUnits { get; set; }
