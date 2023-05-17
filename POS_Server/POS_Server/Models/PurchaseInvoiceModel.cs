@@ -17,16 +17,22 @@ namespace POS_Server.Models
         public Nullable<decimal> TotalCost { get; set; }
         public Nullable<decimal> TotalPrice { get; set; }
         public Nullable<decimal> EnterpriseDiscount { get; set; }
-        public Nullable<decimal> CostAfterDiscount { get; set; }
+        public Nullable<decimal> DiscountValue { get; set; }
         public Nullable<decimal> FreePercentage { get; set; }
         public Nullable<decimal> ConsumerDiscount { get; set; }
         public Nullable<decimal> CostNet { get; set; }
         public string InvType { get; set; }
         public string InvStatus { get; set; }
+        public bool IsApproved { get; set; }
+
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
+
+        //extra
+        public string LocationName { get; set; }
+        public List<PurchaseInvDetailsModel> PurchaseDetails { get; set; }
     }
 }

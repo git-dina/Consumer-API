@@ -353,7 +353,6 @@
     <Compile Include="Models\LstCountryModel.cs" />
     <Compile Include="Models\PhoneTypeModel.cs" />
     <Compile Include="Models\PurchaseInvDetailsModel.cs" />
-    <Compile Include="Models\PurchaseInvModel.cs" />
     <Compile Include="Models\PurchaseInvoiceModel.cs" />
     <Compile Include="Models\SupplierDocTypeModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
