@@ -51,7 +51,7 @@ namespace POS_Server.Controllers
             }
         }
 
-        public List<PurchaseInvModel> GetPurchaseInv(string invType)
+        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
@@ -62,7 +62,7 @@ namespace POS_Server.Controllers
 
                 var invList = entity.PUR_PURCHASE_INV
                                     .Where(searchPredicate)
-                                .Select(p => new PurchaseInvModel
+                                .Select(p => new PurchaseInvoiceModel
                                 {
                                     PurchaseId = p.PurchaseId,
                                     LocationId = p.LocationId,
@@ -75,7 +75,7 @@ namespace POS_Server.Controllers
 
                                     ConsumerDiscount = p.ConsumerDiscount,
                                     CoopDiscount = p.CoopDiscount,
-                                    CostAfterDiscount = p.CostAfterDiscount,
+                                    DiscountValue = p.DiscountValue,
                                     FreePercentage = p.FreePercentage,
                                     CostNet = p.CostNet,
                                     TotalCost = p.TotalCost,
@@ -132,7 +132,7 @@ namespace POS_Server.Controllers
             else
             {
                 string jsonObject = "";
-                PurchaseInvModel invModel = null;
+                PurchaseInvoiceModel invModel = null;
                 PUR_PURCHASE_INV invoice = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
@@ -140,7 +140,7 @@ namespace POS_Server.Controllers
                     if (c.Type == "itemObject")
                     {
                         jsonObject = c.Value;
-                        invModel = JsonConvert.DeserializeObject<PurchaseInvModel>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        invModel = JsonConvert.DeserializeObject<PurchaseInvoiceModel>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         invoice = JsonConvert.DeserializeObject<PUR_PURCHASE_INV>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
@@ -149,7 +149,7 @@ namespace POS_Server.Controllers
                 {
                     #region generate InvNumber
                     long locationId = (long)invModel.LocationId;
-                    if (invModel.InvNumber == "")
+                    if (invModel.InvNumber == "" || invModel.InvNumber == null)
                     {
                         string invNumber = await generateSupplyingInvNumber(locationId);
                        
@@ -161,7 +161,10 @@ namespace POS_Server.Controllers
                     invModel.PurchaseId = invoice.PurchaseId;
                     invModel.InvNumber = invoice.InvNumber;
 
-                    saveInvoiceItems(invModel.PurchaseDetails, invoice.PurchaseId);
+                    string jsonString = JsonConvert.SerializeObject(invModel.PurchaseDetails);
+                    var invItems = JsonConvert.DeserializeObject<List<PUR_PURCHASE_INV_DETAILS>>(jsonString, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    saveInvoiceItems(invItems, invoice.PurchaseId);
+
                     return TokenManager.GenerateToken(invModel);
                 }
                 catch (DbEntityValidationException dbEx)
@@ -212,10 +215,10 @@ namespace POS_Server.Controllers
                     tmpInvoice.CostNet = newObject.CostNet;
                     
                     tmpInvoice.Notes = newObject.Notes;
-                    tmpInvoice.isApproved = newObject.isApproved;
+                    tmpInvoice.IsApproved = newObject.IsApproved;
 
-                    tmpInvoice.updateDate = datenow;
-                    tmpInvoice.updateUserId = newObject.updateUserId;
+                    tmpInvoice.UpdateDate = datenow;
+                    tmpInvoice.UpdateUserId = newObject.UpdateUserId;
 
 
                     entity.SaveChanges();
@@ -264,7 +267,7 @@ namespace POS_Server.Controllers
                         row.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         row.UpdateUserId = row.CreateUserId;
 
-                        t = entity.PUR_PURCHASE_INV_DETAILS.Add(row);
+                        entity.PUR_PURCHASE_INV_DETAILS.Add(row);
                         
                     }
                     entity.SaveChanges();
@@ -272,5 +275,109 @@ namespace POS_Server.Controllers
             }
             catch {  }
         }
+
+        [HttpPost]
+        [Route("ApproveSupplyingOrder")]
+        public string ApproveSupplyingOrder(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string message = "";
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long purchaseId = 0;
+                long userId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "purchaseId")
+                    {
+                        purchaseId = long.Parse(c.Value);
+                    }
+                    else if (c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var order = entity.PUR_PURCHASE_INV.Find(purchaseId);
+                        order.IsApproved = true;
+                        order.InvType = "soa";//approved supplying order 
+                        order.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        order.UpdateUserId = userId;
+
+                        message = entity.SaveChanges().ToString();
+                    }
+
+                    return TokenManager.GenerateToken(message);
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+
+            }
+
+        }
+        
+        [HttpPost]
+        [Route("DeletePurchaseInv")]
+        public string DeletePurchaseInv(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string message = "";
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long purchaseId = 0;
+                long userId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "purchaseId")
+                    {
+                        purchaseId = long.Parse(c.Value);
+                    }
+                    else if (c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var order = entity.PUR_PURCHASE_INV.Find(purchaseId);
+                        order.IsActive = false;
+                        order.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        order.UpdateUserId = userId;
+
+                        message = entity.SaveChanges().ToString();
+                    }
+
+                    return TokenManager.GenerateToken(message);
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+
+            }
+
+        }
+
     }
 }

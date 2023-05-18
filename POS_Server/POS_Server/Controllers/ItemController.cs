@@ -303,13 +303,7 @@ namespace POS_Server.Controllers
             }
         }
 
-        [NonAction]
-        private string generateItemCode(long supId,long itemId)
-        {
-            var itemCode = supId.ToString().PadLeft(4,'0')+itemId.ToString().PadLeft(4,'0');
-            
-            return itemCode;
-        }
+     
         [NonAction]
         private void saveItemUnits(List<ItemUnitModel> itemUnits,long itemId)
         {
@@ -854,6 +848,46 @@ namespace POS_Server.Controllers
                             },
                         }).FirstOrDefault();
                     return TokenManager.GenerateToken(item);
+
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("generateItemCode")]
+        public string generateItemCode(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                #region parameters
+                long supId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                   if (c.Type == "supId")
+                    {
+                        if (c.Value != "")
+                            supId = long.Parse( c.Value);
+                    }
+                }
+                #endregion
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    long maxId = 0;
+                    var item = entity.GEN_ITEM.Where(p => p.SupId == supId).Count();
+                      if(item > 0)
+                        maxId = entity.GEN_ITEM.Where(p => p.SupId == supId).Select(p=> p.ItemId).Max();
+                    maxId++;
+                    var itemCode = supId.ToString().PadLeft(4, '0') + maxId.ToString().PadLeft(4, '0');
+                    return TokenManager.GenerateToken(itemCode);
 
                 }
             }

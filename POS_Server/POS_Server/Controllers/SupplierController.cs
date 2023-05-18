@@ -57,15 +57,52 @@ namespace POS_Server.Controllers
                 return TokenManager.GenerateToken(supplierList);
             }
         }
+         [HttpPost]
+        [Route("SearchSuppliers")]
+        public string SearchSuppliers(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string textSearch = "";
 
-        public List<SupplierModel> GetSuplliers(bool? isActive)
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        textSearch = c.Value;
+                    }
+                }
+
+                var supplierList = GetSuplliers(null, textSearch);
+                return TokenManager.GenerateToken(supplierList);
+            }
+        }
+
+        public List<SupplierModel> GetSuplliers(bool? isActive, string textSearch="")
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<GEN_SUPPLIER>();
                 searchPredicate = searchPredicate.And(x => true);
+
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
+                if(textSearch != "")
+                {
+                    searchPredicate = searchPredicate.And(x => x.IsActive == true);
+                    searchPredicate = searchPredicate.And(s => s.SupId.ToString().Contains(textSearch) ||
+            s.Name.ToLower().Contains(textSearch)
+             || s.ShortName.ToLower().Contains(textSearch)
+             || s.LST_SUPPLIER_GROUP.Name.ToLower().Contains(textSearch.ToLower())
+             || s.LST_SUPPLIER_TYPE.Name.ToLower().Contains(textSearch.ToLower()));
+                }
 
                 var supplierList = entity.GEN_SUPPLIER
                                     .Where(searchPredicate)
@@ -248,8 +285,8 @@ namespace POS_Server.Controllers
                         SaveSupplierDocuments(subModel.SupplierDocuments, sup.SupId);
                     }
 
-                    var supList = GetSuplliers(true);
-                    return TokenManager.GenerateToken(supList);
+                    //var supList = GetSuplliers(true);
+                    return TokenManager.GenerateToken(sup);
                 }
             catch (DbEntityValidationException dbEx)
                 {
@@ -263,6 +300,33 @@ namespace POS_Server.Controllers
                         }
                     }
                    return sb.ToString();
+                }
+            }
+        }
+        [HttpPost]
+        [Route("GetMaxSupplierId")]
+        public string GetMaxSupplierId(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+               
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    long maxId = 0;
+                    var item = entity.GEN_SUPPLIER.Count();
+                    if (item > 0)
+                        maxId = entity.GEN_SUPPLIER.Select(x => x.SupId).Max();
+                    maxId++;
+           
+                    return TokenManager.GenerateToken(maxId.ToString());
+
                 }
             }
         }
