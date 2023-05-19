@@ -50,8 +50,46 @@ namespace POS_Server.Controllers
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
+         [HttpPost]
+        [Route("SearchOrders")]
+        public string SearchOrders(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string invNumber = "";
+            string invType = "";
+            long locationId = 0;
 
-        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType)
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "locationId")
+                    {
+                        if (c.Value != "")
+                            locationId = long.Parse( c.Value);
+                    }
+                    else if(c.Type == "invNumber")
+                    {
+                        invNumber = c.Value;
+                    } 
+                    else if(c.Type == "invType")
+                    {
+                        invType = c.Value;
+                    }
+                }
+
+                var invoicesList = GetPurchaseInv("",invNumber,locationId);
+                return TokenManager.GenerateToken(invoicesList);
+            }
+        }
+
+        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",long locationId=0)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
@@ -59,6 +97,12 @@ namespace POS_Server.Controllers
                 searchPredicate = searchPredicate.And(x => true);
                 if (invType != "")
                     searchPredicate = searchPredicate.And(x => x.InvType == invType);
+                
+                if (invNumber != "")
+                    searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
+                
+                if (locationId != 0)
+                    searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
 
                 var invList = entity.PUR_PURCHASE_INV
                                     .Where(searchPredicate)
@@ -233,13 +277,13 @@ namespace POS_Server.Controllers
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.LocationId == locationId).Select(b => b.InvNumber).Max();
+                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.LocationId == locationId).Select(b => long.Parse( b.InvNumber)).Max();
 
                 if (sequence == null)
-                    sequence = "1";
+                    sequence = 1;
                 else
-                    sequence = (long.Parse(sequence) + 1).ToString();
-                return sequence;
+                    sequence++;
+                return sequence.ToString();
             }
             
         }
