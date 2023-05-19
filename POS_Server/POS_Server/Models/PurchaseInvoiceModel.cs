@@ -21,6 +21,7 @@ namespace POS_Server.Models
         public Nullable<decimal> CoopDiscount { get; set; }
         public Nullable<decimal> DiscountValue { get; set; }
         public Nullable<decimal> FreePercentage { get; set; }
+        public Nullable<decimal> FreeValue { get; set; }
         public Nullable<decimal> ConsumerDiscount { get; set; }
         public Nullable<decimal> CostNet { get; set; }
         public string InvType { get; set; }
@@ -35,6 +36,7 @@ namespace POS_Server.Models
 
         //extra
         public string LocationName { get; set; }
+        public string SupplierName { get; set; }
         public List<PurchaseInvDetailsModel> PurchaseDetails { get; set; }
     }
 }

@@ -58,7 +58,7 @@ namespace POS_Server.Controllers
             string invNumber = "";
             string invType = "";
             long locationId = 0;
-
+            bool? isApproved = null;
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
             {
@@ -82,14 +82,19 @@ namespace POS_Server.Controllers
                     {
                         invType = c.Value;
                     }
+                    else if(c.Type == "isApproved")
+                    {
+                        if(c.Value != "null")
+                            isApproved = bool.Parse(c.Value);
+                    }
                 }
 
-                var invoicesList = GetPurchaseInv("",invNumber,locationId);
+                var invoicesList = GetPurchaseInv("",invNumber,locationId,isApproved);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
 
-        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",long locationId=0)
+        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",long locationId=0,bool? isApproved=null)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
@@ -103,6 +108,9 @@ namespace POS_Server.Controllers
                 
                 if (locationId != 0)
                     searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
+                if (isApproved != null)
+                    searchPredicate = searchPredicate.And(x => x.IsApproved == isApproved);
+
 
                 var invList = entity.PUR_PURCHASE_INV
                                     .Where(searchPredicate)
@@ -121,6 +129,7 @@ namespace POS_Server.Controllers
                                     CoopDiscount = p.CoopDiscount,
                                     DiscountValue = p.DiscountValue,
                                     FreePercentage = p.FreePercentage,
+                                    FreeValue = p.FreeValue,
                                     CostNet = p.CostNet,
                                     TotalCost = p.TotalCost,
                                     TotalPrice = p.TotalPrice,
@@ -277,12 +286,12 @@ namespace POS_Server.Controllers
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.LocationId == locationId).Select(b => long.Parse( b.InvNumber)).Max();
+                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.LocationId == locationId).Select(b =>  b.InvNumber).Max();
 
                 if (sequence == null)
-                    sequence = 1;
+                    sequence = "1";
                 else
-                    sequence++;
+                    sequence = (long.Parse(sequence) + 1).ToString();
                 return sequence.ToString();
             }
             
@@ -310,7 +319,7 @@ namespace POS_Server.Controllers
                        row.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                         row.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         row.UpdateUserId = row.CreateUserId;
-
+                        row.IsActive = true;
                         entity.PUR_PURCHASE_INV_DETAILS.Add(row);
                         
                     }
