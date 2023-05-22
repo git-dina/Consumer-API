@@ -10,6 +10,7 @@ namespace POS_Server.Models
         public long DetailsId { get; set; }
         public Nullable<long> ItemId { get; set; }
         public Nullable<long> PurchaseId { get; set; }
+        public string ItemName { get; set; }
         public string ItemCode { get; set; }
         public string Barcode { get; set; }
         public string ItemNotes { get; set; }

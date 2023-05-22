@@ -96,6 +96,12 @@ namespace POS_Server.Controllers
 
         public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",long locationId=0,bool? isApproved=null)
         {
+            List<string> invTypeL = new List<string>();
+            string[] invTypeArray = invType.Split(',');
+            foreach (string s in invTypeArray)
+                invTypeL.Add(s.ToLower().Trim());
+
+
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<PUR_PURCHASE_INV>();
@@ -120,6 +126,7 @@ namespace POS_Server.Controllers
                                     LocationId = p.LocationId,
                                     LocationName = p.GEN_LOCATION.Name,
                                     SupId = p.SupId,
+                                    SupplierName = p.GEN_SUPPLIER.Name,
                                     InvNumber = p.InvNumber,
                                     InvStatus = p.InvStatus,
                                     OrderDate = p.OrderDate,
@@ -149,6 +156,7 @@ namespace POS_Server.Controllers
                                                         {
                                                             DetailsId = x.DetailsId,
                                                             ItemId = x.ItemId,
+                                                            ItemName = x.ItemName,
                                                             ItemCode = x.ItemCode,
                                                             ItemNotes = x.ItemNotes,
                                                             Factor = x.Factor,
