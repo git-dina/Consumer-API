@@ -735,12 +735,11 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetSuplliers(true);
-                    return TokenManager.GenerateToken(supList);
+                    return TokenManager.GenerateToken("1");
                 }
                 catch
                 {
-                    return TokenManager.GenerateToken(null);
+                    return TokenManager.GenerateToken("0");
                 }
                
             }

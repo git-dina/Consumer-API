@@ -48,8 +48,36 @@ namespace POS_Server.Controllers
                 return TokenManager.GenerateToken(supplierList);
             }
         }
+         [HttpPost]
+        [Route("Search")]
+        public string Search(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string searchText = "";
 
-        public List<AssistantSupModel> GetAssistantSup(bool? isActive)
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "searchText")
+                    {
+                        if (c.Value != "")
+                            searchText =c.Value;
+                    }
+                }
+
+                var supplierList = GetAssistantSup(null, searchText);
+                return TokenManager.GenerateToken(supplierList);
+            }
+        }
+
+        public List<AssistantSupModel> GetAssistantSup(bool? isActive,string searchText="")
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
@@ -58,6 +86,10 @@ namespace POS_Server.Controllers
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
+                if (searchText != "")
+                    searchPredicate = searchPredicate.And(s =>
+                            s.Name.ToLower().Contains(searchText)
+                           || s.AssistantSupId.ToString().Contains(searchText));
                 var AssistantSupplierList = entity.GEN_ASSISTANT_SUPPLIER
                                     .Where(searchPredicate)
                                 .Select(p => new AssistantSupModel
@@ -132,8 +164,8 @@ namespace POS_Server.Controllers
 
                     }
 
-                    var supList = GetAssistantSup(true);
-                    return TokenManager.GenerateToken(supList);
+                    //var supList = GetAssistantSup(true);
+                    return TokenManager.GenerateToken(sup);
                 }
                 catch
                 {
@@ -183,12 +215,11 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var supList = GetAssistantSup(true);
-                    return TokenManager.GenerateToken(supList);
+                    return TokenManager.GenerateToken("1");
                 }
                 catch
                 {
-                    return TokenManager.GenerateToken(null);
+                    return TokenManager.GenerateToken("0");
                 }
 
             }
