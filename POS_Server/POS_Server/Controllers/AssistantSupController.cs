@@ -225,5 +225,33 @@ namespace POS_Server.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("GetMaxSupplierId")]
+        public string GetMaxSupplierId(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    long maxId = 0;
+                    var item = entity.GEN_ASSISTANT_SUPPLIER.Count();
+                    if (item > 0)
+                        maxId = entity.GEN_ASSISTANT_SUPPLIER.Select(x => x.AssistantSupId).Max();
+                    maxId++;
+
+                    return TokenManager.GenerateToken(maxId.ToString());
+
+                }
+            }
+        }
     }
 }
