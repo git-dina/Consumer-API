@@ -404,7 +404,7 @@ namespace POS_Server.Controllers
                             item.ItemId = itemObj.ItemId;
                         }
                         entity.SaveChanges();
-                        itemId = item.ItemId;
+                       
 
                         //if (isNew)
                         //{
@@ -413,9 +413,10 @@ namespace POS_Server.Controllers
                         //    entity.SaveChanges();
                         //}
                     }
-
+                    itemId = item.ItemId;
+                 
                     #region save item units
-                    if(itemModel.ItemUnits != null)
+                    if (itemModel.ItemUnits != null)
                     {
                         saveItemUnits(itemModel.ItemUnits,itemId);
                     }
@@ -499,7 +500,7 @@ namespace POS_Server.Controllers
                 {
                     var itemUnit = new GEN_ITEM_UNIT()
                     {
-                        ItemId = row.ItemId,
+                        ItemId = itemId,
                         UnitId = row.UnitId,
                         Barcode = row.Barcode,
                         BarcodeType = row.BarcodeType,
