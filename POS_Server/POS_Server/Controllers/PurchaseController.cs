@@ -150,8 +150,37 @@ namespace POS_Server.Controllers
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
-
-                                    PurchaseDetails = entity.PUR_PURCHASE_INV_DETAILS.Where(x => x.PurchaseId == p.PurchaseId && x.IsActive == true)
+                                    supplier = entity.GEN_SUPPLIER.Where(x => x.SupId == p.SupId)
+                                     .Select(x => new SupplierModel
+                                     {
+                                         SupId = x.SupId,
+                                         SupRef = x.SupRef,
+                                         Name = x.Name,
+                                         ShortName = x.Name,
+                                         Address = x.Address,
+                                         SupplierTypeId = x.SupplierTypeId,
+                                         SupplierType = x.LST_SUPPLIER_TYPE.Name,
+                                         SupplierGroupId = x.SupplierGroupId,
+                                         SupplierGroup = x.LST_SUPPLIER_GROUP.Name,
+                                         AssistantSupId = x.AssistantSupId,
+                                         AssistantAccountNumber = x.AssistantAccountNumber,
+                                         AssistantAccountName = x.AssistantAccountName,
+                                         AssistantStartDate = x.AssistantStartDate,
+                                         DiscountPercentage = x.DiscountPercentage,
+                                         FreePercentag = x.FreePercentag,
+                                         BankId = x.BankId,
+                                         BankAccount = x.BankAccount,
+                                         SupNODays = x.SupNODays,
+                                         AccountCode = x.AccountCode,
+                                         Email = x.Email,
+                                         BOX = x.BOX,
+                                         IsBlocked = x.IsBlocked,
+                                         LicenseId = x.LicenseId,
+                                         LicenseDate = x.LicenseDate,
+                                         Notes = x.Notes,
+                                         PurchaseOrderNotes = x.PurchaseOrderNotes
+                                     }).FirstOrDefault(),
+                                         PurchaseDetails = entity.PUR_PURCHASE_INV_DETAILS.Where(x => x.PurchaseId == p.PurchaseId && x.IsActive == true)
                                                         .Select(x => new PurchaseInvDetailsModel()
                                                         {
                                                             DetailsId = x.DetailsId,

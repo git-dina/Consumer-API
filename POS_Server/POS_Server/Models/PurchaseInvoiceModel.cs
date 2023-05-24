@@ -37,6 +37,7 @@ namespace POS_Server.Models
         //extra
         public string LocationName { get; set; }
         public string SupplierName { get; set; }
+        public SupplierModel supplier { get; set; }
         public List<PurchaseInvDetailsModel> PurchaseDetails { get; set; }
     }
 }
