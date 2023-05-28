@@ -97,7 +97,7 @@ namespace POS_Server.Controllers
                 if(textSearch != "")
                 {
                     searchPredicate = searchPredicate.And(x => x.IsActive == true);
-                    searchPredicate = searchPredicate.And(s => s.SupId.ToString().Contains(textSearch) ||
+                    searchPredicate = searchPredicate.And(s => s.SupCode.ToString().Contains(textSearch) ||
             s.Name.ToLower().Contains(textSearch)
              || s.ShortName.ToLower().Contains(textSearch)
              || s.LST_SUPPLIER_GROUP.Name.ToLower().Contains(textSearch.ToLower())
@@ -109,6 +109,7 @@ namespace POS_Server.Controllers
                                 .Select(p => new SupplierModel
                                 {
                                     SupId = p.SupId,
+                                    SupCode = p.SupCode,
                                     SupRef = p.SupRef,
                                     Name = p.Name,
                                     ShortName = p.Name,
@@ -217,6 +218,7 @@ namespace POS_Server.Controllers
                 string supObject = "";
                 GEN_SUPPLIER subObj = null;
                 SupplierModel subModel = null;
+                bool isNew = false;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
@@ -236,6 +238,7 @@ namespace POS_Server.Controllers
                         var supEntity = entity.Set<GEN_SUPPLIER>();
                         if (subObj.SupId == 0)
                         {
+                            isNew = true;
                             subObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             subObj.UpdateDate = subObj.CreateDate;
                             subObj.UpdateUserId = subObj.CreateUserId;
@@ -279,6 +282,11 @@ namespace POS_Server.Controllers
                         }
                         entity.SaveChanges();
 
+                        if(isNew == true)
+                        {
+                            sup.SupCode = sup.SupId.ToString().PadLeft(4, '0');
+                            entity.SaveChanges();
+                        }
                         SaveSupplierPhones(subModel.SupplierPhones, sup.SupId,(long)subObj.UpdateUserId);
                         SaveSupplierSectors(subModel.SupplierSectors, sup.SupId);
                         SaveSupplierSectorsSpecify(subModel.supplierSectorSpecifies, sup.SupId);
@@ -437,12 +445,6 @@ namespace POS_Server.Controllers
 
                 if (supplierSectors != null)
                 {
-                    //var specifyToRemove = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupId == supId).ToList();
-                    //if (specifyToRemove.Count > 0)
-                    //{
-                    //    entity.GEN_SUPPLIER_SECTOR_SPECIFY.RemoveRange(specifyToRemove);
-                    //    entity.SaveChanges();
-                    //}
                     var supSectorIds = supplierSectors.Select(x => x.SupSectorId).ToList();
                     #region remove not existed sectors
 
@@ -535,7 +537,6 @@ namespace POS_Server.Controllers
 
                 if (supplierSectorsSpec != null)
                 {
-                    //return "f";
                     #region specify sectors
                     var sectorSpecify = entity.GEN_SUPPLIER_SECTOR_SPECIFY.Where(x => x.SupId == supId).ToList();
                     if(sectorSpecify.Count > 0)
