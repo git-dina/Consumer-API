@@ -347,6 +347,7 @@
     <Compile Include="Models\BrandModel.cs" />
     <Compile Include="Models\CompanySettingModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
+    <Compile Include="Models\HelpClass.cs" />
     <Compile Include="Models\ItemAllowedTransModel.cs" />
     <Compile Include="Models\ItemCategoryModel.cs" />
     <Compile Include="Models\ItemGeneralizationModel.cs" />

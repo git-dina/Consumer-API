@@ -92,7 +92,7 @@ namespace POS_Server.Controllers
                        || s.EngName.ToLower().Contains(searchText)
                        || s.GEN_ITEM_CATEGORY.Name.ToLower().Contains(searchText)
                        || s.Code.ToLower().Contains(searchText)
-                       || s.SupId.ToString() == searchText
+                       || s.GEN_SUPPLIER.SupCode.ToString().Contains(searchText)
                        || s.Factor.ToString() == searchText
                        || s.Price.ToString() == searchText
                        || s.Cost.ToString() == searchText
@@ -126,6 +126,7 @@ namespace POS_Server.Controllers
                                     PackageUnit = p.PackageUnit,
                                     PackageWeight = p.PackageWeight,
                                     SupId = p.SupId,
+                                    SupCode = p.GEN_SUPPLIER.SupCode,
                                     SupSectorId = p.SupSectorId,
                                     WholesaleDiscPerc = p.WholesaleDiscPerc,
                                     WholesalePrice = p.WholesalePrice,

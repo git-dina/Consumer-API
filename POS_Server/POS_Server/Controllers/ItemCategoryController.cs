@@ -217,6 +217,8 @@ namespace POS_Server.Controllers
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var catEntity = entity.Set<GEN_ITEM_CATEGORY>();
+                        bool profitPercentageChanged = false;
+
                         if (catObj.CategoryId == 0)
                         {
                             catObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
@@ -229,6 +231,10 @@ namespace POS_Server.Controllers
                         else
                         {
                             category = entity.GEN_ITEM_CATEGORY.Find(catObj.CategoryId);
+
+                            if (category.ProfitPercentage != catObj.ProfitPercentage)
+                                profitPercentageChanged = true;
+
                             category.Name = catObj.Name;
                             category.CategoryParentId = catObj.CategoryParentId;
                             category.CanContainItems = catObj.CanContainItems;
@@ -243,6 +249,38 @@ namespace POS_Server.Controllers
                         }
                         entity.SaveChanges();
 
+                        if(profitPercentageChanged)
+                        {
+                            var items = entity.GEN_ITEM.Where(x => x.CategoryId == category.CategoryId).ToList();
+                            foreach(var item in items)
+                            {
+                                decimal peicePrice = 0;
+                                decimal cost = item.MainCost;
+                                //سعر بيع الحبة
+                                if (category.ProfitPercentage != 0)
+                                    peicePrice = cost / (int)item.Factor * (1 + HelpClass.calcPercentage(1, category.ProfitPercentage));
+                                else
+                                    peicePrice = cost / (int)item.Factor;
+
+                                //صافي بيع الحبة
+                               decimal finalPrice = peicePrice;
+                                if (category.DiscountPercentage != 0)
+                                {
+                                    var discount = peicePrice - HelpClass.calcPercentage(peicePrice, 100 + category.DiscountPercentage);
+                                    finalPrice = peicePrice - Math.Abs(discount);
+                                }
+                                if (finalPrice < 0)
+                                    finalPrice = 0;
+
+                                //wholesale price سعر الجملة
+                                var wholesalePrice = cost / (int)item.Factor * (1 + HelpClass.calcPercentage(1, category.WholesalePercentage));
+
+                                item.Cost = cost;
+                                item.Price = finalPrice;
+                                item.WholesalePrice = wholesalePrice;
+                            }
+                            entity.SaveChanges();
+                        }
                     }
 
                     var phoneList = GetCategories(true);

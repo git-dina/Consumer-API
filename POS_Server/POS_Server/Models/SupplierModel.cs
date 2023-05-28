@@ -8,6 +8,7 @@ namespace POS_Server.Models
     public class SupplierModel
     {
         public long SupId { get; set; }
+        public string SupCode { get; set; }
         public string SupRef { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
