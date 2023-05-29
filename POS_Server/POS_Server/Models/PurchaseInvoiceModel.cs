@@ -7,7 +7,7 @@ namespace POS_Server.Models
 {
     public class PurchaseInvoiceModel
     {
-        public long PurchaseId { get; set; }
+        public long PurchaseId { get; set; }     
         public string InvNumber { get; set; }
         public Nullable<long> LocationId { get; set; }
         public Nullable<long> SupId { get; set; }

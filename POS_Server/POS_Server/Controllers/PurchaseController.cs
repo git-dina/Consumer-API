@@ -57,6 +57,7 @@ namespace POS_Server.Controllers
             token = TokenManager.readToken(HttpContext.Current.Request);
             string invNumber = "";
             string invType = "";
+            string invStatus = "";
             long locationId = 0;
             bool? isApproved = null;
             var strP = TokenManager.GetPrincipal(token);
@@ -82,6 +83,10 @@ namespace POS_Server.Controllers
                     {
                         invType = c.Value;
                     }
+                    else if(c.Type == "invStatus")
+                    {
+                        invStatus = c.Value;
+                    }
                     else if(c.Type == "isApproved")
                     {
                         if(c.Value != "null")
@@ -89,19 +94,18 @@ namespace POS_Server.Controllers
                     }
                 }
 
-                var invoicesList = GetPurchaseInv("",invNumber,locationId,isApproved);
+                var invoicesList = GetPurchaseInv(invType, invNumber, invStatus,locationId, isApproved);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
 
-        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",long locationId=0,bool? isApproved=null)
+        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",string invStatus="",long locationId=0,bool? isApproved=null)
         {
-            List<string> invTypeL = new List<string>();
-            string[] invTypeArray = invType.Split(',');
-            foreach (string s in invTypeArray)
-                invTypeL.Add(s.ToLower().Trim());
-
-
+            //List<string> invTypeL = new List<string>();
+            //string[] invTypeArray = invType.Split(',');
+            //foreach (string s in invTypeArray)
+            //    invTypeL.Add(s.ToLower().Trim());
+          
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<PUR_PURCHASE_INV>();
@@ -111,7 +115,10 @@ namespace POS_Server.Controllers
                 
                 if (invNumber != "")
                     searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
-                
+
+                if (invStatus != null && invStatus != "")
+                    searchPredicate = searchPredicate.And(x => x.InvStatus == invStatus);
+
                 if (locationId != 0)
                     searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
                 if (isApproved != null)
@@ -123,12 +130,14 @@ namespace POS_Server.Controllers
                                 .Select(p => new PurchaseInvoiceModel
                                 {
                                     PurchaseId = p.PurchaseId,
+                                    
                                     LocationId = p.LocationId,
                                     LocationName = p.GEN_LOCATION.Name,
                                     SupId = p.SupId,
                                     SupplierName = p.GEN_SUPPLIER.Name,
                                     InvNumber = p.InvNumber,
                                     InvStatus = p.InvStatus,
+                                    IsApproved = p.IsApproved,
                                     OrderDate = p.OrderDate,
                                     OrderRecieveDate = p.OrderRecieveDate,
 
@@ -261,6 +270,70 @@ namespace POS_Server.Controllers
                 {
                     return TokenManager.GenerateToken("0");
                 }
+            }
+        } 
+        [HttpPost]
+        [Route("SavePurchaseOrder")]
+        public async Task<string> SavePurchaseOrder(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string jsonObject = "";
+                PurchaseInvoiceModel invModel = null;
+                PUR_PURCHASE_INV invoice = null;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        jsonObject = c.Value;
+                        invModel = JsonConvert.DeserializeObject<PurchaseInvoiceModel>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        invoice = JsonConvert.DeserializeObject<PUR_PURCHASE_INV>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                //try
+                {
+                    #region generate InvNumber
+                    long locationId = (long)invModel.LocationId;
+                    if (invModel.InvNumber == "" || invModel.InvNumber == null)
+                    {
+                        string invNumber = await generateSupplyingInvNumber(locationId);
+                       
+                        invoice.InvNumber = invNumber;
+                    }
+                    #endregion
+
+                    invoice = await saveInvoice(invoice);
+                    invModel.PurchaseId = invoice.PurchaseId;
+                    invModel.InvNumber = invoice.InvNumber;
+
+                    if(invoice.RefId != null)
+                    {
+                        using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                        {
+                            var supplyingOrder = entity.PUR_PURCHASE_INV.Find(invoice.RefId);
+                            supplyingOrder.InvStatus = "orderPlaced";
+                            entity.SaveChanges();
+                        }
+                    }
+                    string jsonString = JsonConvert.SerializeObject(invModel.PurchaseDetails);
+                    var invItems = JsonConvert.DeserializeObject<List<PUR_PURCHASE_INV_DETAILS>>(jsonString, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    saveInvoiceItems(invItems, invoice.PurchaseId);
+
+                    return TokenManager.GenerateToken(invModel);
+                }
+                //catch (DbEntityValidationException dbEx)
+                //{
+                //    return TokenManager.GenerateToken("0");
+                //}
             }
         }
         [NonAction]
