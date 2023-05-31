@@ -85,11 +85,12 @@ namespace POS_Server.Controllers
                     }
                     else if(c.Type == "invStatus")
                     {
-                        invStatus = c.Value;
+                        if (c.Value != null)
+                            invStatus = c.Value;
                     }
                     else if(c.Type == "isApproved")
                     {
-                        if(c.Value != "null")
+                        if(c.Value != null)
                             isApproved = bool.Parse(c.Value);
                     }
                 }
@@ -199,7 +200,7 @@ namespace POS_Server.Controllers
                                                             ItemNotes = x.ItemNotes,
                                                             Factor = x.Factor,
                                                             Barcode = x.Barcode,
-                                                            Balance = x.Balance,
+                                                            //Balance = x.Balance,
                                                             MainCost = x.MainCost,
                                                             MainPrice = x.MainPrice,
                                                             Cost = x.Cost,
@@ -328,6 +329,7 @@ namespace POS_Server.Controllers
                     var invItems = JsonConvert.DeserializeObject<List<PUR_PURCHASE_INV_DETAILS>>(jsonString, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                     saveInvoiceItems(invItems, invoice.PurchaseId);
 
+                    makeItemsAsOrderd(invItems);
                     return TokenManager.GenerateToken(invModel);
                 }
                 //catch (DbEntityValidationException dbEx)
@@ -388,6 +390,22 @@ namespace POS_Server.Controllers
 
                 }
                 return tmpInvoice;
+            }
+        }
+        [NonAction]
+        public void makeItemsAsOrderd(List<PUR_PURCHASE_INV_DETAILS> invItems)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                foreach(var row in invItems)
+                {
+                    var item = entity.GEN_ITEM.Find(row.ItemId);
+                    if(item.ItemTransactionType == "new_committee")
+                    {
+                        item.ItemTransactionType = "orderPlaced";
+                    }
+                }
+                entity.SaveChanges();
             }
         }
         [NonAction]

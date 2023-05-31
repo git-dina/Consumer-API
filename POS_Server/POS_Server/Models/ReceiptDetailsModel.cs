@@ -5,12 +5,12 @@ using System.Web;
 
 namespace POS_Server.Models
 {
-    public class PurchaseInvDetailsModel
+    public class ReceiptDetailsModel
     {
         public long DetailsId { get; set; }
         public Nullable<long> ItemId { get; set; }
-        public Nullable<long> PurchaseId { get; set; }
         public string ItemName { get; set; }
+        public Nullable<long> ReceiptId { get; set; }
         public string ItemCode { get; set; }
         public string Barcode { get; set; }
         public string ItemNotes { get; set; }
@@ -31,8 +31,6 @@ namespace POS_Server.Models
         public Nullable<long> UpdateUserId { get; set; }
 
         //extra
-        public int Sequence { get; set; }
         public decimal Balance { get; set; }
-
     }
 }

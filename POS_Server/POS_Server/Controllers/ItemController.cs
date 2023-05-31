@@ -722,6 +722,7 @@ namespace POS_Server.Controllers
             {
                 #region parameters
                 string textSearch = "";
+                string itemsFor = "";
                 long locationId = 0;
                 long supId = 0;
 
@@ -732,6 +733,10 @@ namespace POS_Server.Controllers
                     {
                         if (c.Value != "")
                             textSearch = c.Value;
+                    }
+                    else if (c.Type == "itemsFor")
+                    {
+                        itemsFor = c.Value;
                     }
                     else if (c.Type == "locationId")
                     {
@@ -747,8 +752,19 @@ namespace POS_Server.Controllers
                 #endregion
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
-                    var item = entity.GEN_ITEM.Where(p => p.IsActive == true && p.Code.ToLower() == textSearch.ToLower() && p.SupId == supId
-                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId))
+                    var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Code.ToLower() == textSearch.ToLower() && p.SupId == supId
+                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+
+                    switch (itemsFor)
+                    {
+                        case "orders":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
+                                                        || x.ItemReceiptType == "service");
+                            break;
+                    }
+
+                    var item = entity.GEN_ITEM.Where(searchPredicate)
                         .Select(p => new ItemModel
                         {
                             ItemId = p.ItemId,
@@ -851,9 +867,21 @@ namespace POS_Server.Controllers
                         }).ToList();
 
                     //search by name
-                    if(item.Count == 0)
-                        item = entity.GEN_ITEM.Where(p => p.IsActive == true && p.Name.ToLower().Contains( textSearch.ToLower()) && p.SupId == supId
-                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId))
+                    if (item.Count == 0)
+                    {
+                       searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                        searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Name.ToLower().Contains(textSearch.ToLower()) && p.SupId == supId
+                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+
+                        switch (itemsFor)
+                        {
+                            case "orders":
+                                searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
+                                                            || x.ItemReceiptType == "service");
+                                break;
+                        }
+
+                        item = entity.GEN_ITEM.Where(searchPredicate)
                         .Select(p => new ItemModel
                         {
                             ItemId = p.ItemId,
@@ -955,6 +983,7 @@ namespace POS_Server.Controllers
                                 Name = p.GEN_SUPPLIER.Name,
                             },
                         }).ToList();
+                    }
                     return TokenManager.GenerateToken(item);
 
                 }
@@ -976,6 +1005,7 @@ namespace POS_Server.Controllers
             {
                 #region parameters
                 string barcode = "";
+                string itemsFor = "";
                 long locationId = 0;
                 long supId = 0;
 
@@ -986,6 +1016,10 @@ namespace POS_Server.Controllers
                     {
                         if (c.Value != "")
                             barcode = c.Value;
+                    }
+                    else if (c.Type == "itemsFor")
+                    {
+                            itemsFor = c.Value;
                     }
                     else if (c.Type == "locationId")
                     {
@@ -1001,8 +1035,19 @@ namespace POS_Server.Controllers
                 #endregion
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
-                    var item = entity.GEN_ITEM.Where(p => p.IsActive == true && p.SupId == supId
-                                && p.GEN_ITEM_UNIT.Any(u => u.Barcode.ToLower() == barcode.ToLower()))
+                    var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.SupId == supId
+                                && p.GEN_ITEM_UNIT.Any(u => u.Barcode.ToLower() == barcode.ToLower()));
+
+                    switch (itemsFor)
+                    {
+                        case "orders":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
+                                                        || x.ItemReceiptType == "service");
+                            break;
+                    }
+
+                    var item = entity.GEN_ITEM.Where(searchPredicate)
                         .Select(p => new ItemModel
                         {
                             ItemId = p.ItemId,

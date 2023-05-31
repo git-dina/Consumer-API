@@ -244,6 +244,7 @@
     <Compile Include="Controllers\LstCountryController.cs" />
     <Compile Include="Controllers\PhoneTypeController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
+    <Compile Include="Controllers\ReceiptsController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\SupplierDocTypeController.cs" />
     <Compile Include="Controllers\SupplierGroupController.cs" />
@@ -303,6 +304,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="INV_RECEIPT.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="INV_RECEIPT_DETAILS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="LST_CountriesCodes.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -360,6 +367,9 @@
     <Compile Include="Models\PhoneTypeModel.cs" />
     <Compile Include="Models\PurchaseInvDetailsModel.cs" />
     <Compile Include="Models\PurchaseInvoiceModel.cs" />
+    <Compile Include="Models\ReceiptDetailsModel.cs" />
+    <Compile Include="Models\ReceiptInvoiceModel.cs" />
+    <Compile Include="Models\RecieptModel.cs" />
     <Compile Include="Models\SupplierDocTypeModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
