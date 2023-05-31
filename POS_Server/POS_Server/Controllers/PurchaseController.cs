@@ -85,16 +85,16 @@ namespace POS_Server.Controllers
                     }
                     else if(c.Type == "invStatus")
                     {
-                        if (c.Value != null)
+                        if (c.Value != null && c.Value != "null")
                             invStatus = c.Value;
                     }
                     else if(c.Type == "isApproved")
                     {
-                        if(c.Value != null)
+                        if (c.Value != null && c.Value != "")
                             isApproved = bool.Parse(c.Value);
                     }
                 }
-
+                //return invType + invNumber + invStatus + locationId + locationId + isApproved;
                 var invoicesList = GetPurchaseInv(invType, invNumber, invStatus,locationId, isApproved);
                 return TokenManager.GenerateToken(invoicesList);
             }
@@ -111,14 +111,14 @@ namespace POS_Server.Controllers
             {
                 var searchPredicate = PredicateBuilder.New<PUR_PURCHASE_INV>();
                 searchPredicate = searchPredicate.And(x => true);
-                if (invType != "")
-                    searchPredicate = searchPredicate.And(x => x.InvType == invType);
+                if (invType.Trim() != "")
+                    searchPredicate = searchPredicate.And(x => x.InvType == invType.Trim());
                 
-                if (invNumber != "")
+                if (invNumber.Trim() != "")
                     searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
 
-                if (invStatus != null && invStatus != "")
-                    searchPredicate = searchPredicate.And(x => x.InvStatus == invStatus);
+                if (invStatus.Trim() != null && invStatus != "")
+                    searchPredicate = searchPredicate.And(x => x.InvStatus == invStatus.Trim());
 
                 if (locationId != 0)
                     searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
@@ -131,6 +131,9 @@ namespace POS_Server.Controllers
                                 .Select(p => new PurchaseInvoiceModel
                                 {
                                     PurchaseId = p.PurchaseId,
+                                    
+                                    RefId=p.RefId,
+                                    SupplyingOrderNum = entity.PUR_PURCHASE_INV.Where(x => x.PurchaseId == p.RefId).Select(x => x.InvNumber).FirstOrDefault(),
                                     
                                     LocationId = p.LocationId,
                                     LocationName = p.GEN_LOCATION.Name,
@@ -164,6 +167,7 @@ namespace POS_Server.Controllers
                                      .Select(x => new SupplierModel
                                      {
                                          SupId = x.SupId,
+                                         SupCode = x.SupCode,
                                          SupRef = x.SupRef,
                                          Name = x.Name,
                                          ShortName = x.Name,
@@ -255,8 +259,15 @@ namespace POS_Server.Controllers
                        
                         invoice.InvNumber = invNumber;
                     }
+                    
+                    if(invoice.PurchaseId != 0)
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var tmpInvoice = entity.PUR_PURCHASE_INV.Find(invoice.PurchaseId);
+                        if (tmpInvoice.LocationId != invoice.LocationId)
+                            invoice.InvNumber = await generateSupplyingInvNumber((long)invoice.LocationId);
+                    }
                     #endregion
-
                     invoice = await saveInvoice(invoice);
                     invModel.PurchaseId = invoice.PurchaseId;
                     invModel.InvNumber = invoice.InvNumber;
@@ -306,7 +317,7 @@ namespace POS_Server.Controllers
                     long locationId = (long)invModel.LocationId;
                     if (invModel.InvNumber == "" || invModel.InvNumber == null)
                     {
-                        string invNumber = await generateSupplyingInvNumber(locationId);
+                        string invNumber = await generatePurchaseInvNumber();
                        
                         invoice.InvNumber = invNumber;
                     }
@@ -362,8 +373,6 @@ namespace POS_Server.Controllers
                 else
                 {
                     tmpInvoice = entity.PUR_PURCHASE_INV.Find(newObject.PurchaseId);
-                    if (tmpInvoice.LocationId != newObject.LocationId)
-                        tmpInvoice.InvNumber =await generateSupplyingInvNumber((long)newObject.LocationId);
 
                     tmpInvoice.LocationId = newObject.LocationId;
                     tmpInvoice.SupId = newObject.SupId;
@@ -414,7 +423,25 @@ namespace POS_Server.Controllers
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.LocationId == locationId).Select(b =>  b.InvNumber).Max();
+                var sequence = entity.PUR_PURCHASE_INV
+                                .Where(b => b.LocationId == locationId &&( b.InvType =="soa" || b.InvType =="sod"))
+                                .Select(b =>  b.InvNumber).Max();
+
+                if (sequence == null)
+                    sequence = "1";
+                else
+                    sequence = (long.Parse(sequence) + 1).ToString();
+                return sequence.ToString();
+            }
+            
+        }
+        [NonAction]
+        public async Task<string> generatePurchaseInvNumber( )
+        {
+
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var sequence = entity.PUR_PURCHASE_INV.Where(b => b.InvType == "po").Select(b =>  b.InvNumber).Max();
 
                 if (sequence == null)
                     sequence = "1";

@@ -8,6 +8,7 @@ namespace POS_Server.Models
     public class PurchaseInvoiceModel
     {
         public long PurchaseId { get; set; }     
+        public Nullable<long> RefId { get; set; }
         public string InvNumber { get; set; }
         public Nullable<long> LocationId { get; set; }
         public Nullable<long> SupId { get; set; }
@@ -35,6 +36,7 @@ namespace POS_Server.Models
         public Nullable<long> UpdateUserId { get; set; }
 
         //extra
+        public string SupplyingOrderNum { get; set; }
         public string LocationName { get; set; }
         public string SupplierName { get; set; }
         public SupplierModel supplier { get; set; }

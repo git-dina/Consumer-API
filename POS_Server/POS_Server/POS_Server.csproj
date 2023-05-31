@@ -369,7 +369,6 @@
     <Compile Include="Models\PurchaseInvoiceModel.cs" />
     <Compile Include="Models\ReceiptDetailsModel.cs" />
     <Compile Include="Models\ReceiptInvoiceModel.cs" />
-    <Compile Include="Models\RecieptModel.cs" />
     <Compile Include="Models\SupplierDocTypeModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
