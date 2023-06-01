@@ -200,6 +200,7 @@ namespace POS_Server.Controllers
                                                             DetailsId = x.DetailsId,
                                                             ItemId = x.ItemId,
                                                             ItemName = x.ItemName,
+                                                            ItemUnit =  entity.GEN_UNIT.Where(m => m.UnitId == x.GEN_ITEM.UnitId).Select(m => m.Name).FirstOrDefault(),
                                                             ItemCode = x.ItemCode,
                                                             ItemNotes = x.ItemNotes,
                                                             Factor = x.Factor,
