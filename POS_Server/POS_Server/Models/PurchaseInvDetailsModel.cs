@@ -33,6 +33,7 @@ namespace POS_Server.Models
         //extra
         public int Sequence { get; set; }
         public decimal Balance { get; set; }
+        public string ItemUnit { get; set; }
 
     }
 }
