@@ -23,6 +23,12 @@ namespace POS_Server.Models
         public string Notes { get; set; }
         public decimal CoopDiscount { get; set; }
         public decimal DiscountValue { get; set; }
+        public Nullable<decimal> FreePercentage { get; set; }
+        public Nullable<decimal> FreeValue { get; set; }
+        public Nullable<decimal> ConsumerDiscount { get; set; }
+        public Nullable<decimal> CostNet { get; set; }
+        public Nullable<decimal> TotalCost { get; set; }
+        public Nullable<decimal> TotalPrice { get; set; }
         public bool IsTransfer { get; set; }
         public Nullable<long> TransferBy { get; set; }
         public Nullable<System.DateTime> TransferDate { get; set; }
@@ -41,6 +47,8 @@ namespace POS_Server.Models
         public SupplierModel supplier { get; set; }
         public string SupplierNotes { get; set; }
         public string SupplierPurchaseNotes { get; set; }
+        public string PurchaseInvNumber { get; set; }
+
         public List<ReceiptDetailsModel> ReceiptDetails { get; set; }
     }
 }

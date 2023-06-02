@@ -762,6 +762,23 @@ namespace POS_Server.Controllers
                             searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
                                                         || x.ItemReceiptType == "service");
                             break;
+                        case "direct":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "direct"
+                                                        || x.ItemReceiptType == "orders_direct");
+                            break;
+                        case "vegetable":
+                        case "freeVegetables":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "vegetable");
+                            break;
+                        case "service":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
+                            break; 
+                        case "free":
+                           
+                            break;  
+                        case "customFree":
+                         
+                            break;
                     }
 
                     var item = entity.GEN_ITEM.Where(searchPredicate)
@@ -879,7 +896,25 @@ namespace POS_Server.Controllers
                                 searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
                                                             || x.ItemReceiptType == "service");
                                 break;
+                            case "direct":
+                                searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "direct"
+                                                            || x.ItemReceiptType == "orders_direct");
+                                break;
+                            case "vegetable":
+                            case "freeVegetables":
+                                searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "vegetable");
+                                break;
+                            case "service":
+                                searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
+                                break;
+                            case "free":
+
+                                break;
+                            case "customFree":
+
+                                break;
                         }
+
 
                         item = entity.GEN_ITEM.Where(searchPredicate)
                         .Select(p => new ItemModel
@@ -1045,7 +1080,25 @@ namespace POS_Server.Controllers
                             searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "orders"
                                                         || x.ItemReceiptType == "service");
                             break;
+                        case "direct":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "direct"
+                                                        || x.ItemReceiptType == "orders_direct");
+                            break;
+                        case "vegetable":
+                        case "freeVegetables":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "vegetable");
+                            break;
+                        case "service":
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
+                            break;
+                        case "free":
+
+                            break;
+                        case "customFree":
+
+                            break;
                     }
+
 
                     var item = entity.GEN_ITEM.Where(searchPredicate)
                         .Select(p => new ItemModel

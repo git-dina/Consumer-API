@@ -377,6 +377,7 @@ namespace POS_Server.Controllers
 
                     tmpInvoice.LocationId = newObject.LocationId;
                     tmpInvoice.SupId = newObject.SupId;
+                    tmpInvoice.InvNumber = newObject.InvNumber;
                     tmpInvoice.InvType = newObject.InvType;
                     tmpInvoice.OrderDate = newObject.OrderDate;
                     tmpInvoice.OrderRecieveDate = newObject.OrderRecieveDate;
