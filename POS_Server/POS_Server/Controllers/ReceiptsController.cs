@@ -208,13 +208,37 @@ namespace POS_Server.Controllers
 
                     #endregion
                     invoice = await saveInvoice(invoice);
-                    invModel.PurchaseId = invoice.PurchaseId;
+                    invModel.ReceiptId = invoice.ReceiptId;
                     invModel.InvNumber = invoice.InvNumber;
 
                     string jsonString = JsonConvert.SerializeObject(invModel.ReceiptDetails);
                     var invItems = JsonConvert.DeserializeObject<List<INV_RECEIPT_DETAILS>>(jsonString, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                     saveInvoiceItems(invItems, invoice.ReceiptId);
+                    addQuantityToLocation(invItems,(long) invoice.LocationId);
 
+                    makeItemsAsRecieved(invItems);
+                    //edit purchase order and supplying status 
+                    if (invoice.PurchaseId != null)
+                    {
+                        string status = "";
+                        using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                        {
+                            var purInv = entity.PUR_PURCHASE_INV.Find(invoice.PurchaseId);
+                            if (invoice.IsRecieveAll == true)
+                                status = "entireReceipt";
+                            else
+                                status = "receipt";
+                            purInv.InvStatus = status;
+                            if (purInv.RefId != null)
+                            {
+                            
+                                var supplyingOrder = entity.PUR_PURCHASE_INV.Find(purInv.RefId);
+                                supplyingOrder.InvStatus = status;
+                                
+                            }
+                            entity.SaveChanges();
+                        }
+                    }
                     return TokenManager.GenerateToken(invModel);
                 }
                 catch (DbEntityValidationException dbEx)
@@ -235,7 +259,7 @@ namespace POS_Server.Controllers
                 var invoiceEntity = entity.Set<INV_RECEIPT>();
 
 
-                if (newObject.PurchaseId == 0)
+                if (newObject.ReceiptId == 0)
                 {
                     newObject.CreateDate = datenow;
                     newObject.UpdateDate = datenow;
@@ -316,7 +340,47 @@ namespace POS_Server.Controllers
             }
             catch { }
         }
+        
+        [NonAction]
+        private void addQuantityToLocation(List<INV_RECEIPT_DETAILS> invoiceItems, long locationId)
+        {
+            try
+            {
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
 
+                    foreach (var row in invoiceItems)
+                    {
+
+                        var loc = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == row.ItemId && x.LocationId == locationId).FirstOrDefault();
+
+                        loc.Max_Qty += row.MaxQty;
+                        loc.Min_Qty += row.MinQty;
+    
+                        loc.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        loc.UpdateUserId = row.CreateUserId;
+
+                    }
+                    entity.SaveChanges();
+                }
+            }
+            catch { }
+        }
+
+        [NonAction]
+        public void makeItemsAsRecieved(List<INV_RECEIPT_DETAILS> invItems)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                foreach (var row in invItems)
+                {
+                    var item = entity.GEN_ITEM.Find(row.ItemId);
+
+                    item.ItemTransactionType = "recieved";
+                }
+                entity.SaveChanges();
+            }
+        }
         [NonAction]
         public async Task<string> generateRecieptInvNumber(long locationId)
         {
@@ -332,6 +396,163 @@ namespace POS_Server.Controllers
                 return sequence.ToString();
             }
 
+        }
+
+        [HttpPost]
+        [Route("SearchOrders")]
+        public string SearchOrders(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string invNumber = "";
+            long locationId = 0;
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "locationId")
+                    {
+                        if (c.Value != "")
+                            locationId = long.Parse(c.Value);
+                    }
+                    else if (c.Type == "invNumber")
+                    {
+                        invNumber = c.Value;
+                    }
+                   
+                }
+ 
+                var invoicesList = GetReceipts(locationId, invNumber);
+                return TokenManager.GenerateToken(invoicesList);
+            }
+        }
+
+        public List<ReceiptInvoiceModel> GetReceipts(long locationId =0, string invNumber = "")
+        {
+
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var searchPredicate = PredicateBuilder.New<INV_RECEIPT>();
+                searchPredicate = searchPredicate.And(x => true);
+
+                if (invNumber.Trim() != "")
+                    searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
+
+                if (locationId != 0)
+                    searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
+
+
+                var invList = entity.INV_RECEIPT
+                                    .Where(searchPredicate)
+                                .Select(p => new ReceiptInvoiceModel
+                                {
+                                    ReceiptId=p.ReceiptId,
+                                    PurchaseId = p.PurchaseId,
+
+                                    PurchaseInvNumber = entity.PUR_PURCHASE_INV.Where(x => x.PurchaseId == p.PurchaseId).Select(x => x.InvNumber).FirstOrDefault(),
+
+                                    LocationId = p.LocationId,
+                                    LocationName = p.GEN_LOCATION.Name,
+                                    SupId = p.SupId,
+                                    InvNumber = p.InvNumber,
+                                   IsRecieveAll=p.IsRecieveAll,
+                                   ReceiptDate=p.ReceiptDate,
+                                   ReceiptStatus=p.ReceiptStatus,
+                                   ReceiptType=p.ReceiptType,
+                                   SupInvoiceDate=p.SupInvoiceDate,
+                                   SupInvoiceNum=p.SupInvoiceNum,
+                                   IsTransfer=p.IsTransfer,
+                                   InvoiceAmount=p.InvoiceAmount,
+                                   AmountDifference=p.AmountDifference,
+                                   ISAccountTransfer=p.ISAccountTransfer,
+                                   AccountEntryCode =p.AccountEntryCode,
+                                   AccountEntryCodeCustody = p.AccountEntryCodeCustody,
+                                   AccountTransferDate = p.AccountTransferDate,
+                                   TransferBy = p.TransferBy,
+                                   TransferDate = p.TransferDate,
+
+                                    ConsumerDiscount = p.ConsumerDiscount,
+                                    CoopDiscount = p.CoopDiscount,
+                                    DiscountValue = p.DiscountValue,
+                                    FreePercentage = p.FreePercentage,
+                                    FreeValue = p.FreeValue,
+                                    CostNet = p.CostNet,
+                                    TotalCost = p.TotalCost,
+                                    TotalPrice = p.TotalPrice,
+
+                                    Notes = p.Notes,
+                                    SupplierNotes = p.SupplierNotes,
+                                    SupplierPurchaseNotes = p.SupplierPurchaseNotes,
+
+                                    IsActive = p.IsActive,
+                                    CreateDate = p.CreateDate,
+                                    UpdateDate = p.UpdateDate,
+                                    CreateUserId = p.CreateUserId,
+                                    UpdateUserId = p.UpdateUserId,
+                                    supplier = entity.GEN_SUPPLIER.Where(x => x.SupId == p.SupId)
+                                     .Select(x => new SupplierModel
+                                     {
+                                         SupId = x.SupId,
+                                         SupCode = x.SupCode,
+                                         SupRef = x.SupRef,
+                                         Name = x.Name,
+                                         ShortName = x.Name,
+                                         Address = x.Address,
+                                         SupplierTypeId = x.SupplierTypeId,
+                                         SupplierType = x.LST_SUPPLIER_TYPE.Name,
+                                         SupplierGroupId = x.SupplierGroupId,
+                                         SupplierGroup = x.LST_SUPPLIER_GROUP.Name,
+                                         AssistantSupId = x.AssistantSupId,
+                                         AssistantAccountNumber = x.AssistantAccountNumber,
+                                         AssistantAccountName = x.AssistantAccountName,
+                                         AssistantStartDate = x.AssistantStartDate,
+                                         DiscountPercentage = x.DiscountPercentage,
+                                         FreePercentag = x.FreePercentag,
+                                         BankId = x.BankId,
+                                         BankAccount = x.BankAccount,
+                                         SupNODays = x.SupNODays,
+                                         AccountCode = x.AccountCode,
+                                         Email = x.Email,
+                                         BOX = x.BOX,
+                                         IsBlocked = x.IsBlocked,
+                                         LicenseId = x.LicenseId,
+                                         LicenseDate = x.LicenseDate,
+                                         Notes = x.Notes,
+                                         PurchaseOrderNotes = x.PurchaseOrderNotes
+                                     }).FirstOrDefault(),
+                                    ReceiptDetails = entity.INV_RECEIPT_DETAILS.Where(x => x.ReceiptId == p.ReceiptId && x.IsActive == true)
+                                                        .Select(x => new ReceiptDetailsModel()
+                                                        {
+                                                            DetailsId = x.DetailsId,
+                                                            ItemId = x.ItemId,
+                                                            ItemName = x.ItemName,
+                                                            ItemUnit = entity.GEN_UNIT.Where(m => m.UnitId == x.GEN_ITEM.UnitId).Select(m => m.Name).FirstOrDefault(),
+                                                            ItemCode = x.ItemCode,
+                                                            ItemNotes = x.ItemNotes,
+                                                            Factor = x.Factor,
+                                                            Barcode = x.Barcode,
+                                                            //Balance = x.Balance,
+                                                            MainCost = x.MainCost,
+                                                            MainPrice = x.MainPrice,
+                                                            Cost = x.Cost,
+                                                            Price = x.Price,
+                                                            MaxQty = x.MaxQty,
+                                                            MinQty = x.MinQty,
+                                                            ConsumerDiscount = x.ConsumerDiscount,
+                                                            CoopDiscount = x.CoopDiscount,
+                                                            FreeQty = x.FreeQty,
+
+                                                        }).ToList()
+                                }).ToList();
+
+                return invList;
+            }
         }
     }
 }

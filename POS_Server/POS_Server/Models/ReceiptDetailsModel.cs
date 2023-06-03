@@ -32,5 +32,6 @@ namespace POS_Server.Models
 
         //extra
         public decimal Balance { get; set; }
+        public string ItemUnit { get; set; }
     }
 }
