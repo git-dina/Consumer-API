@@ -149,7 +149,7 @@ namespace POS_Server.Controllers
                                                             ItemNotes = x.ItemNotes,
                                                             Factor = x.Factor,
                                                             Barcode = x.Barcode,
-                                                            //Balance = x.Balance,
+                                                            Balance = entity.GEN_ITEM_LOCATION.Where(m => m.ItemId == x.ItemId && m.LocationId == p.LocationId && m.IsActive == true).Select(m => m.Balance).FirstOrDefault(),
                                                             MainCost = x.MainCost,
                                                             MainPrice = x.MainPrice,
                                                             Cost = x.Cost,
@@ -354,8 +354,7 @@ namespace POS_Server.Controllers
 
                         var loc = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == row.ItemId && x.LocationId == locationId).FirstOrDefault();
 
-                        loc.Max_Qty += row.MaxQty;
-                        loc.Min_Qty += row.MinQty;
+                        loc.Balance +=(long) (row.MaxQty * row.Factor + row.MinQty);
     
                         loc.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         loc.UpdateUserId = row.CreateUserId;

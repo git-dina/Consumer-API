@@ -205,7 +205,7 @@ namespace POS_Server.Controllers
                                                             ItemNotes = x.ItemNotes,
                                                             Factor = x.Factor,
                                                             Barcode = x.Barcode,
-                                                            //Balance = x.Balance,
+                                                            Balance = entity.GEN_ITEM_LOCATION.Where(m => m.ItemId == x.ItemId && m.LocationId == p.LocationId && m.IsActive == true).Select(m => m.Balance).FirstOrDefault(),
                                                             MainCost = x.MainCost,
                                                             MainPrice = x.MainPrice,
                                                             Cost = x.Cost,

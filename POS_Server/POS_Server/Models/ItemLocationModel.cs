@@ -11,8 +11,8 @@ namespace POS_Server.Models
         public Nullable<long> ItemId { get; set; }
         public Nullable<long> LocationId { get; set; }
         public string LocationName { get; set; }
-        public int Min_Qty { get; set; }
-        public int Max_Qty { get; set; }
+        public long Balance { get; set; }
+
         public bool IsActive { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }

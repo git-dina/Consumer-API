@@ -190,8 +190,8 @@ namespace POS_Server.Controllers
                                                         LocationName = x.GEN_LOCATION.Name,
                                                         LocationId = x.LocationId,
                                                         ItemId = x.ItemId,
-                                                        Max_Qty = x.Max_Qty,
-                                                        Min_Qty = x.Min_Qty,
+                                                      Balance = x.Balance,
+
                                                     }).ToList(),
                                     Supplier = new SupplierModel() {
                                         SupId = p.GEN_SUPPLIER.SupId,
@@ -298,8 +298,7 @@ namespace POS_Server.Controllers
                                                         LocationName = x.GEN_LOCATION.Name,
                                                         LocationId = x.LocationId,
                                                         ItemId = x.ItemId,
-                                                        Max_Qty = x.Max_Qty,
-                                                        Min_Qty = x.Min_Qty,
+                                                       Balance = x.Balance,
                                                     }).ToList(),
                                     Supplier = new SupplierModel() {
                                         SupId = p.GEN_SUPPLIER.SupId,
@@ -873,8 +872,7 @@ namespace POS_Server.Controllers
                                                         LocationName = x.GEN_LOCATION.Name,
                                                         LocationId = x.LocationId,
                                                         ItemId = x.ItemId,
-                                                        Max_Qty = x.Max_Qty,
-                                                        Min_Qty = x.Min_Qty,
+                                                       Balance = x.Balance,
                                                     }).ToList(),
                             Supplier = new SupplierModel()
                             {
@@ -1009,8 +1007,7 @@ namespace POS_Server.Controllers
                                                         LocationName = x.GEN_LOCATION.Name,
                                                         LocationId = x.LocationId,
                                                         ItemId = x.ItemId,
-                                                        Max_Qty = x.Max_Qty,
-                                                        Min_Qty = x.Min_Qty,
+                                                       Balance = x.Balance,
                                                     }).ToList(),
                             Supplier = new SupplierModel()
                             {
@@ -1192,8 +1189,7 @@ namespace POS_Server.Controllers
                                                         LocationName = x.GEN_LOCATION.Name,
                                                         LocationId = x.LocationId,
                                                         ItemId = x.ItemId,
-                                                        Max_Qty = x.Max_Qty,
-                                                        Min_Qty = x.Min_Qty,
+                                                       Balance = x.Balance,
                                                     }).ToList(),
                             Supplier = new SupplierModel()
                             {
