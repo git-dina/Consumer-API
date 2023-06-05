@@ -772,11 +772,9 @@ namespace POS_Server.Controllers
                         case "service":
                             searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
                             break; 
-                        case "free":
-                           
-                            break;  
+                        case "free"://كل شي ما عدا أصناف الخضار
                         case "customFree":
-                         
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType != "vegetable");
                             break;
                     }
 
@@ -906,10 +904,8 @@ namespace POS_Server.Controllers
                                 searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
                                 break;
                             case "free":
-
-                                break;
                             case "customFree":
-
+                                searchPredicate = searchPredicate.And(x => x.ItemReceiptType != "vegetable");
                                 break;
                         }
 
@@ -1089,10 +1085,8 @@ namespace POS_Server.Controllers
                             searchPredicate = searchPredicate.And(x => x.ItemReceiptType == "service");
                             break;
                         case "free":
-
-                            break;
                         case "customFree":
-
+                            searchPredicate = searchPredicate.And(x => x.ItemReceiptType != "vegetable");
                             break;
                     }
 

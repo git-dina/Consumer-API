@@ -51,6 +51,136 @@ namespace POS_Server.Controllers
             }
         }
          [HttpPost]
+        [Route("getPurchaseOrderByNum")]
+        public string getPurchaseOrderByNum(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string invNumber = "";
+           
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                ReceiptsController receiptsController = new ReceiptsController();
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+
+                    if (c.Type == "invNumber")
+                    {
+                        invNumber = c.Value;
+                    }
+                }
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    var invList = entity.PUR_PURCHASE_INV
+                                    .Where(p => p.InvNumber == invNumber)
+                                .Select(p => new PurchaseInvoiceModel
+                                {
+                                    PurchaseId = p.PurchaseId,
+
+                                    RefId = p.RefId,
+                                    SupplyingOrderNum = entity.PUR_PURCHASE_INV.Where(x => x.PurchaseId == p.RefId).Select(x => x.InvNumber).FirstOrDefault(),
+
+                                    LocationId = p.LocationId,
+                                    LocationName = p.GEN_LOCATION.Name,
+                                    SupId = p.SupId,
+                                    SupplierName = p.GEN_SUPPLIER.Name,
+                                    InvNumber = p.InvNumber,
+                                    InvStatus = p.InvStatus,
+                                    IsApproved = p.IsApproved,
+                                    OrderDate = p.OrderDate,
+                                    OrderRecieveDate = p.OrderRecieveDate,
+
+                                    ConsumerDiscount = p.ConsumerDiscount,
+                                    CoopDiscount = p.CoopDiscount,
+                                    DiscountValue = p.DiscountValue,
+                                    FreePercentage = p.FreePercentage,
+                                    FreeValue = p.FreeValue,
+                                    CostNet = p.CostNet,
+                                    TotalCost = p.TotalCost,
+                                    TotalPrice = p.TotalPrice,
+
+                                    Notes = p.Notes,
+                                    SupplierNotes = p.SupplierNotes,
+                                    SupplierPurchaseNotes = p.SupplierPurchaseNotes,
+
+                                    IsActive = p.IsActive,
+                                    CreateDate = p.CreateDate,
+                                    UpdateDate = p.UpdateDate,
+                                    CreateUserId = p.CreateUserId,
+                                    UpdateUserId = p.UpdateUserId,
+                                    supplier = entity.GEN_SUPPLIER.Where(x => x.SupId == p.SupId)
+                                     .Select(x => new SupplierModel
+                                     {
+                                         SupId = x.SupId,
+                                         SupCode = x.SupCode,
+                                         SupRef = x.SupRef,
+                                         Name = x.Name,
+                                         ShortName = x.Name,
+                                         Address = x.Address,
+                                         SupplierTypeId = x.SupplierTypeId,
+                                         SupplierType = x.LST_SUPPLIER_TYPE.Name,
+                                         SupplierGroupId = x.SupplierGroupId,
+                                         SupplierGroup = x.LST_SUPPLIER_GROUP.Name,
+                                         AssistantSupId = x.AssistantSupId,
+                                         AssistantAccountNumber = x.AssistantAccountNumber,
+                                         AssistantAccountName = x.AssistantAccountName,
+                                         AssistantStartDate = x.AssistantStartDate,
+                                         DiscountPercentage = x.DiscountPercentage,
+                                         FreePercentag = x.FreePercentag,
+                                         BankId = x.BankId,
+                                         BankAccount = x.BankAccount,
+                                         SupNODays = x.SupNODays,
+                                         AccountCode = x.AccountCode,
+                                         Email = x.Email,
+                                         BOX = x.BOX,
+                                         IsBlocked = x.IsBlocked,
+                                         LicenseId = x.LicenseId,
+                                         LicenseDate = x.LicenseDate,
+                                         Notes = x.Notes,
+                                         PurchaseOrderNotes = x.PurchaseOrderNotes
+                                     }).FirstOrDefault(),
+                                    PurchaseDetails = entity.PUR_PURCHASE_INV_DETAILS.Where(x => x.PurchaseId == p.PurchaseId && x.IsActive == true)
+                                                        .Select(x => new PurchaseInvDetailsModel()
+                                                        {
+                                                            DetailsId = x.DetailsId,
+                                                            ItemId = x.ItemId,
+                                                            ItemName = x.ItemName,
+                                                            ItemUnit = entity.GEN_UNIT.Where(m => m.UnitId == x.GEN_ITEM.UnitId).Select(m => m.Name).FirstOrDefault(),
+                                                            ItemCode = x.ItemCode,
+                                                            ItemNotes = x.ItemNotes,
+                                                            Factor = x.Factor,
+                                                            Barcode = x.Barcode,
+                                                            Balance = entity.GEN_ITEM_LOCATION.Where(m => m.ItemId == x.ItemId && m.LocationId == p.LocationId && m.IsActive == true).Select(m => m.Balance).FirstOrDefault(),
+                                                            MainCost = x.MainCost,
+                                                            MainPrice = x.MainPrice,
+                                                            Cost = x.Cost,
+                                                            Price = x.Price,
+                                                            MaxQty = x.MaxQty,
+                                                            MinQty = x.MinQty,
+                                                            ConsumerDiscount = x.ConsumerDiscount,
+                                                            CoopDiscount = x.CoopDiscount,
+                                                            FreeQty = x.FreeQty,
+
+                                                        }).ToList(),
+                                   
+                                }).FirstOrDefault();
+
+                    if (invList.InvStatus == "entireReceipt" || invList.InvStatus == "receipt")
+                        invList.ReceiptDocuments = receiptsController.getPurchaseOrderReceipts(invList.PurchaseId);
+
+                   return TokenManager.GenerateToken(invList);
+                }
+            }
+        }
+
+
+        [HttpPost]
         [Route("SearchOrders")]
         public string SearchOrders(string token)
         {
@@ -60,6 +190,8 @@ namespace POS_Server.Controllers
             string invStatus = "";
             long locationId = 0;
             bool? isApproved = null;
+            DateTime? fromDate = null;
+            DateTime? toDate = null;
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
             {
@@ -93,19 +225,26 @@ namespace POS_Server.Controllers
                         if (c.Value != null && c.Value != "")
                             isApproved = bool.Parse(c.Value);
                     }
+                    else if(c.Type == "fromDate")
+                    {
+                        if (c.Value != null && c.Value != "")
+                            fromDate = DateTime.Parse(c.Value);
+                    } 
+                    else if(c.Type == "toDate")
+                    {
+                        if (c.Value != null && c.Value != "")
+                            toDate = DateTime.Parse(c.Value);
+                    }
                 }
                 //return invType + invNumber + invStatus + locationId + locationId + isApproved;
-                var invoicesList = GetPurchaseInv(invType, invNumber, invStatus,locationId, isApproved);
+                var invoicesList = GetPurchaseInv(invType, invNumber, invStatus,locationId, isApproved,fromDate,toDate);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
 
-        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",string invStatus="",long locationId=0,bool? isApproved=null)
+        public List<PurchaseInvoiceModel> GetPurchaseInv(string invType = "",string invNumber = "",string invStatus="",
+                                            long locationId=0,bool? isApproved=null,DateTime? fromDate=null, DateTime? toDate=null)
         {
-            //List<string> invTypeL = new List<string>();
-            //string[] invTypeArray = invType.Split(',');
-            //foreach (string s in invTypeArray)
-            //    invTypeL.Add(s.ToLower().Trim());
           
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
@@ -125,6 +264,17 @@ namespace POS_Server.Controllers
                 if (isApproved != null)
                     searchPredicate = searchPredicate.And(x => x.IsApproved == isApproved);
 
+                if (fromDate != null)
+                {
+                    fromDate = DateTime.Parse(fromDate.ToString().Split(' ')[0]);
+                    searchPredicate = searchPredicate.And(x => x.OrderDate >= fromDate);
+                }
+                
+                if (toDate != null)
+                {
+                    toDate = DateTime.Parse(toDate.ToString().Split(' ')[0]);
+                    searchPredicate = searchPredicate.And(x => x.OrderDate <= toDate);
+                }
 
                 var invList = entity.PUR_PURCHASE_INV
                                     .Where(searchPredicate)

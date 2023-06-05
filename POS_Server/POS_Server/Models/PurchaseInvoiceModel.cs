@@ -41,5 +41,7 @@ namespace POS_Server.Models
         public string SupplierName { get; set; }
         public SupplierModel supplier { get; set; }
         public List<PurchaseInvDetailsModel> PurchaseDetails { get; set; }
+
+        public List<ReceiptInvoiceModel> ReceiptDocuments { get; set; }
     }
 }
