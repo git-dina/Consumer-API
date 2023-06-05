@@ -8,10 +8,12 @@ namespace POS_Server.Models
     public class ReceiptInvoiceModel
     {
         public long ReceiptId { get; set; }
+        public string InvType { get; set; }
         public string ReceiptStatus { get; set; }
         public bool IsRecieveAll { get; set; }
         public string InvNumber { get; set; }
         public string ReceiptType { get; set; }
+        public string CustomFreeType { get; set; }
         public Nullable<long> LocationId { get; set; }
         public Nullable<long> PurchaseId { get; set; }
         public Nullable<System.DateTime> ReceiptDate { get; set; }

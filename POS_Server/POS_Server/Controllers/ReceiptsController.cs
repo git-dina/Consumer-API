@@ -227,7 +227,37 @@ namespace POS_Server.Controllers
                             if (invoice.IsRecieveAll == true)
                                 status = "entireReceipt";
                             else
-                                status = "receipt";
+                            {
+                                //check quantity in all receipts
+                                var receipts = getPurchaseOrderReceipts((long)invoice.PurchaseId);
+                                var purchaseDetails = entity.PUR_PURCHASE_INV_DETAILS.Where(x => x.PurchaseId == (long)invoice.PurchaseId && x.IsActive == true).ToList();
+                                foreach (var row in purchaseDetails)
+                                {
+                                    var minQty = 0;
+                                    var maxQty = 0;
+                                    var allQuantity = row.MinQty + (row.MaxQty * row.Factor);
+                                    foreach (var row1 in receipts)
+                                    {
+                                        foreach (var item in row1.ReceiptDetails)
+                                        {
+                                            if (item.ItemId == row.ItemId)
+                                            {
+                                                minQty += (int)item.MinQty;
+                                                maxQty += (int)item.MaxQty;
+                                            }
+                                        }
+                                    }
+
+                                    var receiptsQuantity = minQty + (maxQty * row.Factor);
+
+                                    if(allQuantity !=  receiptsQuantity)
+                                        status = "receipt";
+                                    else
+                                        status = "entireReceipt";
+                                  
+                                }
+                            }
+
                             purInv.InvStatus = status;
                             if (purInv.RefId != null)
                             {
@@ -276,6 +306,7 @@ namespace POS_Server.Controllers
                     tmpInvoice.LocationId = newObject.LocationId;
                     tmpInvoice.SupId = newObject.SupId;
                     tmpInvoice.ReceiptType = newObject.ReceiptType;
+                    tmpInvoice.CustomFreeType = newObject.CustomFreeType;
                     tmpInvoice.IsRecieveAll = newObject.IsRecieveAll;
                     tmpInvoice.InvNumber = newObject.InvNumber;
                     tmpInvoice.PurchaseId = newObject.PurchaseId;
@@ -438,12 +469,12 @@ namespace POS_Server.Controllers
                     }
                 }
  
-                var invoicesList = GetReceipts(locationId, invNumber,fromDate,toDate);
+                var invoicesList = GetReceipts("receipt",locationId, invNumber,fromDate,toDate);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
 
-        public List<ReceiptInvoiceModel> GetReceipts(long locationId =0, string invNumber = "", DateTime? fromDate = null, DateTime? toDate = null)
+        public List<ReceiptInvoiceModel> GetReceipts(string invType, long locationId =0, string invNumber = "", DateTime? fromDate = null, DateTime? toDate = null)
         {
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
@@ -451,7 +482,10 @@ namespace POS_Server.Controllers
                 var searchPredicate = PredicateBuilder.New<INV_RECEIPT>();
                 searchPredicate = searchPredicate.And(x => true);
 
-                if (invNumber.Trim() != "")
+                if (invType.Trim() != "")
+                    searchPredicate = searchPredicate.And(x => x.InvType == invType);
+
+                 if (invNumber.Trim() != "")
                     searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
 
                 if (locationId != 0)
@@ -486,6 +520,7 @@ namespace POS_Server.Controllers
                                    ReceiptDate=p.ReceiptDate,
                                    ReceiptStatus=p.ReceiptStatus,
                                    ReceiptType=p.ReceiptType,
+                                   CustomFreeType = p.CustomFreeType,
                                    SupInvoiceDate=p.SupInvoiceDate,
                                    SupInvoiceNum=p.SupInvoiceNum,
                                    IsTransfer=p.IsTransfer,
