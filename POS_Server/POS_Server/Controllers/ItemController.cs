@@ -877,6 +877,14 @@ namespace POS_Server.Controllers
                                 SupId = p.GEN_SUPPLIER.SupId,
                                 Name = p.GEN_SUPPLIER.Name,
                             },
+                            Category = new ItemCategoryModel() 
+                            { 
+                                CategoryId = p.GEN_ITEM_CATEGORY.CategoryId,
+                                FreePercentage =  p.GEN_ITEM_CATEGORY.FreePercentage,
+                                DiscountPercentage = p.GEN_ITEM_CATEGORY.DiscountPercentage,
+                                WholesalePercentage = p.GEN_ITEM_CATEGORY.WholesalePercentage,
+                                ProfitPercentage = p.GEN_ITEM_CATEGORY.ProfitPercentage,
+                            },
                         }).ToList();
 
                     //search by name

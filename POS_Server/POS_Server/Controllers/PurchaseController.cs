@@ -290,6 +290,7 @@ namespace POS_Server.Controllers
                                     SupId = p.SupId,
                                     SupplierName = p.GEN_SUPPLIER.Name,
                                     InvNumber = p.InvNumber,
+                                    InvType = p.InvType,
                                     InvStatus = p.InvStatus,
                                     IsApproved = p.IsApproved,
                                     OrderDate = p.OrderDate,

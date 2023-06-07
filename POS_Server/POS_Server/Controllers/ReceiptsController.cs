@@ -417,7 +417,7 @@ namespace POS_Server.Controllers
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var sequence = entity.INV_RECEIPT.Select(b => b.InvNumber).Max();
+                var sequence = entity.INV_RECEIPT.Where(b => b.InvType == "receipt").Select(b => b.InvNumber).Max();
 
                 if (sequence == null)
                     sequence = "1";
@@ -516,7 +516,8 @@ namespace POS_Server.Controllers
                                     LocationName = p.GEN_LOCATION.Name,
                                     SupId = p.SupId,
                                     InvNumber = p.InvNumber,
-                                   IsRecieveAll=p.IsRecieveAll,
+                                    InvType = p.InvType,
+                                    IsRecieveAll =p.IsRecieveAll,
                                    ReceiptDate=p.ReceiptDate,
                                    ReceiptStatus=p.ReceiptStatus,
                                    ReceiptType=p.ReceiptType,
@@ -721,6 +722,106 @@ namespace POS_Server.Controllers
 
                 return invList;
             }
+        }
+
+        [HttpPost]
+        [Route("SaveReturnOrder")]
+        public async Task<string> SaveReturnOrder(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string jsonObject = "";
+                ReceiptInvoiceModel invModel = null;
+                INV_RECEIPT invoice = null;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        jsonObject = c.Value;
+                        invModel = JsonConvert.DeserializeObject<ReceiptInvoiceModel>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        invoice = JsonConvert.DeserializeObject<INV_RECEIPT>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                try
+                {
+                    #region generate InvNumber
+                    long locationId = (long)invModel.LocationId;
+                    if (invModel.InvNumber == "" || invModel.InvNumber == null)
+                    {
+                        string invNumber = await generateReturnInvNumber(locationId);
+
+                        invoice.InvNumber = invNumber;
+                    }
+
+
+                    #endregion
+                    invoice = await saveInvoice(invoice);
+                    invModel.ReceiptId = invoice.ReceiptId;
+                    invModel.InvNumber = invoice.InvNumber;
+
+                    string jsonString = JsonConvert.SerializeObject(invModel.ReceiptDetails);
+                    var invItems = JsonConvert.DeserializeObject<List<INV_RECEIPT_DETAILS>>(jsonString, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    saveInvoiceItems(invItems, invoice.ReceiptId);
+                    encreaseQuantityFromLocation(invItems, (long)invoice.LocationId);
+
+                    
+                    return TokenManager.GenerateToken(invModel);
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+
+        [NonAction]
+        public async Task<string> generateReturnInvNumber(long locationId)
+        {
+
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var sequence = entity.INV_RECEIPT.Where(b => b.InvType =="return").Select(b => b.InvNumber).Max();
+
+                if (sequence == null)
+                    sequence = "1";
+                else
+                    sequence = (long.Parse(sequence) + 1).ToString();
+                return sequence.ToString();
+            }
+
+        }
+        [NonAction]
+        private void encreaseQuantityFromLocation(List<INV_RECEIPT_DETAILS> invoiceItems, long locationId)
+        {
+            try
+            {
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+
+                    foreach (var row in invoiceItems)
+                    {
+
+                        var loc = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == row.ItemId && x.LocationId == locationId).FirstOrDefault();
+
+                        loc.Balance -= (long)(row.MaxQty * row.Factor + row.MinQty);
+
+                        loc.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        loc.UpdateUserId = row.CreateUserId;
+
+                    }
+                    entity.SaveChanges();
+                }
+            }
+            catch { }
         }
     }
 }

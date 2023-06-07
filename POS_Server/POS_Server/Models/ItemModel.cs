@@ -63,6 +63,7 @@ namespace POS_Server.Models
         public List<ItemAllowedTransModel> ItemAllowedTransactions { get; set; }
         public List<ItemGeneralizationModel> ItemGeneralizations { get; set; }
         public List<ItemLocationModel> ItemLocations { get; set; }
+        public ItemCategoryModel Category { get; set; }
 
         public SupplierModel Supplier { get; set; }
 
