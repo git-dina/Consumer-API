@@ -281,10 +281,11 @@ namespace POS_Server.Controllers
                             sup.UpdateUserId = subObj.UpdateUserId;
                         }
                         entity.SaveChanges();
-
-                        if(isNew == true)
+                        subModel.SupId = sup.SupId;
+                        if (isNew == true)
                         {
                             sup.SupCode = sup.SupId.ToString().PadLeft(4, '0');
+                            subModel.SupCode = sup.SupCode;
                             entity.SaveChanges();
                         }
                         SaveSupplierPhones(subModel.SupplierPhones, sup.SupId,(long)subObj.UpdateUserId);
@@ -294,7 +295,7 @@ namespace POS_Server.Controllers
                     }
 
                     //var supList = GetSuplliers(true);
-                    return TokenManager.GenerateToken(sup);
+                    return TokenManager.GenerateToken(subModel);
                 }
             catch (DbEntityValidationException dbEx)
                 {
@@ -307,7 +308,7 @@ namespace POS_Server.Controllers
                             validationError.PropertyName, validationError.ErrorMessage));
                         }
                     }
-                   return sb.ToString();
+                    return sb.ToString();
                 }
             }
         }

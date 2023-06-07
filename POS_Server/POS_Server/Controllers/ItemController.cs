@@ -1236,7 +1236,7 @@ namespace POS_Server.Controllers
                     long maxId = 0;
                     var item = entity.GEN_ITEM.Where(p => p.SupId == supId).Count();
                       if(item > 0)
-                        maxId = entity.GEN_ITEM.Where(p => p.SupId == supId).Select(p=> p.ItemId).Max();
+                        maxId = item;
                     maxId++;
                     var itemCode = supId.ToString().PadLeft(4, '0') + maxId.ToString().PadLeft(4, '0');
                     return TokenManager.GenerateToken(itemCode);
