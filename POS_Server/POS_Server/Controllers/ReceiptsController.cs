@@ -828,5 +828,299 @@ namespace POS_Server.Controllers
             }
             catch { }
         }
+
+        [HttpPost]
+        [Route("PostingReceiptOrder")]
+        public async Task<string> PostingReceiptOrder(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long receiptId = 0;
+                long userId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "receiptId")
+                    {
+                        receiptId = long.Parse(c.Value);
+                    } 
+                    else if (c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var rec = entity.INV_RECEIPT.Find(receiptId);
+                        rec.IsTransfer = true;
+                        rec.ReceiptStatus = "locationTransfer";
+                        rec.TransferBy = userId;
+                        rec.TransferDate = cc.AddOffsetTodate(DateTime.Now);
+
+                        entity.SaveChanges();
+                        var receipt = entity.INV_RECEIPT
+                                    .Where(p => p.ReceiptId == receiptId)
+                                .Select(p => new ReceiptInvoiceModel
+                                {
+                                    ReceiptId = p.ReceiptId,
+                                    ReceiptType = p.ReceiptType,
+                                    ReceiptStatus = p.ReceiptStatus,
+                                    PurchaseId = p.PurchaseId,
+                                    PurchaseInvNumber = p.PUR_PURCHASE_INV.InvNumber,
+                                    IsRecieveAll = p.IsRecieveAll,
+                                    LocationId = p.LocationId,
+                                    LocationName = p.GEN_LOCATION.Name,
+                                    SupId = p.SupId,
+                                    InvNumber = p.InvNumber,
+                                    ReceiptDate = p.ReceiptDate,
+
+                                    SupInvoiceDate = p.SupInvoiceDate,
+                                    SupInvoiceNum = p.SupInvoiceNum,
+                                    InvoiceAmount = p.InvoiceAmount,
+                                    AmountDifference = p.AmountDifference,
+
+                                    ISAccountTransfer = p.ISAccountTransfer,
+                                    AccountTransferDate = p.AccountTransferDate,
+
+                                    CoopDiscount = p.CoopDiscount,
+                                    DiscountValue = p.DiscountValue,
+
+                                    IsTransfer = p.IsTransfer,
+                                    TransferBy = p.TransferBy,
+                                    TransferDate = p.TransferDate,
+
+                                    AccountEntryCode = p.AccountEntryCode,
+                                    AccountEntryCodeCustody = p.AccountEntryCode,
+
+                                    Notes = p.Notes,
+                                    SupplierNotes = p.PUR_PURCHASE_INV.SupplierNotes,
+                                    SupplierPurchaseNotes = p.PUR_PURCHASE_INV.SupplierPurchaseNotes,
+
+                                    IsActive = p.IsActive,
+                                    CreateDate = p.CreateDate,
+                                    UpdateDate = p.UpdateDate,
+                                    CreateUserId = p.CreateUserId,
+                                    UpdateUserId = p.UpdateUserId,
+                                    supplier = entity.GEN_SUPPLIER.Where(x => x.SupId == p.SupId)
+                                     .Select(x => new SupplierModel
+                                     {
+                                         SupId = x.SupId,
+                                         SupRef = x.SupRef,
+                                         Name = x.Name,
+                                         ShortName = x.Name,
+                                         Address = x.Address,
+                                         SupplierTypeId = x.SupplierTypeId,
+                                         SupplierType = x.LST_SUPPLIER_TYPE.Name,
+                                         SupplierGroupId = x.SupplierGroupId,
+                                         SupplierGroup = x.LST_SUPPLIER_GROUP.Name,
+                                         AssistantSupId = x.AssistantSupId,
+                                         AssistantAccountNumber = x.AssistantAccountNumber,
+                                         AssistantAccountName = x.AssistantAccountName,
+                                         AssistantStartDate = x.AssistantStartDate,
+                                         DiscountPercentage = x.DiscountPercentage,
+                                         FreePercentag = x.FreePercentag,
+                                         BankId = x.BankId,
+                                         BankAccount = x.BankAccount,
+                                         SupNODays = x.SupNODays,
+                                         AccountCode = x.AccountCode,
+                                         Email = x.Email,
+                                         BOX = x.BOX,
+                                         IsBlocked = x.IsBlocked,
+                                         LicenseId = x.LicenseId,
+                                         LicenseDate = x.LicenseDate,
+                                         Notes = x.Notes,
+                                         PurchaseOrderNotes = x.PurchaseOrderNotes
+                                     }).FirstOrDefault(),
+                                    ReceiptDetails = entity.INV_RECEIPT_DETAILS.Where(x => x.ReceiptId == p.ReceiptId && x.IsActive == true)
+                                                        .Select(x => new ReceiptDetailsModel()
+                                                        {
+                                                            DetailsId = x.DetailsId,
+                                                            ItemId = x.ItemId,
+                                                            ItemName = x.ItemName,
+                                                            ItemCode = x.ItemCode,
+                                                            ItemNotes = x.ItemNotes,
+                                                            Factor = x.Factor,
+                                                            Barcode = x.Barcode,
+                                                            Balance = entity.GEN_ITEM_LOCATION.Where(m => m.ItemId == x.ItemId && m.LocationId == p.LocationId && m.IsActive == true).Select(m => m.Balance).FirstOrDefault(),
+                                                            MainCost = x.MainCost,
+                                                            MainPrice = x.MainPrice,
+                                                            Cost = x.Cost,
+                                                            Price = x.Price,
+                                                            MaxQty = x.MaxQty,
+                                                            MinQty = x.MinQty,
+                                                            ConsumerDiscount = x.ConsumerDiscount,
+                                                            CoopDiscount = x.CoopDiscount,
+                                                            FreeQty = x.FreeQty,
+
+                                                        }).ToList()
+                                }).FirstOrDefault();
+
+                        return TokenManager.GenerateToken(receipt);
+                    }
+                        
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        } 
+        
+        [HttpPost]
+        [Route("CanclePostingReceiptOrder")]
+        public async Task<string> CanclePostingReceiptOrder(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long receiptId = 0;
+                long userId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "receiptId")
+                    {
+                        receiptId = long.Parse(c.Value);
+                    } 
+                    else if (c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var rec = entity.INV_RECEIPT.Find(receiptId);
+                        rec.IsTransfer = false;
+                        rec.ReceiptStatus = "notCarriedOver";
+                        rec.TransferBy = userId;
+                        rec.TransferDate = cc.AddOffsetTodate(DateTime.Now);
+
+                        entity.SaveChanges();
+                        var receipt = entity.INV_RECEIPT
+                                    .Where(p => p.ReceiptId == receiptId)
+                                .Select(p => new ReceiptInvoiceModel
+                                {
+                                    ReceiptId = p.ReceiptId,
+                                    ReceiptType = p.ReceiptType,
+                                    ReceiptStatus = p.ReceiptStatus,
+                                    PurchaseId = p.PurchaseId,
+                                    PurchaseInvNumber = p.PUR_PURCHASE_INV.InvNumber,
+                                    IsRecieveAll = p.IsRecieveAll,
+                                    LocationId = p.LocationId,
+                                    LocationName = p.GEN_LOCATION.Name,
+                                    SupId = p.SupId,
+                                    InvNumber = p.InvNumber,
+                                    ReceiptDate = p.ReceiptDate,
+
+                                    SupInvoiceDate = p.SupInvoiceDate,
+                                    SupInvoiceNum = p.SupInvoiceNum,
+                                    InvoiceAmount = p.InvoiceAmount,
+                                    AmountDifference = p.AmountDifference,
+
+                                    ISAccountTransfer = p.ISAccountTransfer,
+                                    AccountTransferDate = p.AccountTransferDate,
+
+                                    CoopDiscount = p.CoopDiscount,
+                                    DiscountValue = p.DiscountValue,
+
+                                    IsTransfer = p.IsTransfer,
+                                    TransferBy = p.TransferBy,
+                                    TransferDate = p.TransferDate,
+
+                                    AccountEntryCode = p.AccountEntryCode,
+                                    AccountEntryCodeCustody = p.AccountEntryCode,
+
+                                    Notes = p.Notes,
+                                    SupplierNotes = p.PUR_PURCHASE_INV.SupplierNotes,
+                                    SupplierPurchaseNotes = p.PUR_PURCHASE_INV.SupplierPurchaseNotes,
+
+                                    IsActive = p.IsActive,
+                                    CreateDate = p.CreateDate,
+                                    UpdateDate = p.UpdateDate,
+                                    CreateUserId = p.CreateUserId,
+                                    UpdateUserId = p.UpdateUserId,
+                                    supplier = entity.GEN_SUPPLIER.Where(x => x.SupId == p.SupId)
+                                     .Select(x => new SupplierModel
+                                     {
+                                         SupId = x.SupId,
+                                         SupRef = x.SupRef,
+                                         Name = x.Name,
+                                         ShortName = x.Name,
+                                         Address = x.Address,
+                                         SupplierTypeId = x.SupplierTypeId,
+                                         SupplierType = x.LST_SUPPLIER_TYPE.Name,
+                                         SupplierGroupId = x.SupplierGroupId,
+                                         SupplierGroup = x.LST_SUPPLIER_GROUP.Name,
+                                         AssistantSupId = x.AssistantSupId,
+                                         AssistantAccountNumber = x.AssistantAccountNumber,
+                                         AssistantAccountName = x.AssistantAccountName,
+                                         AssistantStartDate = x.AssistantStartDate,
+                                         DiscountPercentage = x.DiscountPercentage,
+                                         FreePercentag = x.FreePercentag,
+                                         BankId = x.BankId,
+                                         BankAccount = x.BankAccount,
+                                         SupNODays = x.SupNODays,
+                                         AccountCode = x.AccountCode,
+                                         Email = x.Email,
+                                         BOX = x.BOX,
+                                         IsBlocked = x.IsBlocked,
+                                         LicenseId = x.LicenseId,
+                                         LicenseDate = x.LicenseDate,
+                                         Notes = x.Notes,
+                                         PurchaseOrderNotes = x.PurchaseOrderNotes
+                                     }).FirstOrDefault(),
+                                    ReceiptDetails = entity.INV_RECEIPT_DETAILS.Where(x => x.ReceiptId == p.ReceiptId && x.IsActive == true)
+                                                        .Select(x => new ReceiptDetailsModel()
+                                                        {
+                                                            DetailsId = x.DetailsId,
+                                                            ItemId = x.ItemId,
+                                                            ItemName = x.ItemName,
+                                                            ItemCode = x.ItemCode,
+                                                            ItemNotes = x.ItemNotes,
+                                                            Factor = x.Factor,
+                                                            Barcode = x.Barcode,
+                                                            Balance = entity.GEN_ITEM_LOCATION.Where(m => m.ItemId == x.ItemId && m.LocationId == p.LocationId && m.IsActive == true).Select(m => m.Balance).FirstOrDefault(),
+                                                            MainCost = x.MainCost,
+                                                            MainPrice = x.MainPrice,
+                                                            Cost = x.Cost,
+                                                            Price = x.Price,
+                                                            MaxQty = x.MaxQty,
+                                                            MinQty = x.MinQty,
+                                                            ConsumerDiscount = x.ConsumerDiscount,
+                                                            CoopDiscount = x.CoopDiscount,
+                                                            FreeQty = x.FreeQty,
+
+                                                        }).ToList()
+                                }).FirstOrDefault();
+
+                        return TokenManager.GenerateToken(receipt);
+                    }
+                        
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
     }
 }
