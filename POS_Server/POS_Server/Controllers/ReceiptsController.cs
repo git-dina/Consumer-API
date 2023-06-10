@@ -434,6 +434,7 @@ namespace POS_Server.Controllers
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
             string invNumber = "";
+            string invType = "";
             long locationId = 0;
             DateTime? fromDate = null;
             DateTime? toDate = null;
@@ -457,6 +458,10 @@ namespace POS_Server.Controllers
                     {
                         invNumber = c.Value;
                     }
+                    else if (c.Type == "invType")
+                    {
+                        invType = c.Value;
+                    }
                     else if (c.Type == "fromDate")
                     {
                         if (c.Value != null && c.Value != "")
@@ -469,7 +474,7 @@ namespace POS_Server.Controllers
                     }
                 }
  
-                var invoicesList = GetReceipts("receipt",locationId, invNumber,fromDate,toDate);
+                var invoicesList = GetReceipts(invType, locationId, invNumber,fromDate, toDate);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
