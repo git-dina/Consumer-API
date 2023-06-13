@@ -202,6 +202,7 @@ namespace POS_Server.Controllers
                 return itemsList;
             }
         }
+        [NonAction]
          public ItemModel GetItem(long itemId)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
@@ -752,9 +753,13 @@ namespace POS_Server.Controllers
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
                     var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
-                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Code.ToLower() == textSearch.ToLower() && p.SupId == supId
-                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Code.ToLower() == textSearch.ToLower() );
+                    if(supId != 0)
+                        searchPredicate = searchPredicate.And(p =>  p.SupId == supId);
+                    if(locationId != 0)
+                        searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
 
+                    if(itemsFor != "")
                     switch (itemsFor)
                     {
                         case "orders":
@@ -891,9 +896,14 @@ namespace POS_Server.Controllers
                     if (item.Count == 0)
                     {
                        searchPredicate = PredicateBuilder.New<GEN_ITEM>();
-                        searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Name.ToLower().Contains(textSearch.ToLower()) && p.SupId == supId
-                                && p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+                        searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Name.ToLower().Contains(textSearch.ToLower()));
 
+                        if (supId != 0)
+                            searchPredicate = searchPredicate.And(p => p.SupId == supId);
+                        if (locationId != 0)
+                            searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+
+                        if(itemsFor != "")
                         switch (itemsFor)
                         {
                             case "orders":
@@ -1024,7 +1034,99 @@ namespace POS_Server.Controllers
 
                 }
             }
-        }
+        } 
+        
+        //[HttpPost]
+        //[Route("GetItemBarcodesByCodeOrName")]
+        //public string GetItemBarcodesByCodeOrName(string token)
+        //{
+        //    token = TokenManager.readToken(HttpContext.Current.Request);
+
+        //    var strP = TokenManager.GetPrincipal(token);
+        //    if (strP != "0") //invalid authorization
+        //    {
+        //        return TokenManager.GenerateToken(strP);
+        //    }
+        //    else
+        //    {
+        //        #region parameters
+        //        string textSearch = "";
+        //        long locationId = 0;
+
+        //        IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+        //        foreach (Claim c in claims)
+        //        {
+        //            if (c.Type == "textSearch")
+        //            {
+        //                if (c.Value != "")
+        //                    textSearch = c.Value;
+        //            }
+        //            else if (c.Type == "locationId")
+        //            {
+        //                if (c.Value != "")
+        //                    locationId = long.Parse( c.Value);
+        //            } 
+                   
+        //        }
+        //        #endregion
+        //        using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+        //        {
+        //            var searchPredicate = PredicateBuilder.New<GEN_ITEM_UNIT>();
+        //            searchPredicate = searchPredicate.And(p => p.GEN_ITEM.IsActive == true && p.GEN_ITEM.Code.ToLower() == textSearch.ToLower() 
+        //                        && p.GEN_ITEM.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId) && p.IsActive == true);
+
+
+        //            var itemUnits = entity.GEN_ITEM_UNIT.Where(searchPredicate)
+        //                                        .Select(x => new ItemUnitModel()
+        //                                        {
+        //                                            UnitId = x.UnitId,
+        //                                            Barcode = x.Barcode,
+        //                                            BarcodeType = x.BarcodeType,
+        //                                            Cost = x.Cost,
+        //                                            Factor = x.Factor,
+        //                                            SalePrice = x.SalePrice,
+        //                                            CreateDate = x.CreateDate,
+        //                                            UpdateDate = x.UpdateDate,
+        //                                            CreateUserId = x.CreateUserId,
+        //                                            IsActive = x.IsActive,
+        //                                            IsBlocked = x.IsBlocked,
+        //                                            ItemId = x.ItemId,
+        //                                            ItemUnitId = x.ItemUnitId,
+        //                                            UpdateUserId = x.UpdateUserId,
+        //                                        }).ToList();
+
+        //            //search by name
+        //            if (itemUnits.Count == 0)
+        //            {
+        //               searchPredicate = PredicateBuilder.New<GEN_ITEM_UNIT>();
+        //                searchPredicate = searchPredicate.And(p => p.GEN_ITEM.IsActive == true && p.GEN_ITEM.Name.ToLower().Contains(textSearch.ToLower()) 
+        //                        && p.GEN_ITEM.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId) &&p.IsActive==true);
+
+
+        //                itemUnits = entity.GEN_ITEM_UNIT.Where(searchPredicate)
+        //                                        .Select(x => new ItemUnitModel()
+        //                                        {
+        //                                            UnitId = x.UnitId,
+        //                                            Barcode = x.Barcode,
+        //                                            BarcodeType = x.BarcodeType,
+        //                                            Cost = x.Cost,
+        //                                            Factor = x.Factor,
+        //                                            SalePrice = x.SalePrice,
+        //                                            CreateDate = x.CreateDate,
+        //                                            UpdateDate = x.UpdateDate,
+        //                                            CreateUserId = x.CreateUserId,
+        //                                            IsActive = x.IsActive,
+        //                                            IsBlocked = x.IsBlocked,
+        //                                            ItemId = x.ItemId,
+        //                                            ItemUnitId = x.ItemUnitId,
+        //                                            UpdateUserId = x.UpdateUserId,
+        //                                        }).ToList();
+        //            }
+        //            return TokenManager.GenerateToken(itemUnits);
+
+        //        }
+        //    }
+        //}
 
          [HttpPost]
         [Route("GetItemByBarcode")]
@@ -1072,9 +1174,15 @@ namespace POS_Server.Controllers
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
                     var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
-                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.SupId == supId
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true
                                 && p.GEN_ITEM_UNIT.Any(u => u.Barcode.ToLower() == barcode.ToLower()));
 
+                    if (supId != 0)
+                        searchPredicate = searchPredicate.And(p => p.SupId == supId);
+                    if (locationId != 0)
+                        searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+
+                    if(itemsFor != "")
                     switch (itemsFor)
                     {
                         case "orders":
