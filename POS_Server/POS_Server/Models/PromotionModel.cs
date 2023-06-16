@@ -19,7 +19,6 @@ namespace POS_Server.Models
         public string PromotionType { get; set; }
         public string PromotionNature { get; set; }
         public decimal PromotionPercentage { get; set; }
-        public int? PromotionQuantity { get; set; }
         public string Notes { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
