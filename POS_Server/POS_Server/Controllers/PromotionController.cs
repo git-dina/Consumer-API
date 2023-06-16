@@ -4,6 +4,7 @@ using POS_Server.Models;
 using POS_Server.Models.VM;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
@@ -21,8 +22,8 @@ namespace POS_Server.Controllers
         CountriesController cc = new CountriesController();
 
         [HttpPost]
-        [Route("Save")]
-        public string Save(string token)
+        [Route("SavePromotion")]
+        public string SavePromotion(string token)
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
 
@@ -48,11 +49,19 @@ namespace POS_Server.Controllers
                         break;
                     }
                 }
-                try
+                //try
                 {
                     PUR_PROMOTION promotion;
                     long promotionId = 0;
+                    #region check barcode availability for offer
+                    var barcodesAvailability = checkBarcodesAvailability(promotionModel);
+                    if(!barcodesAvailability)
+                    {
+                        promotionModel.PromotionId = -5;
+                        return TokenManager.GenerateToken(promotionModel);
 
+                    }
+                    #endregion
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var proEntity = entity.Set<PUR_PROMOTION>();
@@ -78,7 +87,6 @@ namespace POS_Server.Controllers
                             promotion.PromotionStartDate = proObj.PromotionStartDate;
                             promotion.PromotionEndDate = proObj.PromotionEndDate;
                             promotion.PromotionPercentage = proObj.PromotionPercentage;
-                            promotion.PromotionQuantity = proObj.PromotionQuantity;
                             promotion.RefId = proObj.RefId;
    
                             promotion.Notes = proObj.Notes;
@@ -105,14 +113,38 @@ namespace POS_Server.Controllers
                     var itemsList = GetOffer(promotionId);
                     return TokenManager.GenerateToken(itemsList);
                 }
-                catch
-                {
-                    return TokenManager.GenerateToken(null);
+                //catch
+                //{
+                //    return TokenManager.GenerateToken(null);
 
-                }
+                //}
             }
         }
 
+        [NonAction]
+        private bool checkBarcodesAvailability(PromotionModel promotionModel)
+        {
+            bool valid = true;
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                foreach(var row in promotionModel.PromotionDetails)
+                {
+                    var promotion = entity.PUR_PROMOTION_DETAILS.Where(x => ((EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate))
+                                   || (EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate))
+                                   || (EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate)))
+                                   && (x.PUR_PROMOTION.PromotionType == "quantity" || x.PUR_PROMOTION.PromotionType == "percentage")
+                                   && x.Barcode == row.Barcode
+                                   && x.ItemId == row.ItemId
+                                   && x.UnitId == row.UnitId
+                                   ).FirstOrDefault();
+
+                    if (promotion != null)
+                        return false;
+                                   
+                }
+            }
+            return valid;
+        }
         [NonAction]
         private void savePromotionItems(List<PUR_PROMOTION_DETAILS> invoiceItems, long promotionId)
         {
@@ -196,7 +228,6 @@ namespace POS_Server.Controllers
                                   PromotionStartDate = p.PromotionStartDate,
                                   PromotionEndDate = p.PromotionEndDate,
                                   PromotionPercentage = p.PromotionPercentage,
-                                  PromotionQuantity = p.PromotionQuantity,
                                   RefId = p.RefId,
                                   IsStoped = p.IsStoped,
                                   StopedBy = p.StopedBy,
@@ -292,7 +323,6 @@ namespace POS_Server.Controllers
                                    PromotionStartDate = p.PromotionStartDate,
                                    PromotionEndDate = p.PromotionEndDate,
                                    PromotionPercentage = p.PromotionPercentage,
-                                   PromotionQuantity = p.PromotionQuantity,
                                    RefId = p.RefId,
                                    IsStoped = p.IsStoped,
                                    StopedBy = p.StopedBy,
