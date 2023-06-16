@@ -53,21 +53,22 @@ namespace POS_Server.Controllers
                 {
                     PUR_PROMOTION promotion;
                     long promotionId = 0;
-                    #region check barcode availability for offer
-                    var barcodesAvailability = checkBarcodesAvailability(promotionModel);
-                    if(!barcodesAvailability)
-                    {
-                        promotionModel.PromotionId = -5;
-                        return TokenManager.GenerateToken(promotionModel);
-
-                    }
-                    #endregion
+                   
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
+
                         var proEntity = entity.Set<PUR_PROMOTION>();
                         if (proObj.PromotionId == 0)
                         {
-                            //isNew = true;
+                            #region check barcode availability for offer
+                            var barcodesAvailability = checkBarcodesAvailability(promotionModel);
+                            if (!barcodesAvailability)
+                            {
+                                promotionModel.PromotionId = -5;
+                                return TokenManager.GenerateToken(promotionModel);
+
+                            }
+                            #endregion
 
                             proObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             proObj.UpdateDate = proObj.CreateDate;
@@ -80,19 +81,8 @@ namespace POS_Server.Controllers
                         {
                             promotion = entity.PUR_PROMOTION.Find(proObj.PromotionId);
 
-                            promotion.PromotionType = proObj.PromotionType;
-                            promotion.PromotionCategory = proObj.PromotionCategory;
-                            promotion.PromotionNature = proObj.PromotionNature;
-                            promotion.PromotionDate = proObj.PromotionDate;
-                            promotion.PromotionStartDate = proObj.PromotionStartDate;
-                            promotion.PromotionEndDate = proObj.PromotionEndDate;
-                            promotion.PromotionPercentage = proObj.PromotionPercentage;
-                            promotion.RefId = proObj.RefId;
-   
-                            promotion.Notes = proObj.Notes;
+                            stopPromotionOnBarcode(promotionModel);
 
-                            promotion.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            promotion.UpdateUserId = proObj.UpdateUserId;
                         }
                         entity.SaveChanges();
                     }
@@ -121,6 +111,23 @@ namespace POS_Server.Controllers
             }
         }
 
+        [NonAction]
+        private void stopPromotionOnBarcode(PromotionModel promotion)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                foreach(var pro in promotion.PromotionDetails)
+                {
+                    var barcode = entity.PUR_PROMOTION_DETAILS.Find(pro.DetailsId);
+                    if (barcode.IsItemStoped != pro.IsItemStoped)
+                    { barcode.IsItemStoped = pro.IsItemStoped;
+                        barcode.StoppedItemBy = promotion.UpdateUserId;
+                        barcode.StoppedItemDate = cc.AddOffsetTodate(DateTime.Now);
+                    }
+                }
+                entity.SaveChanges(); 
+            }
+        }
         [NonAction]
         private bool checkBarcodesAvailability(PromotionModel promotionModel)
         {
