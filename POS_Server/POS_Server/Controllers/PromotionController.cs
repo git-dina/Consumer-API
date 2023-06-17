@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LinqKit;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using POS_Server.Models;
 using POS_Server.Models.VM;
@@ -379,6 +380,139 @@ namespace POS_Server.Controllers
                 {
                     return TokenManager.GenerateToken("0");
                 }
+            }
+        }
+
+        [HttpPost]
+        [Route("SearchPromotions")]
+        public string SearchPromotions(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            long invNumber = 0;
+            string promotionType = "";
+            long locationId = 0;
+            DateTime? fromDate = null;
+            DateTime? toDate = null;
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "locationId")
+                    {
+                        if (c.Value != "")
+                            locationId = long.Parse(c.Value);
+                    }
+                    else if (c.Type == "invNumber")
+                    {
+                        invNumber = long.Parse( c.Value);
+                    }
+                    else if (c.Type == "promotionType")
+                    {
+                        promotionType = c.Value;
+                    }
+                    else if (c.Type == "fromDate")
+                    {
+                        if (c.Value != null && c.Value != "")
+                            fromDate = DateTime.Parse(c.Value);
+                    }
+                    else if (c.Type == "toDate")
+                    {
+                        if (c.Value != null && c.Value != "")
+                            toDate = DateTime.Parse(c.Value);
+                    }
+                }
+
+                var invoicesList = GetPromotions(promotionType, locationId, invNumber, fromDate, toDate);
+                return TokenManager.GenerateToken(invoicesList);
+            }
+        }
+
+        [NonAction]
+        public List<PromotionModel> GetPromotions(string promotionType, long locationId,long invNumber,DateTime? fromDate,DateTime? toDate)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var searchPredicate = PredicateBuilder.New<PUR_PROMOTION>();
+                searchPredicate = searchPredicate.And(x => x.IsActive == true);
+
+                if (promotionType == "")
+                    searchPredicate = searchPredicate.And(x => x.PromotionType == "percentage" || x.PromotionType == "quantity");
+                else
+                    searchPredicate = searchPredicate.And(x => x.PromotionType == promotionType);
+
+                if (invNumber != 0)
+                    searchPredicate = searchPredicate.And(x => x.PromotionId == invNumber);
+
+                if (fromDate != null && toDate == null)
+                    searchPredicate = searchPredicate.And( x => EntityFunctions.TruncateTime(x.PromotionStartDate) >= fromDate.Value);
+                else if (fromDate != null && toDate == null)
+                    searchPredicate = searchPredicate.And(x => EntityFunctions.TruncateTime(x.PromotionEndDate) <= toDate.Value);
+                else if (fromDate != null && toDate != null)
+                    searchPredicate = searchPredicate.And(x => EntityFunctions.TruncateTime(x.PromotionStartDate )>= fromDate.Value &&  EntityFunctions.TruncateTime(x.PromotionEndDate) <= toDate.Value);
+               
+               
+                var promotion = entity.PUR_PROMOTION
+                                  .Where(searchPredicate)
+                              .Select(p => new PromotionModel
+                              {
+                                  PromotionId = p.PromotionId,
+                                  PromotionType = p.PromotionType,
+                                  PromotionCategory = p.PromotionCategory,
+                                  PromotionNature = p.PromotionNature,
+                                  PromotionDate = p.PromotionDate,
+                                  PromotionStartDate = p.PromotionStartDate,
+                                  PromotionEndDate = p.PromotionEndDate,
+                                  PromotionPercentage = p.PromotionPercentage,
+                                  RefId = p.RefId,
+                                  IsStoped = p.IsStoped,
+                                  StopedBy = p.StopedBy,
+                                  StopedDate = p.StopedDate,
+                                  IsActive = p.IsActive,
+                                  CreateDate = p.CreateDate,
+                                  UpdateDate = p.UpdateDate,
+                                  CreateUserId = p.CreateUserId,
+                                  UpdateUserId = p.UpdateUserId,
+                                  Notes = p.Notes,
+
+                                  PromotionDetails = entity.PUR_PROMOTION_DETAILS.Where(x => x.PromotionId == p.PromotionId && x.IsActive == true)
+                                                      .Select(x => new PromotionDetailsModel()
+                                                      {
+                                                          DetailsId = x.DetailsId,
+                                                          ItemId = x.ItemId,
+                                                          ItemName = x.ItemName,
+                                                          ItemCode = x.ItemCode,
+                                                          Factor = x.Factor,
+                                                          Barcode = x.Barcode,
+                                                          MainCost = x.MainCost,
+                                                          MainPrice = x.MainPrice,
+                                                          PromotionPrice = x.PromotionPrice,
+                                                          IsItemStoped = x.IsItemStoped,
+                                                          Qty = x.Qty,
+                                                          StoppedItemBy = x.StoppedItemBy,
+                                                          StoppedItemDate = x.StoppedItemDate,
+                                                          UnitId = x.UnitId,
+                                                          UnitName = x.UnitName,
+                                                          NetDeffirence = x.NetDeffirence,
+
+                                                      }).ToList(),
+                                  PromotionLocations = entity.PUR_PROMOTION_LOCATION.Where(x => x.PromotionId == p.PromotionId)
+                                                       .Select(x => new PromotionLocationsModel()
+                                                       {
+                                                           LocationId = x.LocationId,
+                                                           PromotionId = p.PromotionId,
+                                                           PromotionLocationId = x.PromotionLocationId,
+                                                       }).ToList(),
+                              }).ToList();
+
+
+                return promotion;
             }
         }
     }

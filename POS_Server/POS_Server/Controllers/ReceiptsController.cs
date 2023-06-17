@@ -371,8 +371,9 @@ namespace POS_Server.Controllers
             }
             catch { }
         }
-        
-        [NonAction]
+  
+
+       [NonAction]
         private void addQuantityToLocation(List<INV_RECEIPT_DETAILS> invoiceItems, long locationId)
         {
             try
@@ -435,6 +436,7 @@ namespace POS_Server.Controllers
             token = TokenManager.readToken(HttpContext.Current.Request);
             string invNumber = "";
             string invType = "";
+            string receiptType = "";
             long locationId = 0;
             DateTime? fromDate = null;
             DateTime? toDate = null;
@@ -461,6 +463,10 @@ namespace POS_Server.Controllers
                     else if (c.Type == "invType")
                     {
                         invType = c.Value;
+                    }   
+                    else if (c.Type == "receiptType")
+                    {
+                        receiptType = c.Value;
                     }
                     else if (c.Type == "fromDate")
                     {
@@ -474,24 +480,27 @@ namespace POS_Server.Controllers
                     }
                 }
  
-                var invoicesList = GetReceipts(invType, locationId, invNumber,fromDate, toDate);
+                var invoicesList = GetReceipts(invType, locationId, invNumber, receiptType, fromDate, toDate);
                 return TokenManager.GenerateToken(invoicesList);
             }
         }
 
-        public List<ReceiptInvoiceModel> GetReceipts(string invType, long locationId =0, string invNumber = "", DateTime? fromDate = null, DateTime? toDate = null)
+        public List<ReceiptInvoiceModel> GetReceipts(string invType, long locationId =0, string invNumber = "",string receiptType ="", DateTime? fromDate = null, DateTime? toDate = null)
         {
 
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
                 var searchPredicate = PredicateBuilder.New<INV_RECEIPT>();
-                searchPredicate = searchPredicate.And(x => true);
+                searchPredicate = searchPredicate.And(x => x.IsActive == true);
 
                 if (invType.Trim() != "")
                     searchPredicate = searchPredicate.And(x => x.InvType == invType);
 
                  if (invNumber.Trim() != "")
                     searchPredicate = searchPredicate.And(x => x.InvNumber == invNumber);
+
+                  if (receiptType.Trim() != "")
+                    searchPredicate = searchPredicate.And(x => x.ReceiptType == receiptType);
 
                 if (locationId != 0)
                     searchPredicate = searchPredicate.And(x => x.LocationId == locationId);
