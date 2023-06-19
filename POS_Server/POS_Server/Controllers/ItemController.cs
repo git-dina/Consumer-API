@@ -1036,6 +1036,272 @@ namespace POS_Server.Controllers
             }
         } 
         
+        
+        [HttpPost]
+        [Route("GetPromotionItemByCodeOrName")]
+        public string GetPromotionItemByCodeOrName(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                #region parameters
+                string textSearch = "";
+                List<long?> locationsId = new List<long?>() ;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        if (c.Value != "")
+                            textSearch = c.Value;
+                    }
+                    else if (c.Type == "locationsId")
+                    {
+                        if (c.Value != "")
+                            locationsId =  JsonConvert.DeserializeObject<List<long?>>(c.Value, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    } 
+
+                }
+                #endregion
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Code.ToLower() == textSearch.ToLower() );
+
+                    searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => locationsId.Contains(u.LocationId)));
+                   
+                    var item = entity.GEN_ITEM.Where(searchPredicate)
+                        .Select(p => new ItemModel
+                        {
+                            ItemId = p.ItemId,
+                            EngName = p.EngName,
+                            ShortName = p.ShortName,
+                            Name = p.Name,
+                            Code = p.Code,
+                            CategoryId = p.CategoryId,
+                            CategoryName = p.GEN_ITEM_CATEGORY.Name,
+                            CommitteeNo = p.CommitteeNo,
+                            ConsumerDiscPerc = p.ConsumerDiscPerc,
+                            ConsumerProfitPerc = p.ConsumerProfitPerc,
+                            Cost = p.Cost,
+                            MainCost = p.MainCost,
+                            Price = p.Price,
+                            MainPrice = p.MainPrice,
+                            DiscPerc = p.DiscPerc,
+                            UnitId = p.UnitId,
+                            ItemUnit = entity.GEN_UNIT.Where(x => x.UnitId == p.UnitId).Select(x => x.Name).FirstOrDefault(),
+                            IsWeight = p.IsWeight,
+                            ItemStatus = p.ItemStatus,
+                            ItemReceiptType = p.ItemReceiptType,
+                            ItemType = p.ItemType,
+                            ItemTransactionType = p.ItemTransactionType,
+                            PackageUnit = p.PackageUnit,
+                            PackageWeight = p.PackageWeight,
+                            SupId = p.SupId,
+                            SupSectorId = p.SupSectorId,
+                            WholesaleDiscPerc = p.WholesaleDiscPerc,
+                            WholesalePrice = p.WholesalePrice,
+                            WholesaleProfitPerc = p.WholesaleProfitPerc,
+                            QtyMax = p.QtyMax,
+                            QtyMin = p.QtyMin,
+                            IsContainExpiryDate = p.IsContainExpiryDate,
+                            IsSellNotAllow = p.IsSellNotAllow,
+
+                            Factor = p.Factor,
+                            FreePerc = p.FreePerc,
+                            IsSpecialOffer = p.IsSpecialOffer,
+                            OfferEndDate = p.OfferEndDate,
+                            CountryId = p.CountryId,
+                            BrandId = p.BrandId,
+                            Notes = p.Notes,
+                            IsActive = p.IsActive,
+                            CreateDate = p.CreateDate,
+                            UpdateDate = p.UpdateDate,
+                            CreateUserId = p.CreateUserId,
+                            UpdateUserId = p.UpdateUserId,
+
+                            ItemUnits = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemUnitModel()
+                                                {
+                                                    UnitId = x.UnitId,
+                                                    Barcode = x.Barcode,
+                                                    BarcodeType = x.BarcodeType,
+                                                    Cost = x.Cost,
+                                                    Factor = x.Factor,
+                                                    SalePrice = x.SalePrice,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                    CreateUserId = x.CreateUserId,
+                                                    IsActive = x.IsActive,
+                                                    IsBlocked = x.IsBlocked,
+                                                    ItemId = x.ItemId,
+                                                    ItemUnitId = x.ItemUnitId,
+                                                    UpdateUserId = x.UpdateUserId,
+                                                }).ToList(),
+                            ItemGeneralizations = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemGeneralizationModel()
+                                                {
+                                                    Id = x.Id,
+                                                    ItemId = x.ItemId,
+                                                    GeneralizationYear = x.GeneralizationYear,
+                                                    GeneralizationNo = x.GeneralizationNo,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                }).ToList(),
+                            ItemAllowedTransactions = entity.GEN_ITEM_ALLOWED_TRANSACTION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                            .Select(x => new ItemAllowedTransModel()
+                                                            {
+                                                                Id = x.Id,
+                                                                ItemId = x.ItemId,
+                                                                Transaction = x.Transaction,
+                                                            }).ToList(),
+                            ItemLocations = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                    .Select(x => new ItemLocationModel()
+                                                    {
+                                                        ItemLocationId = x.ItemLocationId,
+                                                        LocationName = x.GEN_LOCATION.Name,
+                                                        LocationId = x.LocationId,
+                                                        ItemId = x.ItemId,
+                                                       Balance = x.Balance,
+                                                    }).ToList(),
+                            Supplier = new SupplierModel()
+                            {
+                                SupId = p.GEN_SUPPLIER.SupId,
+                                Name = p.GEN_SUPPLIER.Name,
+                            },
+                            Category = new ItemCategoryModel() 
+                            { 
+                                CategoryId = p.GEN_ITEM_CATEGORY.CategoryId,
+                                FreePercentage =  p.GEN_ITEM_CATEGORY.FreePercentage,
+                                DiscountPercentage = p.GEN_ITEM_CATEGORY.DiscountPercentage,
+                                WholesalePercentage = p.GEN_ITEM_CATEGORY.WholesalePercentage,
+                                ProfitPercentage = p.GEN_ITEM_CATEGORY.ProfitPercentage,
+                            },
+                        }).ToList();
+
+                    //search by name
+                    if (item.Count == 0)
+                    {
+                       searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                        searchPredicate = searchPredicate.And(p => p.IsActive == true && p.Name.ToLower().Contains(textSearch.ToLower()));
+
+                        searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => locationsId.Contains(u.LocationId)));
+
+                        item = entity.GEN_ITEM.Where(searchPredicate)
+                        .Select(p => new ItemModel
+                        {
+                            ItemId = p.ItemId,
+                            EngName = p.EngName,
+                            ShortName = p.ShortName,
+                            Name = p.Name,
+                            Code = p.Code,
+                            CategoryId = p.CategoryId,
+                            CategoryName = p.GEN_ITEM_CATEGORY.Name,
+                            CommitteeNo = p.CommitteeNo,
+                            ConsumerDiscPerc = p.ConsumerDiscPerc,
+                            ConsumerProfitPerc = p.ConsumerProfitPerc,
+                            Cost = p.Cost,
+                            MainCost = p.MainCost,
+                            Price = p.Price,
+                            MainPrice = p.MainPrice,
+                            DiscPerc = p.DiscPerc,
+                            UnitId = p.UnitId,
+                            ItemUnit = entity.GEN_UNIT.Where(x => x.UnitId == p.UnitId).Select(x => x.Name).FirstOrDefault(),
+                            IsWeight = p.IsWeight,
+                            ItemStatus = p.ItemStatus,
+                            ItemReceiptType = p.ItemReceiptType,
+                            ItemType = p.ItemType,
+                            ItemTransactionType = p.ItemTransactionType,
+                            PackageUnit = p.PackageUnit,
+                            PackageWeight = p.PackageWeight,
+                            SupId = p.SupId,
+                            SupCode = p.GEN_SUPPLIER.SupCode,
+                            SupSectorId = p.SupSectorId,
+                            WholesaleDiscPerc = p.WholesaleDiscPerc,
+                            WholesalePrice = p.WholesalePrice,
+                            WholesaleProfitPerc = p.WholesaleProfitPerc,
+                            QtyMax = p.QtyMax,
+                            QtyMin = p.QtyMin,
+                            IsContainExpiryDate = p.IsContainExpiryDate,
+                            IsSellNotAllow = p.IsSellNotAllow,
+
+                            Factor = p.Factor,
+                            FreePerc = p.FreePerc,
+                            IsSpecialOffer = p.IsSpecialOffer,
+                            OfferEndDate = p.OfferEndDate,
+                            CountryId = p.CountryId,
+                            BrandId = p.BrandId,
+                            Notes = p.Notes,
+                            IsActive = p.IsActive,
+                            CreateDate = p.CreateDate,
+                            UpdateDate = p.UpdateDate,
+                            CreateUserId = p.CreateUserId,
+                            UpdateUserId = p.UpdateUserId,
+
+                            ItemUnits = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemUnitModel()
+                                                {
+                                                    UnitId = x.UnitId,
+                                                    Barcode = x.Barcode,
+                                                    BarcodeType = x.BarcodeType,
+                                                    Cost = x.Cost,
+                                                    Factor = x.Factor,
+                                                    SalePrice = x.SalePrice,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                    CreateUserId = x.CreateUserId,
+                                                    IsActive = x.IsActive,
+                                                    IsBlocked = x.IsBlocked,
+                                                    ItemId = x.ItemId,
+                                                    ItemUnitId = x.ItemUnitId,
+                                                    UpdateUserId = x.UpdateUserId,
+                                                }).ToList(),
+                            ItemGeneralizations = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemGeneralizationModel()
+                                                {
+                                                    Id = x.Id,
+                                                    ItemId = x.ItemId,
+                                                    GeneralizationYear = x.GeneralizationYear,
+                                                    GeneralizationNo = x.GeneralizationNo,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                }).ToList(),
+                            ItemAllowedTransactions = entity.GEN_ITEM_ALLOWED_TRANSACTION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                            .Select(x => new ItemAllowedTransModel()
+                                                            {
+                                                                Id = x.Id,
+                                                                ItemId = x.ItemId,
+                                                                Transaction = x.Transaction,
+                                                            }).ToList(),
+                            ItemLocations = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                    .Select(x => new ItemLocationModel()
+                                                    {
+                                                        ItemLocationId = x.ItemLocationId,
+                                                        LocationName = x.GEN_LOCATION.Name,
+                                                        LocationId = x.LocationId,
+                                                        ItemId = x.ItemId,
+                                                       Balance = x.Balance,
+                                                    }).ToList(),
+                            Supplier = new SupplierModel()
+                            {
+                                SupId = p.GEN_SUPPLIER.SupId,
+                                Name = p.GEN_SUPPLIER.Name,
+                            },
+                        }).ToList();
+                    }
+                    return TokenManager.GenerateToken(item);
+
+                }
+            }
+        } 
+        
         //[HttpPost]
         //[Route("GetItemBarcodesByCodeOrName")]
         //public string GetItemBarcodesByCodeOrName(string token)
@@ -1313,6 +1579,152 @@ namespace POS_Server.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetPromotionItemByBarcode")]
+        public string GetPromotionItemByBarcode(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                #region parameters
+                string barcode = "";
+                List<long?> locationsId = new List<long?>();
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "barcode")
+                    {
+                        if (c.Value != "")
+                            barcode = c.Value;
+                    }
+                    else if (c.Type == "locationsId")
+                    {
+                        if (c.Value != "")
+                            locationsId = JsonConvert.DeserializeObject<List<long?>>(c.Value, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    }
+
+                }
+                #endregion
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    var searchPredicate = PredicateBuilder.New<GEN_ITEM>();
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true
+                                && p.GEN_ITEM_UNIT.Any(u => u.Barcode.ToLower() == barcode.ToLower()));
+
+                    searchPredicate = searchPredicate.And(p => p.GEN_ITEM_LOCATION.Any(u => locationsId.Contains(u.LocationId)));
+
+                    var item = entity.GEN_ITEM.Where(searchPredicate)
+                        .Select(p => new ItemModel
+                        {
+                            ItemId = p.ItemId,
+                            EngName = p.EngName,
+                            ShortName = p.ShortName,
+                            Name = p.Name,
+                            Code = p.Code,
+                            CategoryId = p.CategoryId,
+                            CategoryName = p.GEN_ITEM_CATEGORY.Name,
+                            CommitteeNo = p.CommitteeNo,
+                            ConsumerDiscPerc = p.ConsumerDiscPerc,
+                            ConsumerProfitPerc = p.ConsumerProfitPerc,
+                            Cost = p.Cost,
+                            MainCost = p.MainCost,
+                            Price = p.Price,
+                            MainPrice = p.MainPrice,
+                            DiscPerc = p.DiscPerc,
+                            UnitId = p.UnitId,
+                            ItemUnit = entity.GEN_UNIT.Where(x => x.UnitId == p.UnitId).Select(x => x.Name).FirstOrDefault(),
+                            IsWeight = p.IsWeight,
+                            ItemStatus = p.ItemStatus,
+                            ItemReceiptType = p.ItemReceiptType,
+                            ItemType = p.ItemType,
+                            ItemTransactionType = p.ItemTransactionType,
+                            PackageUnit = p.PackageUnit,
+                            PackageWeight = p.PackageWeight,
+                            SupId = p.SupId,
+                            SupSectorId = p.SupSectorId,
+                            WholesaleDiscPerc = p.WholesaleDiscPerc,
+                            WholesalePrice = p.WholesalePrice,
+                            WholesaleProfitPerc = p.WholesaleProfitPerc,
+                            QtyMax = p.QtyMax,
+                            QtyMin = p.QtyMin,
+                            IsContainExpiryDate = p.IsContainExpiryDate,
+                            IsSellNotAllow = p.IsSellNotAllow,
+
+                            Factor = p.Factor,
+                            FreePerc = p.FreePerc,
+                            IsSpecialOffer = p.IsSpecialOffer,
+                            OfferEndDate = p.OfferEndDate,
+                            CountryId = p.CountryId,
+                            BrandId = p.BrandId,
+                            Notes = p.Notes,
+                            IsActive = p.IsActive,
+                            CreateDate = p.CreateDate,
+                            UpdateDate = p.UpdateDate,
+                            CreateUserId = p.CreateUserId,
+                            UpdateUserId = p.UpdateUserId,
+
+                            ItemUnits = entity.GEN_ITEM_UNIT.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemUnitModel()
+                                                {
+                                                    UnitId = x.UnitId,
+                                                    Barcode = x.Barcode,
+                                                    BarcodeType = x.BarcodeType,
+                                                    Cost = x.Cost,
+                                                    Factor = x.Factor,
+                                                    SalePrice = x.SalePrice,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                    CreateUserId = x.CreateUserId,
+                                                    IsActive = x.IsActive,
+                                                    IsBlocked = x.IsBlocked,
+                                                    ItemId = x.ItemId,
+                                                    ItemUnitId = x.ItemUnitId,
+                                                    UpdateUserId = x.UpdateUserId,
+                                                }).ToList(),
+                            ItemGeneralizations = entity.GEN_ITEM_GENERALIZATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                .Select(x => new ItemGeneralizationModel()
+                                                {
+                                                    Id = x.Id,
+                                                    ItemId = x.ItemId,
+                                                    GeneralizationYear = x.GeneralizationYear,
+                                                    GeneralizationNo = x.GeneralizationNo,
+                                                    CreateDate = x.CreateDate,
+                                                    UpdateDate = x.UpdateDate,
+                                                }).ToList(),
+                            ItemAllowedTransactions = entity.GEN_ITEM_ALLOWED_TRANSACTION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                            .Select(x => new ItemAllowedTransModel()
+                                                            {
+                                                                Id = x.Id,
+                                                                ItemId = x.ItemId,
+                                                                Transaction = x.Transaction,
+                                                            }).ToList(),
+                            ItemLocations = entity.GEN_ITEM_LOCATION.Where(x => x.ItemId == p.ItemId && x.IsActive == true)
+                                                    .Select(x => new ItemLocationModel()
+                                                    {
+                                                        ItemLocationId = x.ItemLocationId,
+                                                        LocationName = x.GEN_LOCATION.Name,
+                                                        LocationId = x.LocationId,
+                                                        ItemId = x.ItemId,
+                                                        Balance = x.Balance,
+                                                    }).ToList(),
+                            Supplier = new SupplierModel()
+                            {
+                                SupId = p.GEN_SUPPLIER.SupId,
+                                Name = p.GEN_SUPPLIER.Name,
+                            },
+                        }).FirstOrDefault();
+                    return TokenManager.GenerateToken(item);
+
+                }
+            }
+        }
         [HttpPost]
         [Route("generateItemCode")]
         public string generateItemCode(string token)
