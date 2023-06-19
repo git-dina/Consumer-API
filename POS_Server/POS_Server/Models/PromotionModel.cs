@@ -23,6 +23,7 @@ namespace POS_Server.Models
         public bool IsTransfer { get; set; }
         public Nullable<long> TransferBy { get; set; }
         public Nullable<System.DateTime> TransferDate { get; set; }
+        public bool CopyPrice { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

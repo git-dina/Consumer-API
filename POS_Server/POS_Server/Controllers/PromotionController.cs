@@ -246,7 +246,10 @@ namespace POS_Server.Controllers
                                   CreateUserId = p.CreateUserId,
                                   UpdateUserId = p.UpdateUserId,
                                   Notes = p.Notes,
-
+                                  CopyPrice = p.CopyPrice,
+                                  IsTransfer=p.IsTransfer,
+                                  TransferBy=p.TransferBy,
+                                  TransferDate=p.TransferDate,
                                   PromotionDetails = entity.PUR_PROMOTION_DETAILS.Where(x => x.PromotionId == p.PromotionId && x.IsActive == true)
                                                       .Select(x => new PromotionDetailsModel()
                                                       {
@@ -480,6 +483,10 @@ namespace POS_Server.Controllers
                                   CreateUserId = p.CreateUserId,
                                   UpdateUserId = p.UpdateUserId,
                                   Notes = p.Notes,
+                                  CopyPrice=p.CopyPrice,
+                                  IsTransfer=p.IsTransfer,
+                                  TransferBy=p.TransferBy,
+                                  TransferDate=p.TransferDate,
 
                                   PromotionDetails = entity.PUR_PROMOTION_DETAILS.Where(x => x.PromotionId == p.PromotionId && x.IsActive == true)
                                                       .Select(x => new PromotionDetailsModel()
