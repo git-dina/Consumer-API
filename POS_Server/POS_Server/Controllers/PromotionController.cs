@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -312,7 +313,7 @@ namespace POS_Server.Controllers
                         userId = long.Parse(c.Value);
                     }
                 }
-                try
+            try
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
@@ -322,58 +323,8 @@ namespace POS_Server.Controllers
                         pro.StopedDate = cc.AddOffsetTodate(DateTime.Now);
 
                         entity.SaveChanges();
-                        var promotion = entity.PUR_PROMOTION
-                                    .Where(p => p.PromotionId == promotionId)
-                                .Select(p => new PromotionModel
-                                {
-                                    PromotionId = p.PromotionId,
-                                    PromotionType = p.PromotionType,
-                                    PromotionCategory = p.PromotionCategory,
-                                    PromotionNature = p.PromotionNature,
-                                  PromotionDate = p.PromotionDate,
-                                   PromotionStartDate = p.PromotionStartDate,
-                                   PromotionEndDate = p.PromotionEndDate,
-                                   PromotionPercentage = p.PromotionPercentage,
-                                   RefId = p.RefId,
-                                   IsStoped = p.IsStoped,
-                                   StopedBy = p.StopedBy,
-                                   StopedDate = p.StopedDate,
-                                    IsActive = p.IsActive,
-                                    CreateDate = p.CreateDate,
-                                    UpdateDate = p.UpdateDate,
-                                    CreateUserId = p.CreateUserId,
-                                    UpdateUserId = p.UpdateUserId,
-                                    Notes = p.Notes,
-                                    
-                                    PromotionDetails = entity.PUR_PROMOTION_DETAILS.Where(x => x.PromotionId == p.PromotionId && x.IsActive == true)
-                                                        .Select(x => new PromotionDetailsModel()
-                                                        {
-                                                            DetailsId = x.DetailsId,
-                                                            ItemId = x.ItemId,
-                                                            ItemName = x.ItemName,
-                                                            ItemCode = x.ItemCode,
-                                                            Factor = x.Factor,
-                                                            Barcode = x.Barcode,
-                                                            MainCost = x.MainCost,
-                                                            MainPrice = x.MainPrice,
-                                                            PromotionPrice = x.PromotionPrice,
-                                                            IsItemStoped = x.IsItemStoped,
-                                                            Qty = x.Qty,
-                                                            StoppedItemBy = x.StoppedItemBy,
-                                                            StoppedItemDate = x.StoppedItemDate,
-                                                            UnitId = x.UnitId,
-                                                            UnitName = x.UnitName,
-                                                            NetDeffirence = x.NetDeffirence,
 
-                                                        }).ToList(),
-                                    PromotionLocations = entity.PUR_PROMOTION_LOCATION.Where(x => x.PromotionId == p.PromotionId)
-                                                         .Select(x => new PromotionLocationsModel()
-                                                         {
-                                                             LocationId = x.LocationId,
-                                                             PromotionId = p.PromotionId,
-                                                             PromotionLocationId = x.PromotionLocationId,
-                                                         }).ToList(),
-                                }).FirstOrDefault();
+                        var promotion = GetPromotion(promotionId); 
 
                         return TokenManager.GenerateToken(promotion);
                     }
@@ -381,11 +332,83 @@ namespace POS_Server.Controllers
                 }
                 catch (DbEntityValidationException dbEx)
                 {
-                    return TokenManager.GenerateToken("0");
+                    var sb = new StringBuilder();
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            sb.AppendLine(string.Format("Property: {0} Error: {1}",
+                            validationError.PropertyName, validationError.ErrorMessage));
+                        }
+                    }
+                    return sb.ToString();
                 }
             }
         }
 
+        private PromotionModel GetPromotion(long promotionId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var promotion = entity.PUR_PROMOTION
+                                  .Where(p => p.PromotionId == promotionId)
+                              .Select(p => new PromotionModel
+                              {
+                                  PromotionId = p.PromotionId,
+                                  PromotionType = p.PromotionType,
+                                  PromotionCategory = p.PromotionCategory,
+                                  PromotionNature = p.PromotionNature,
+                                  PromotionDate = p.PromotionDate,
+                                  PromotionStartDate = p.PromotionStartDate,
+                                  PromotionEndDate = p.PromotionEndDate,
+                                  PromotionPercentage = p.PromotionPercentage,
+                                  RefId = p.RefId,
+                                  IsStoped = p.IsStoped,
+                                  StopedBy = p.StopedBy,
+                                  StopedDate = p.StopedDate,
+                                  IsActive = p.IsActive,
+                                  CreateDate = p.CreateDate,
+                                  UpdateDate = p.UpdateDate,
+                                  CreateUserId = p.CreateUserId,
+                                  UpdateUserId = p.UpdateUserId,
+                                  Notes = p.Notes,
+                                  IsTransfer = p.IsTransfer,
+                                  TransferBy = p.TransferBy,
+                                  CopyPrice = p.CopyPrice,
+                                  TransferDate = p.TransferDate,
+                                  PromotionDetails = entity.PUR_PROMOTION_DETAILS.Where(x => x.PromotionId == p.PromotionId && x.IsActive == true)
+                                                      .Select(x => new PromotionDetailsModel()
+                                                      {
+                                                          DetailsId = x.DetailsId,
+                                                          ItemId = x.ItemId,
+                                                          ItemName = x.ItemName,
+                                                          ItemCode = x.ItemCode,
+                                                          Factor = x.Factor,
+                                                          Barcode = x.Barcode,
+                                                          MainCost = x.MainCost,
+                                                          MainPrice = x.MainPrice,
+                                                          PromotionPrice = x.PromotionPrice,
+                                                          IsItemStoped = x.IsItemStoped,
+                                                          Qty = x.Qty,
+                                                          StoppedItemBy = x.StoppedItemBy,
+                                                          StoppedItemDate = x.StoppedItemDate,
+                                                          UnitId = x.UnitId,
+                                                          UnitName = x.UnitName,
+                                                          NetDeffirence = x.NetDeffirence,
+
+                                                      }).ToList(),
+                                  PromotionLocations = entity.PUR_PROMOTION_LOCATION.Where(x => x.PromotionId == p.PromotionId)
+                                                       .Select(x => new PromotionLocationsModel()
+                                                       {
+                                                           LocationId = x.LocationId,
+                                                           PromotionId = p.PromotionId,
+                                                           PromotionLocationId = x.PromotionLocationId,
+                                                       }).ToList(),
+                              }).FirstOrDefault();
+
+                return promotion;
+            }
+        }
         [HttpPost]
         [Route("SearchPromotions")]
         public string SearchPromotions(string token)
@@ -520,6 +543,57 @@ namespace POS_Server.Controllers
 
 
                 return promotion;
+            }
+        }
+
+        [HttpPost]
+        [Route("PostingPromotion")]
+        public async Task<string> PostingPromotion(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long promotionId = 0;
+                long userId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "promotionId")
+                    {
+                        promotionId = long.Parse(c.Value);
+                    }
+                    else if (c.Type == "userId")
+                    {
+                        userId = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var rec = entity.PUR_PROMOTION.Find(promotionId);
+                        rec.IsTransfer = true;
+                        rec.TransferBy = userId;
+                        rec.TransferDate = cc.AddOffsetTodate(DateTime.Now);
+
+                        entity.SaveChanges();
+                        var receipt = GetPromotion(promotionId);
+
+                        return TokenManager.GenerateToken(receipt);
+                    }
+
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
             }
         }
     }
