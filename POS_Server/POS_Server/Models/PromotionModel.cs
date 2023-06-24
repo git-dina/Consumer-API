@@ -51,6 +51,8 @@ namespace POS_Server.Models
         public decimal PromotionPrice { get; set; }
         public decimal NetDeffirence { get; set; }
         public decimal Qty { get; set; }
+        public string Package { get; set; }
+
         public bool IsItemStoped { get; set; }
         public Nullable<long> StoppedItemBy { get; set; }
         public Nullable<System.DateTime> StoppedItemDate { get; set; }
@@ -60,6 +62,8 @@ namespace POS_Server.Models
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
 
+        public Nullable<System.DateTime> PromotionStartDate { get; set; } = DateTime.Now;
+        public Nullable<System.DateTime> PromotionEndDate { get; set; } = DateTime.Now;
     }
 
     public class PromotionLocationsModel

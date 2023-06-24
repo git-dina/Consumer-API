@@ -138,9 +138,8 @@ namespace POS_Server.Controllers
             {
                 foreach(var row in promotionModel.PromotionDetails)
                 {
-                    var promotion = entity.PUR_PROMOTION_DETAILS.Where(x => ((EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate))
-                                   || (EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate))
-                                   || (EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionStartDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionStartDate) <= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate) && EntityFunctions.TruncateTime(x.PUR_PROMOTION.PromotionEndDate) >= EntityFunctions.TruncateTime(promotionModel.PromotionEndDate)))
+                    var promotion = entity.PUR_PROMOTION_DETAILS.Where(x => x.PUR_PROMOTION.IsStoped == false
+                                   && x.IsItemStoped == false
                                    && (x.PUR_PROMOTION.PromotionType == "quantity" || x.PUR_PROMOTION.PromotionType == "percentage")
                                    && x.Barcode == row.Barcode
                                    && x.ItemId == row.ItemId
@@ -395,7 +394,9 @@ namespace POS_Server.Controllers
                                                           UnitId = x.UnitId,
                                                           UnitName = x.UnitName,
                                                           NetDeffirence = x.NetDeffirence,
-
+                                                          Package = x.Package,
+                                                          PromotionStartDate = p.PromotionStartDate,
+                                                          PromotionEndDate = p.PromotionEndDate,
                                                       }).ToList(),
                                   PromotionLocations = entity.PUR_PROMOTION_LOCATION.Where(x => x.PromotionId == p.PromotionId)
                                                        .Select(x => new PromotionLocationsModel()
@@ -530,7 +531,9 @@ namespace POS_Server.Controllers
                                                           UnitId = x.UnitId,
                                                           UnitName = x.UnitName,
                                                           NetDeffirence = x.NetDeffirence,
-
+                                                          Package = x.Package,
+                                                          PromotionStartDate = p.PromotionStartDate,
+                                                          PromotionEndDate = p.PromotionEndDate,
                                                       }).ToList(),
                                   PromotionLocations = entity.PUR_PROMOTION_LOCATION.Where(x => x.PromotionId == p.PromotionId)
                                                        .Select(x => new PromotionLocationsModel()
