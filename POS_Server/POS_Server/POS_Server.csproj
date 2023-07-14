@@ -231,6 +231,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Classes\Calculate.cs" />
+    <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\AssistantSupController.cs" />
     <Compile Include="Controllers\BankController.cs" />
     <Compile Include="Controllers\BrandController.cs" />
@@ -239,6 +240,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\JobController.cs" />
+    <Compile Include="Controllers\KinshipTiesController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\LocationTypeController.cs" />
     <Compile Include="Controllers\LstCountryController.cs" />
@@ -251,6 +254,9 @@
     <Compile Include="Controllers\SupplierGroupController.cs" />
     <Compile Include="Controllers\SupplierTypeController.cs" />
     <Compile Include="Controllers\UnitController.cs" />
+    <Compile Include="GEN_AREA.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="GEN_ASSISTANT_SUPPLIER.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -261,6 +267,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="GEN_COMPANY_SETTINGS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_CUSTOMER.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_CUSTOMER_BANK.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_HIRARACHY_STRUCTURE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="GEN_ITEM.cs">
@@ -281,7 +296,16 @@
     <Compile Include="GEN_ITEM_UNIT.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="GEN_JOB.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_KINSHIP_TIES.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="GEN_LOCATION.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_SECTION.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="GEN_SUPPLIER.cs">
@@ -350,18 +374,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\AreaModel.cs" />
     <Compile Include="Models\AssistantSupModel.cs" />
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BrandModel.cs" />
     <Compile Include="Models\CompanySettingModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
+    <Compile Include="Models\CustomerBankModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\HelpClass.cs" />
+    <Compile Include="Models\HirarachyStructureModel.cs" />
     <Compile Include="Models\ItemAllowedTransModel.cs" />
     <Compile Include="Models\ItemCategoryModel.cs" />
     <Compile Include="Models\ItemGeneralizationModel.cs" />
     <Compile Include="Models\ItemLocationModel.cs" />
     <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\ItemUnitModel.cs" />
+    <Compile Include="Models\JobModel.cs" />
+    <Compile Include="Models\KinshipTiesModel.cs" />
     <Compile Include="Models\LocationModel.cs" />
     <Compile Include="Models\LocationTypeModel.cs" />
     <Compile Include="Models\LstCountryModel.cs" />
@@ -371,6 +401,8 @@
     <Compile Include="Models\PurchaseInvoiceModel.cs" />
     <Compile Include="Models\ReceiptDetailsModel.cs" />
     <Compile Include="Models\ReceiptInvoiceModel.cs" />
+    <Compile Include="Models\SalesInvoiceModel.cs" />
+    <Compile Include="Models\SalesPaymentModel.cs" />
     <Compile Include="Models\SupplierDocTypeModel.cs" />
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
@@ -393,6 +425,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="PUR_PURCHASE_INV_DETAILS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAL_INVOICE.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAL_INVOICE_DETAILS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAL_PAYMENT.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
