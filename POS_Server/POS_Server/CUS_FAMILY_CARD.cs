@@ -12,30 +12,27 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class LST_SUPPLIER_GROUP
+    public partial class CUS_FAMILY_CARD
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LST_SUPPLIER_GROUP()
+        public CUS_FAMILY_CARD()
         {
-            this.GEN_SUPPLIER = new HashSet<GEN_SUPPLIER>();
-            this.LST_SUPPLIER_GROUP1 = new HashSet<LST_SUPPLIER_GROUP>();
+            this.CUS_ESCORT = new HashSet<CUS_ESCORT>();
         }
     
-        public int SupplierGroupId { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> ParentGroupId { get; set; }
+        public long FamilyCardId { get; set; }
+        public Nullable<long> CustomerId { get; set; }
+        public Nullable<System.DateTime> ReleaseDate { get; set; }
+        public Nullable<bool> IsStopped { get; set; }
         public string Notes { get; set; }
-        public bool IsBlocked { get; set; }
-        public bool IsActive { get; set; }
+        public Nullable<bool> IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP1 { get; set; }
-        public virtual LST_SUPPLIER_GROUP LST_SUPPLIER_GROUP2 { get; set; }
+        public virtual ICollection<CUS_ESCORT> CUS_ESCORT { get; set; }
+        public virtual GEN_CUSTOMER GEN_CUSTOMER { get; set; }
     }
 }

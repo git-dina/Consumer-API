@@ -12,19 +12,23 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_ITEM_LOCATION
+    public partial class SAL_INVOICE_DETAILS
     {
-        public long ItemLocationId { get; set; }
-        public Nullable<long> ItemId { get; set; }
-        public Nullable<long> LocationId { get; set; }
-        public long Balance { get; set; }
+        public long DetailsId { get; set; }
+        public string ItemName { get; set; }
+        public Nullable<long> InvoiceId { get; set; }
+        public string Barcode { get; set; }
+        public Nullable<long> ItemUnitId { get; set; }
+        public decimal Price { get; set; }
+        public int Qty { get; set; }
+        public Nullable<decimal> Total { get; set; }
         public bool IsActive { get; set; }
-        public Nullable<long> CreateUserId { get; set; }
-        public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
     
-        public virtual GEN_ITEM GEN_ITEM { get; set; }
-        public virtual GEN_LOCATION GEN_LOCATION { get; set; }
+        public virtual GEN_ITEM_UNIT GEN_ITEM_UNIT { get; set; }
+        public virtual SAL_INVOICE SAL_INVOICE { get; set; }
     }
 }

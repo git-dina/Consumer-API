@@ -237,6 +237,10 @@
     <Compile Include="Controllers\BrandController.cs" />
     <Compile Include="Controllers\CompanySettingsController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\CustomerBankController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomerTransactionController.cs" />
+    <Compile Include="Controllers\HirarachyStructureController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -254,6 +258,18 @@
     <Compile Include="Controllers\SupplierGroupController.cs" />
     <Compile Include="Controllers\SupplierTypeController.cs" />
     <Compile Include="Controllers\UnitController.cs" />
+    <Compile Include="CUS_CHANGE_FUND.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUS_ESCORT.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUS_FAMILY_CARD.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUS_TRANSACTION.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="GEN_AREA.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -272,7 +288,13 @@
     <Compile Include="GEN_CUSTOMER.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="GEN_CUSTOMER_ADDRESS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="GEN_CUSTOMER_BANK.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GEN_CUSTOMER_DOCUMENT.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="GEN_HIRARACHY_STRUCTURE.cs">
@@ -378,10 +400,12 @@
     <Compile Include="Models\AssistantSupModel.cs" />
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BrandModel.cs" />
+    <Compile Include="Models\ChangeFundModel.cs" />
     <Compile Include="Models\CompanySettingModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
     <Compile Include="Models\CustomerBankModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\FamilyCardModel.cs" />
     <Compile Include="Models\HelpClass.cs" />
     <Compile Include="Models\HirarachyStructureModel.cs" />
     <Compile Include="Models\ItemAllowedTransModel.cs" />
@@ -407,6 +431,7 @@
     <Compile Include="Models\SupplierGroupModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
     <Compile Include="Models\SupplierTypeModel.cs" />
+    <Compile Include="Models\TransactionModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\VM\APIResult.cs" />
     <Compile Include="Models\VM\ResponseVM.cs" />

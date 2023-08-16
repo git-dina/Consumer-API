@@ -27,32 +27,55 @@ namespace POS_Server
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<CUS_TRANSACTION> CUS_TRANSACTION { get; set; }
+        public virtual DbSet<GEN_AREA> GEN_AREA { get; set; }
         public virtual DbSet<GEN_ASSISTANT_SUPPLIER> GEN_ASSISTANT_SUPPLIER { get; set; }
         public virtual DbSet<GEN_BANK> GEN_BANK { get; set; }
         public virtual DbSet<GEN_BRAND> GEN_BRAND { get; set; }
+        public virtual DbSet<GEN_COMPANY_SETTINGS> GEN_COMPANY_SETTINGS { get; set; }
+        public virtual DbSet<GEN_CUSTOMER> GEN_CUSTOMER { get; set; }
+        public virtual DbSet<GEN_CUSTOMER_ADDRESS> GEN_CUSTOMER_ADDRESS { get; set; }
+        public virtual DbSet<GEN_CUSTOMER_BANK> GEN_CUSTOMER_BANK { get; set; }
+        public virtual DbSet<GEN_CUSTOMER_DOCUMENT> GEN_CUSTOMER_DOCUMENT { get; set; }
+        public virtual DbSet<GEN_HIRARACHY_STRUCTURE> GEN_HIRARACHY_STRUCTURE { get; set; }
         public virtual DbSet<GEN_ITEM> GEN_ITEM { get; set; }
+        public virtual DbSet<GEN_ITEM_ALLOWED_TRANSACTION> GEN_ITEM_ALLOWED_TRANSACTION { get; set; }
         public virtual DbSet<GEN_ITEM_CATEGORY> GEN_ITEM_CATEGORY { get; set; }
         public virtual DbSet<GEN_ITEM_GENERALIZATION> GEN_ITEM_GENERALIZATION { get; set; }
+        public virtual DbSet<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
         public virtual DbSet<GEN_ITEM_UNIT> GEN_ITEM_UNIT { get; set; }
+        public virtual DbSet<GEN_JOB> GEN_JOB { get; set; }
+        public virtual DbSet<GEN_KINSHIP_TIES> GEN_KINSHIP_TIES { get; set; }
+        public virtual DbSet<GEN_LOCATION> GEN_LOCATION { get; set; }
+        public virtual DbSet<GEN_SECTION> GEN_SECTION { get; set; }
         public virtual DbSet<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
         public virtual DbSet<GEN_SUPPLIER_DOCUMENT> GEN_SUPPLIER_DOCUMENT { get; set; }
         public virtual DbSet<GEN_SUPPLIER_PHONE> GEN_SUPPLIER_PHONE { get; set; }
         public virtual DbSet<GEN_SUPPLIER_SECTOR> GEN_SUPPLIER_SECTOR { get; set; }
         public virtual DbSet<GEN_SUPPLIER_SECTOR_SPECIFY> GEN_SUPPLIER_SECTOR_SPECIFY { get; set; }
         public virtual DbSet<GEN_UNIT> GEN_UNIT { get; set; }
+        public virtual DbSet<INV_RECEIPT> INV_RECEIPT { get; set; }
+        public virtual DbSet<INV_RECEIPT_DETAILS> INV_RECEIPT_DETAILS { get; set; }
         public virtual DbSet<LST_CountriesCodes> LST_CountriesCodes { get; set; }
         public virtual DbSet<LST_COUNTRY> LST_COUNTRY { get; set; }
+        public virtual DbSet<LST_LOCATION_TYPE> LST_LOCATION_TYPE { get; set; }
         public virtual DbSet<LST_PHONE_TYPE> LST_PHONE_TYPE { get; set; }
         public virtual DbSet<LST_REQUEST_TOKEN> LST_REQUEST_TOKEN { get; set; }
         public virtual DbSet<LST_SUPPLIER_DOCUMENT_TYPE> LST_SUPPLIER_DOCUMENT_TYPE { get; set; }
         public virtual DbSet<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP { get; set; }
         public virtual DbSet<LST_SUPPLIER_TYPE> LST_SUPPLIER_TYPE { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<LST_LOCATION_TYPE> LST_LOCATION_TYPE { get; set; }
-        public virtual DbSet<GEN_ITEM_ALLOWED_TRANSACTION> GEN_ITEM_ALLOWED_TRANSACTION { get; set; }
-        public virtual DbSet<GEN_LOCATION> GEN_LOCATION { get; set; }
-        public virtual DbSet<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
+        public virtual DbSet<PUR_PROMOTION> PUR_PROMOTION { get; set; }
+        public virtual DbSet<PUR_PROMOTION_DETAILS> PUR_PROMOTION_DETAILS { get; set; }
+        public virtual DbSet<PUR_PROMOTION_LOCATION> PUR_PROMOTION_LOCATION { get; set; }
         public virtual DbSet<PUR_PURCHASE_INV> PUR_PURCHASE_INV { get; set; }
+        public virtual DbSet<PUR_PURCHASE_INV_DETAILS> PUR_PURCHASE_INV_DETAILS { get; set; }
+        public virtual DbSet<SAL_INVOICE> SAL_INVOICE { get; set; }
+        public virtual DbSet<SAL_INVOICE_DETAILS> SAL_INVOICE_DETAILS { get; set; }
+        public virtual DbSet<SAL_PAYMENT> SAL_PAYMENT { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<CUS_ESCORT> CUS_ESCORT { get; set; }
+        public virtual DbSet<CUS_FAMILY_CARD> CUS_FAMILY_CARD { get; set; }
+        public virtual DbSet<CUS_CHANGE_FUND> CUS_CHANGE_FUND { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

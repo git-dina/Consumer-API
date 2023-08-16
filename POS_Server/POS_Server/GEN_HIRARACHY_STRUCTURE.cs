@@ -12,19 +12,16 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class GEN_ITEM_LOCATION
+    public partial class GEN_HIRARACHY_STRUCTURE
     {
-        public long ItemLocationId { get; set; }
-        public Nullable<long> ItemId { get; set; }
-        public Nullable<long> LocationId { get; set; }
-        public long Balance { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Notes { get; set; }
         public bool IsActive { get; set; }
-        public Nullable<long> CreateUserId { get; set; }
-        public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-    
-        public virtual GEN_ITEM GEN_ITEM { get; set; }
-        public virtual GEN_LOCATION GEN_LOCATION { get; set; }
+        public Nullable<long> CreateUserId { get; set; }
+        public Nullable<long> UpdateUserId { get; set; }
     }
 }

@@ -12,19 +12,17 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class LST_SUPPLIER_GROUP
+    public partial class GEN_AREA
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LST_SUPPLIER_GROUP()
+        public GEN_AREA()
         {
-            this.GEN_SUPPLIER = new HashSet<GEN_SUPPLIER>();
-            this.LST_SUPPLIER_GROUP1 = new HashSet<LST_SUPPLIER_GROUP>();
+            this.GEN_CUSTOMER_ADDRESS = new HashSet<GEN_CUSTOMER_ADDRESS>();
+            this.GEN_SECTION = new HashSet<GEN_SECTION>();
         }
     
-        public int SupplierGroupId { get; set; }
+        public int AreaId { get; set; }
         public string Name { get; set; }
-        public Nullable<int> ParentGroupId { get; set; }
-        public string Notes { get; set; }
         public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
@@ -33,9 +31,8 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
+        public virtual ICollection<GEN_CUSTOMER_ADDRESS> GEN_CUSTOMER_ADDRESS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP1 { get; set; }
-        public virtual LST_SUPPLIER_GROUP LST_SUPPLIER_GROUP2 { get; set; }
+        public virtual ICollection<GEN_SECTION> GEN_SECTION { get; set; }
     }
 }

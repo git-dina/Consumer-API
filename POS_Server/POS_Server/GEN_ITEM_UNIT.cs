@@ -14,22 +14,30 @@ namespace POS_Server
     
     public partial class GEN_ITEM_UNIT
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public GEN_ITEM_UNIT()
+        {
+            this.SAL_INVOICE_DETAILS = new HashSet<SAL_INVOICE_DETAILS>();
+        }
+    
         public long ItemUnitId { get; set; }
         public Nullable<long> ItemId { get; set; }
         public Nullable<long> UnitId { get; set; }
         public string Barcode { get; set; }
         public string BarcodeType { get; set; }
+        public decimal Cost { get; set; }
+        public decimal SalePrice { get; set; }
+        public Nullable<int> Factor { get; set; }
         public bool IsBlocked { get; set; }
         public bool IsActive { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public decimal Cost { get; set; }
-        public decimal SalePrice { get; set; }
-        public Nullable<int> Factor { get; set; }
     
         public virtual GEN_ITEM GEN_ITEM { get; set; }
         public virtual GEN_UNIT GEN_UNIT { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SAL_INVOICE_DETAILS> SAL_INVOICE_DETAILS { get; set; }
     }
 }

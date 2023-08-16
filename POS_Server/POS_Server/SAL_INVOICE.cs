@@ -12,30 +12,30 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class LST_SUPPLIER_GROUP
+    public partial class SAL_INVOICE
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LST_SUPPLIER_GROUP()
+        public SAL_INVOICE()
         {
-            this.GEN_SUPPLIER = new HashSet<GEN_SUPPLIER>();
-            this.LST_SUPPLIER_GROUP1 = new HashSet<LST_SUPPLIER_GROUP>();
+            this.SAL_INVOICE_DETAILS = new HashSet<SAL_INVOICE_DETAILS>();
+            this.SAL_PAYMENT = new HashSet<SAL_PAYMENT>();
         }
     
-        public int SupplierGroupId { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> ParentGroupId { get; set; }
-        public string Notes { get; set; }
-        public bool IsBlocked { get; set; }
+        public long InvoiceId { get; set; }
+        public string InvNumber { get; set; }
+        public Nullable<decimal> TotalNet { get; set; }
+        public Nullable<long> CustomerId { get; set; }
+        public Nullable<decimal> CashReturn { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
     
+        public virtual GEN_CUSTOMER GEN_CUSTOMER { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_SUPPLIER> GEN_SUPPLIER { get; set; }
+        public virtual ICollection<SAL_INVOICE_DETAILS> SAL_INVOICE_DETAILS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LST_SUPPLIER_GROUP> LST_SUPPLIER_GROUP1 { get; set; }
-        public virtual LST_SUPPLIER_GROUP LST_SUPPLIER_GROUP2 { get; set; }
+        public virtual ICollection<SAL_PAYMENT> SAL_PAYMENT { get; set; }
     }
 }

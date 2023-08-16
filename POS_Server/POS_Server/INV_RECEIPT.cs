@@ -12,37 +12,48 @@ namespace POS_Server
     using System;
     using System.Collections.Generic;
     
-    public partial class PUR_PURCHASE_INV
+    public partial class INV_RECEIPT
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PUR_PURCHASE_INV()
+        public INV_RECEIPT()
         {
-            this.INV_RECEIPT = new HashSet<INV_RECEIPT>();
-            this.PUR_PURCHASE_INV_DETAILS = new HashSet<PUR_PURCHASE_INV_DETAILS>();
-            this.PUR_PURCHASE_INV1 = new HashSet<PUR_PURCHASE_INV>();
+            this.INV_RECEIPT_DETAILS = new HashSet<INV_RECEIPT_DETAILS>();
+            this.INV_RECEIPT_DETAILS1 = new HashSet<INV_RECEIPT_DETAILS>();
         }
     
-        public long PurchaseId { get; set; }
-        public Nullable<long> RefId { get; set; }
+        public long ReceiptId { get; set; }
+        public string InvType { get; set; }
+        public string ReceiptStatus { get; set; }
+        public bool IsRecieveAll { get; set; }
         public string InvNumber { get; set; }
+        public string ReceiptType { get; set; }
+        public string CustomFreeType { get; set; }
         public Nullable<long> LocationId { get; set; }
+        public Nullable<long> PurchaseId { get; set; }
+        public Nullable<System.DateTime> ReceiptDate { get; set; }
         public Nullable<long> SupId { get; set; }
-        public Nullable<System.DateTime> OrderDate { get; set; }
-        public Nullable<System.DateTime> OrderRecieveDate { get; set; }
+        public string SupInvoiceNum { get; set; }
+        public System.DateTime SupInvoiceDate { get; set; }
+        public Nullable<decimal> InvoiceAmount { get; set; }
+        public Nullable<decimal> AmountDifference { get; set; }
         public string Notes { get; set; }
         public string SupplierNotes { get; set; }
         public string SupplierPurchaseNotes { get; set; }
-        public Nullable<decimal> TotalCost { get; set; }
-        public Nullable<decimal> TotalPrice { get; set; }
-        public Nullable<decimal> CoopDiscount { get; set; }
-        public Nullable<decimal> DiscountValue { get; set; }
+        public decimal CoopDiscount { get; set; }
+        public decimal DiscountValue { get; set; }
         public Nullable<decimal> FreePercentage { get; set; }
         public Nullable<decimal> FreeValue { get; set; }
         public Nullable<decimal> ConsumerDiscount { get; set; }
         public Nullable<decimal> CostNet { get; set; }
-        public string InvType { get; set; }
-        public string InvStatus { get; set; }
-        public bool IsApproved { get; set; }
+        public Nullable<decimal> TotalCost { get; set; }
+        public Nullable<decimal> TotalPrice { get; set; }
+        public bool IsTransfer { get; set; }
+        public Nullable<long> TransferBy { get; set; }
+        public Nullable<System.DateTime> TransferDate { get; set; }
+        public bool ISAccountTransfer { get; set; }
+        public Nullable<System.DateTime> AccountTransferDate { get; set; }
+        public Nullable<long> AccountEntryCode { get; set; }
+        public Nullable<long> AccountEntryCodeCustody { get; set; }
         public bool IsActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
@@ -52,11 +63,9 @@ namespace POS_Server
         public virtual GEN_LOCATION GEN_LOCATION { get; set; }
         public virtual GEN_SUPPLIER GEN_SUPPLIER { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<INV_RECEIPT> INV_RECEIPT { get; set; }
+        public virtual ICollection<INV_RECEIPT_DETAILS> INV_RECEIPT_DETAILS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PUR_PURCHASE_INV_DETAILS> PUR_PURCHASE_INV_DETAILS { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PUR_PURCHASE_INV> PUR_PURCHASE_INV1 { get; set; }
-        public virtual PUR_PURCHASE_INV PUR_PURCHASE_INV2 { get; set; }
+        public virtual ICollection<INV_RECEIPT_DETAILS> INV_RECEIPT_DETAILS1 { get; set; }
+        public virtual PUR_PURCHASE_INV PUR_PURCHASE_INV { get; set; }
     }
 }

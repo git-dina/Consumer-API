@@ -18,10 +18,13 @@ namespace POS_Server
         public GEN_LOCATION()
         {
             this.GEN_ITEM_LOCATION = new HashSet<GEN_ITEM_LOCATION>();
+            this.INV_RECEIPT = new HashSet<INV_RECEIPT>();
+            this.PUR_PROMOTION_LOCATION = new HashSet<PUR_PROMOTION_LOCATION>();
             this.PUR_PURCHASE_INV = new HashSet<PUR_PURCHASE_INV>();
         }
     
         public long LocationId { get; set; }
+        public string LocationNumber { get; set; }
         public Nullable<int> LocationTypeId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
@@ -57,11 +60,14 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public string LocationNumber { get; set; }
     
-        public virtual LST_LOCATION_TYPE LST_LOCATION_TYPE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_ITEM_LOCATION> GEN_ITEM_LOCATION { get; set; }
+        public virtual LST_LOCATION_TYPE LST_LOCATION_TYPE { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<INV_RECEIPT> INV_RECEIPT { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PUR_PROMOTION_LOCATION> PUR_PROMOTION_LOCATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PUR_PURCHASE_INV> PUR_PURCHASE_INV { get; set; }
     }
