@@ -23,6 +23,7 @@ namespace POS_Server.Models
         public string Notes { get; set; }
         public Nullable<long> ToCustomerId { get; set; }
         public Nullable<long> ToBoxNumber { get; set; }
+        public Nullable<int> ToStocksCount { get; set; }
         public Nullable<int> BondNo { get; set; }
         public Nullable<System.DateTime> BondDate { get; set; }
         public bool IsActive { get; set; }

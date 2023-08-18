@@ -773,6 +773,141 @@ namespace POS_Server.Controllers
             }
         }
 
+       [HttpPost]
+        [Route("GetByBoxNumber")]
+        public string GetByBoxNumber(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long boxNumber = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "boxNumber")
+                    {
+                        boxNumber = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    var nowDate = cc.AddOffsetTodate(DateTime.Now);
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+
+                        var customer = entity.GEN_CUSTOMER.Where(x => x.BoxNumber == boxNumber )
+                          .Select(x => new CustomerModel()
+                          {
+                              CustomerId = x.CustomerId,
+                              BoxNumber = x.BoxNumber,
+                              Name = x.Name,
+                              Family = x.Family,
+                              InvoiceName = x.InvoiceName,
+                              CivilNum = x.CivilNum,
+                              CustomerStatus = x.CustomerStatus,
+                              MemberNature = x.MemberNature,
+                              DOB = x.DOB,
+                              BankId = x.BankId,
+                              IBAN = x.GEN_CUSTOMER_BANK.Symbol,
+                              Gender = x.Gender,
+                              MaritalStatus = x.MaritalStatus,
+                              IsArchived = x.IsArchived,
+                              IsActive = x.IsActive,
+                              JobId = x.JobId,
+                              JoinDate = x.JoinDate,
+                              JoiningSharesCount = x.JoiningSharesCount,
+                              SharesCount = x.SharesCount,
+                              AllStocksCount = x.JoiningSharesCount + x.SharesCount,
+                              Notes = x.Notes,
+                              ReceiptVoucherDate = x.ReceiptVoucherDate,
+                              ReceiptVoucherNumber = x.ReceiptVoucherNumber,
+                              SessionNumber = x.SessionNumber,
+                              CalculateEarnings = x.CalculateEarnings,
+                              DataCompleted = x.DataCompleted,
+                              PrintNameOnInv = x.PrintNameOnInv,
+                              RegisteredInMinistry = x.RegisteredInMinistry,
+                              CreateUserId = x.CreateUserId,
+                              CreateDate = x.CreateDate,
+                              UpdateDate = x.UpdateDate,
+                              UpdateUserId = x.UpdateUserId,
+                              CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId
+                                                     && m.IsActive == true && m.CreateDate.Value.Year == nowDate.Year)
+                                                    .Sum(m => m.TotalNet) == null ? 0 : entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).Value,
+                              customerAddress = entity.GEN_CUSTOMER_ADDRESS.Where(m => m.CustomerId == x.CustomerId)
+                                                  .Select(m => new CustomerAddressModel()
+                                                  {
+                                                      AutomtedNumber = m.AutomtedNumber,
+                                                      AvenueNumber = m.AvenueNumber,
+                                                      Employer = m.Employer,
+                                                      Floor = m.Floor,
+                                                      AreaId = m.AreaId,
+                                                      Guardian = m.Guardian,
+                                                      HomePhone = m.HomePhone,
+                                                      HouseNumber = m.HouseNumber,
+                                                      KinshipId = m.KinshipId,
+                                                      MailBox = m.MailBox,
+                                                      MobileNumber = m.MobileNumber,
+                                                      MobileNumber2 = m.MobileNumber2,
+                                                      Plot = m.Plot,
+                                                      PostalCode = m.PostalCode,
+                                                      SectionId = m.SectionId,
+                                                      Street = m.Street,
+                                                      WorkAddress = m.WorkAddress,
+                                                      WorkPhone = m.WorkPhone
+                                                  }).FirstOrDefault(),
+                              customerDocuments = entity.GEN_CUSTOMER_DOCUMENT.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true)
+                                                  .Select(m => new DocumentModel()
+                                                  {
+                                                      DocumentId = m.DocumentId,
+                                                      DocName = m.DocName,
+                                                      DocTitle = m.DocTitle,
+                                                  }).ToList(),
+                          }).FirstOrDefault();
+
+                        if (customer != null)
+                        {
+                            bool canArchive = false;
+                            DateTime zeroTime = new DateTime(1, 1, 1);
+
+                            var withdraw = entity.CUS_CHANGE_FUND.Where(x => x.CustomerId == customer.CustomerId && x.ChangeType == "withdraw").FirstOrDefault();
+                            if (withdraw != null)
+                            {
+                                var withdrawDate = withdraw.ChangeDate;
+
+                                TimeSpan span = nowDate - (DateTime)withdrawDate;
+                                // Because we start at year 1 for the Gregorian
+                                // calendar, we must subtract a year here.
+                                int years = (zeroTime + span).Year - 1;
+                                if (years >= 2)
+                                    canArchive = true;
+                            }
+                            customer.CanArchive = canArchive;
+
+                            #region join date
+                            TimeSpan span1 = nowDate - (DateTime)customer.JoinDate;
+                            customer.JoinYear = (zeroTime + span1).Year - 1;
+                            customer.JoinMonth = (zeroTime + span1).Month - 1;
+                            customer.JoinDay = (zeroTime + span1).Day;
+                            #endregion
+                        }
+                        return TokenManager.GenerateToken(customer);
+                    }
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+
         [Route("PostDocument")]
         public IHttpActionResult PostDocument()
         {

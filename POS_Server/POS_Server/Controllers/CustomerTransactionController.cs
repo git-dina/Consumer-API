@@ -124,6 +124,59 @@ namespace POS_Server.Controllers
             }
         }
 
+         [HttpPost]
+        [Route("TransformStocks")]
+        public async Task<string> TransformStocks(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string jsonObject = "";
+                CUS_TRANSACTION transaction = null;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        jsonObject = c.Value;
+                        transaction = JsonConvert.DeserializeObject<CUS_TRANSACTION>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                try
+                {
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        transaction.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                        transaction.UpdateDate = transaction.CreateDate;
+                        transaction.UpdateUserId = transaction.CreateUserId;
+
+                        entity.CUS_TRANSACTION.Add(transaction);
+
+                        var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
+                        customer.SharesCount -= transaction.StocksCount;
+
+                        var toCustomer = entity.GEN_CUSTOMER.Find(transaction.ToCustomerId);
+                        toCustomer.SharesCount += transaction.StocksCount;
+                        entity.SaveChanges();
+
+                    }
+                    return TokenManager.GenerateToken("1");
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+
         [HttpPost]
         [Route("SearchTransactions")]
         public string SearchTransactions(string token)
@@ -191,6 +244,7 @@ namespace POS_Server.Controllers
                                 CustomerName = x.GEN_CUSTOMER.Name,
                                 TransactionStocksCount = x.TransactionStocksCount,
                                 StocksCount=x.StocksCount,
+                                ToStocksCount = x.ToStocksCount,
                                 MeetingDate = x.MeetingDate,
                                 StocksPrice = x.StocksPrice,
                                 ToBoxNumber = x.ToBoxNumber,

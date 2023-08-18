@@ -74,6 +74,7 @@
           <Property Name="Notes" Type="ntext" />
           <Property Name="ToCustomerId" Type="bigint" />
           <Property Name="ToBoxNumber" Type="bigint" />
+          <Property Name="ToStocksCount" Type="int" />
           <Property Name="BondNo" Type="int" />
           <Property Name="BondDate" Type="datetime2" Precision="7" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -1958,6 +1959,7 @@
           <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_TRANSACTION_GEN_CUSTOMER" FromRole="CUS_TRANSACTION" ToRole="GEN_CUSTOMER" />
           <Property Name="CheckNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TransactionStocksCount" Type="Int32" />
+          <Property Name="ToStocksCount" Type="Int32" />
         </EntityType>
         <EntityType Name="GEN_AREA">
           <Key>
@@ -3986,6 +3988,7 @@
           <EntitySetMapping Name="CUS_TRANSACTION">
             <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_TRANSACTION">
               <MappingFragment StoreEntitySet="CUS_TRANSACTION">
+                <ScalarProperty Name="ToStocksCount" ColumnName="ToStocksCount" />
                 <ScalarProperty Name="TransactionStocksCount" ColumnName="TransactionStocksCount" />
                 <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
                 <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
