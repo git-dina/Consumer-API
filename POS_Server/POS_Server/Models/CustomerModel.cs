@@ -28,7 +28,7 @@ namespace POS_Server.Models
         public int SharesCount { get; set; }
         public bool CalculateEarnings { get; set; }
         //public bool IsBlocked { get; set; }
-        //public string IBAN { get; set; }
+        public string IBAN { get; set; }
         public Nullable<int> BankId { get; set; }
         public bool PrintNameOnInv { get; set; }
         public bool RegisteredInMinistry { get; set; }
@@ -45,9 +45,13 @@ namespace POS_Server.Models
         public List<DocumentModel> customerDocuments { get; set; }
 
         //extra
-        public decimal? CurrentPurchses { get; set; }
-        public int AllSharesCount { get; set; }
-
+        public decimal CurrentPurchses { get; set; }
+        public int AllStocksCount { get; set; }
+        public bool FamilyCardHolder { get; set; }
+        public bool CanArchive { get; set; }
+        public int JoinDay { get; set; }
+        public int JoinMonth { get; set; }
+        public int JoinYear { get; set; }
     }
 
     public class CustomerAddressModel

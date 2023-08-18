@@ -38,6 +38,7 @@ namespace POS_Server.Models
 
         // customer
         public string CustomerName { get; set; }
+        public string ToCustomerName { get; set; }
         public Nullable<System.DateTime> JoinDate { get; set; }
     }
 }

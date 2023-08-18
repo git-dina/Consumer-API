@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LinqKit;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using POS_Server.Models;
 using POS_Server.Models.VM;
@@ -73,8 +74,8 @@ namespace POS_Server.Controllers
         }
 
         [HttpPost]
-        [Route("PullStocks")]
-        public async Task<string> PullStocks(string token)
+        [Route("ReduceStocks")]
+        public async Task<string> ReduceStocks(string token)
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
 
@@ -120,6 +121,95 @@ namespace POS_Server.Controllers
                 {
                     return TokenManager.GenerateToken("0");
                 }
+            }
+        }
+
+        [HttpPost]
+        [Route("SearchTransactions")]
+        public string SearchTransactions(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string textSearch = "";
+            string transactionType = "";
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        textSearch = c.Value;
+                    }
+                    else if (c.Type == "transactionType")
+                    {
+                        transactionType = c.Value;
+                    }
+                }
+
+                var transactionsList = GetTransactions(null, transactionType, textSearch);
+                return TokenManager.GenerateToken(transactionsList);
+            }
+        }
+
+        public List<TransactionModel> GetTransactions(bool? isActive,string transactionType="", string textSearch = "")
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var searchPredicate = PredicateBuilder.New<CUS_TRANSACTION>();
+                searchPredicate = searchPredicate.And(x => x.TransactionType.ToLower() == transactionType.ToLower());
+
+                if (isActive != null)
+                    searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
+                if (textSearch != "")
+                {
+                    textSearch = textSearch.ToLower();
+                    searchPredicate = searchPredicate.And(x => x.IsActive == true);
+                    searchPredicate = searchPredicate.And(s => s.CustomerId.ToString().Contains(textSearch) ||
+                    s.GEN_CUSTOMER.Name.ToLower().Contains(textSearch) || s.GEN_CUSTOMER.Family.ToLower().Contains(textSearch)
+                     || s.GEN_CUSTOMER.CivilNum.Contains(textSearch)
+                     );
+
+                }
+
+                var nowDate = cc.AddOffsetTodate(DateTime.Now);
+                var transactions = entity.CUS_TRANSACTION.Where(searchPredicate)
+                            .Select(x => new TransactionModel()
+                            {
+                                CustomerId = x.CustomerId,
+                                BoxNumber = x.BoxNumber,
+                                CheckDate = x.CheckDate,
+                                BondNo = x.BondNo,
+                                BondDate = x.BondDate,
+                                ApprovalNumber = x.ApprovalNumber,
+                                CheckNumber = x.CheckNumber,
+                                CustomerName = x.GEN_CUSTOMER.Name,
+                                TransactionStocksCount = x.TransactionStocksCount,
+                                StocksCount=x.StocksCount,
+                                MeetingDate = x.MeetingDate,
+                                StocksPrice = x.StocksPrice,
+                                ToBoxNumber = x.ToBoxNumber,
+                                ToCustomerId = x.ToCustomerId,
+                                ToCustomerName = entity.GEN_CUSTOMER.Where(m => m.CustomerId == x.ToCustomerId).Select(m => m.Name).FirstOrDefault(),
+                                TransactionDate = x.TransactionDate,
+                                TransactionId = x.TransactionId,
+                                IsActive = x.IsActive,
+                                JoinDate = x.GEN_CUSTOMER.JoinDate,
+                                Notes = x.Notes,                              
+                                CreateUserId = x.CreateUserId,
+                                CreateDate = x.CreateDate,
+                                UpdateDate = x.UpdateDate,
+                                UpdateUserId = x.UpdateUserId,
+                              
+                            }).ToList();
+
+               
+                return transactions;
             }
         }
     }

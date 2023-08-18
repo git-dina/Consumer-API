@@ -63,14 +63,16 @@ namespace POS_Server.Controllers
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
                 if (textSearch != "")
                 {
+                    textSearch = textSearch.ToLower();
                     searchPredicate = searchPredicate.And(x => x.IsActive == true);
                     searchPredicate = searchPredicate.And(s => s.BoxNumber.ToString().Contains(textSearch) ||
-                    s.Name.ToLower().Contains(textSearch)
-                     || s.CivilNum.ToLower().Contains(textSearch)
+                    s.Name.ToLower().Contains(textSearch) || s.Family.ToLower().Contains(textSearch)
+                     || s.CivilNum.Contains(textSearch)
                      );
 
                 }
 
+                var nowDate = cc.AddOffsetTodate(DateTime.Now);
                 var customers = entity.GEN_CUSTOMER.Where(searchPredicate)
                             .Select(x => new CustomerModel()
                             {
@@ -84,6 +86,7 @@ namespace POS_Server.Controllers
                                 MemberNature = x.MemberNature,
                                 DOB = x.DOB,
                                 BankId = x.BankId,
+                                IBAN = x.GEN_CUSTOMER_BANK.Symbol,
                                 Gender = x.Gender,
                                 MaritalStatus = x.MaritalStatus,
                                 IsArchived = x.IsArchived,
@@ -92,7 +95,7 @@ namespace POS_Server.Controllers
                                 JoinDate = x.JoinDate,
                                 JoiningSharesCount = x.JoiningSharesCount,
                                 SharesCount = x.SharesCount,
-                                AllSharesCount = x.JoiningSharesCount + x.SharesCount,
+                                AllStocksCount = x.JoiningSharesCount + x.SharesCount,
                                 Notes = x.Notes,
                                 ReceiptVoucherDate = x.ReceiptVoucherDate,
                                 ReceiptVoucherNumber = x.ReceiptVoucherNumber,
@@ -105,7 +108,9 @@ namespace POS_Server.Controllers
                                 CreateDate = x.CreateDate,
                                 UpdateDate = x.UpdateDate,
                                 UpdateUserId = x.UpdateUserId,
-                                CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).GetValueOrDefault(),
+                                CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId
+                                                        && m.IsActive == true && m.CreateDate.Value.Year == nowDate.Year)
+                                                    .Sum(m => m.TotalNet) == null ? 0 : entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).Value,
                                 customerAddress = entity.GEN_CUSTOMER_ADDRESS.Where(m => m.CustomerId == x.CustomerId)
                                                     .Select(m => new CustomerAddressModel() {
                                                         AutomtedNumber = m.AutomtedNumber,
@@ -134,7 +139,71 @@ namespace POS_Server.Controllers
                                                     }).ToList(),
                             }).ToList();
 
+                bool canArchive = false;
+                bool hasFamilyCard = false;
+                DateTime zeroTime = new DateTime(1, 1, 1);
+                foreach (var cus in customers)
+                {
+                    canArchive = false;
+                    hasFamilyCard = false;
+
+                    var withdraw = entity.CUS_CHANGE_FUND.Where(x => x.CustomerId == cus.CustomerId && x.ChangeType == "withdraw").FirstOrDefault();
+                    if(withdraw != null)
+                    {
+                        var withdrawDate = withdraw.ChangeDate;
+                     
+                        TimeSpan span = nowDate - (DateTime)withdrawDate;
+                        // Because we start at year 1 for the Gregorian
+                        // calendar, we must subtract a year here.
+                        int years = (zeroTime + span).Year - 1;
+                        if(years >= 2)
+                            canArchive = true;
+                    }
+                    cus.CanArchive = canArchive;
+
+                    #region FamilyCardHolder
+                    var card = entity.CUS_FAMILY_CARD.Where(x => x.CustomerId == cus.CustomerId).FirstOrDefault();
+                    if (card != null)
+                        hasFamilyCard = true;
+                    cus.FamilyCardHolder = hasFamilyCard;
+                    #endregion
+
+                    #region join date
+                    TimeSpan span1 = nowDate - (DateTime)cus.JoinDate;
+                    cus.JoinYear= (zeroTime + span1).Year - 1;
+                    cus.JoinMonth = (zeroTime + span1).Month - 1;
+                    cus.JoinDay = (zeroTime + span1).Day;
+                    #endregion
+                }
                 return customers;
+            }
+        }
+
+        [HttpPost]
+        [Route("SearchCustomers")]
+        public string SearchCustomers(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string textSearch = "";
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        textSearch = c.Value;
+                    }
+                }
+
+                var customersList = GetCustomers(null, textSearch);
+                return TokenManager.GenerateToken(customersList);
             }
         }
 
@@ -154,7 +223,7 @@ namespace POS_Server.Controllers
                 string supObject = "";
                 GEN_CUSTOMER cusObj = null;
                 CustomerModel cusModel = null;
-                bool isNew = false;
+
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
@@ -177,6 +246,7 @@ namespace POS_Server.Controllers
                             cusObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
                             cusObj.UpdateDate = cusObj.CreateDate;
                             cusObj.UpdateUserId = cusObj.CreateUserId;
+                            
                             customer = cusEntity.Add(cusObj);
                         }
                         else
@@ -273,7 +343,6 @@ namespace POS_Server.Controllers
                     address.AreaId = customerAddress.AreaId;
                     address.AutomtedNumber = customerAddress.AutomtedNumber;
                     address.AvenueNumber = customerAddress.AvenueNumber;
-                    address.CustomerId = customerAddress.CustomerId;
                     address.Guardian = customerAddress.Guardian;
                     address.PostalCode = customerAddress.PostalCode;
                     address.Employer = customerAddress.Employer;
@@ -338,7 +407,7 @@ namespace POS_Server.Controllers
                         {
                             DocName = row.DocName,
                             DocTitle = row.DocTitle,
-                            //DocumentId = row.DocumentId,
+                            CustomerId = customerId,
                             IsActive = true,
                             CreateDate = DateTime.Now,
                             UpdateDate = DateTime.Now,
@@ -396,6 +465,8 @@ namespace POS_Server.Controllers
                 }
                 try
                 {
+                    var nowDate = cc.AddOffsetTodate(DateTime.Now);
+
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
                         var rec = entity.GEN_CUSTOMER.Find(customerId);
@@ -418,6 +489,7 @@ namespace POS_Server.Controllers
                               MemberNature = x.MemberNature,
                               DOB = x.DOB,
                               BankId = x.BankId,
+                              IBAN = x.GEN_CUSTOMER_BANK.Symbol,
                               Gender = x.Gender,
                               MaritalStatus = x.MaritalStatus,
                               IsArchived = x.IsArchived,
@@ -426,7 +498,7 @@ namespace POS_Server.Controllers
                               JoinDate = x.JoinDate,
                               JoiningSharesCount = x.JoiningSharesCount,
                               SharesCount = x.SharesCount,
-                              AllSharesCount = x.JoiningSharesCount + x.SharesCount,
+                              AllStocksCount = x.JoiningSharesCount + x.SharesCount,
                               Notes = x.Notes,
                               ReceiptVoucherDate = x.ReceiptVoucherDate,
                               ReceiptVoucherNumber = x.ReceiptVoucherNumber,
@@ -439,7 +511,9 @@ namespace POS_Server.Controllers
                               CreateDate = x.CreateDate,
                               UpdateDate = x.UpdateDate,
                               UpdateUserId = x.UpdateUserId,
-                              CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).GetValueOrDefault(),
+                              CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId
+                                                        && m.IsActive == true && m.CreateDate.Value.Year == nowDate.Year)
+                                                    .Sum(m => m.TotalNet) == null ? 0 : entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).Value,
                               customerAddress = entity.GEN_CUSTOMER_ADDRESS.Where(m => m.CustomerId == x.CustomerId)
                                                   .Select(m => new CustomerAddressModel()
                                                   {
@@ -482,6 +556,89 @@ namespace POS_Server.Controllers
         }
 
         [HttpPost]
+        [Route("GetMaxFundNum")]
+        public string GetMaxFundNum(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    long maxId = 1;
+                    var fundNums = entity.GEN_CUSTOMER.Select(x=> x.BoxNumber).ToList();
+                    long counter = fundNums.Count() > 0 ? (long)fundNums.First() : 0;
+
+                    while (counter < int.MaxValue)
+                    {
+                        if (!fundNums.Contains(++counter)) 
+                        {
+                            maxId = counter;
+                            break;
+                        }
+                    }
+
+                    return TokenManager.GenerateToken(maxId.ToString());
+
+                }
+            }
+        }
+        [HttpPost]
+        [Route("CheckBoxNumber")]
+        public string CheckBoxNumber(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long fundNumber = 0;
+                long customerId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "fundNumber")
+                    {
+                        fundNumber = long.Parse(c.Value);
+                    } 
+                    else if (c.Type == "customerId")
+                    {
+                        customerId = long.Parse(c.Value);
+                    }
+                }
+
+                try
+                {
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        bool isValid = false;
+
+                        var cus = entity.GEN_CUSTOMER.Where(x => x.BoxNumber == fundNumber && x.CustomerId != customerId 
+                                                            && x.IsActive == true && x.CustomerStatus == "continouse").FirstOrDefault();
+                        if (cus == null)
+                            isValid = true;
+                        return TokenManager.GenerateToken(isValid.ToString());
+                    }
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken("false");
+                }
+            }
+        }
+
+        [HttpPost]
         [Route("GetById")]
         public string GetById(string token)
         {
@@ -506,6 +663,8 @@ namespace POS_Server.Controllers
                 }
                 try
                 {
+                    var nowDate = cc.AddOffsetTodate(DateTime.Now);
+
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
 
@@ -522,6 +681,7 @@ namespace POS_Server.Controllers
                               MemberNature = x.MemberNature,
                               DOB = x.DOB,
                               BankId = x.BankId,
+                              IBAN = x.GEN_CUSTOMER_BANK.Symbol,
                               Gender = x.Gender,
                               MaritalStatus = x.MaritalStatus,
                               IsArchived = x.IsArchived,
@@ -530,7 +690,7 @@ namespace POS_Server.Controllers
                               JoinDate = x.JoinDate,
                               JoiningSharesCount = x.JoiningSharesCount,
                               SharesCount = x.SharesCount,
-                              AllSharesCount = x.JoiningSharesCount + x.SharesCount,
+                              AllStocksCount = x.JoiningSharesCount + x.SharesCount,
                               Notes = x.Notes,
                               ReceiptVoucherDate = x.ReceiptVoucherDate,
                               ReceiptVoucherNumber = x.ReceiptVoucherNumber,
@@ -543,7 +703,9 @@ namespace POS_Server.Controllers
                               CreateDate = x.CreateDate,
                               UpdateDate = x.UpdateDate,
                               UpdateUserId = x.UpdateUserId,
-                              CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).GetValueOrDefault(),
+                              CurrentPurchses = entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId
+                                                     && m.IsActive == true && m.CreateDate.Value.Year == nowDate.Year)
+                                                    .Sum(m => m.TotalNet) == null ? 0 : entity.SAL_INVOICE.Where(m => m.CustomerId == x.CustomerId && m.IsActive == true).Sum(m => m.TotalNet).Value,
                               customerAddress = entity.GEN_CUSTOMER_ADDRESS.Where(m => m.CustomerId == x.CustomerId)
                                                   .Select(m => new CustomerAddressModel()
                                                   {
@@ -575,6 +737,32 @@ namespace POS_Server.Controllers
                                                   }).ToList(),
                           }).FirstOrDefault();
 
+                        if (customer != null)
+                        {
+                            bool canArchive = false;
+                            DateTime zeroTime = new DateTime(1, 1, 1);
+
+                            var withdraw = entity.CUS_CHANGE_FUND.Where(x => x.CustomerId == customer.CustomerId && x.ChangeType == "withdraw").FirstOrDefault();
+                            if (withdraw != null)
+                            {
+                                var withdrawDate = withdraw.ChangeDate;
+
+                                TimeSpan span = nowDate - (DateTime)withdrawDate;
+                                // Because we start at year 1 for the Gregorian
+                                // calendar, we must subtract a year here.
+                                int years = (zeroTime + span).Year - 1;
+                                if (years >= 2)
+                                    canArchive = true;
+                            }
+                            customer.CanArchive = canArchive;
+
+                            #region join date
+                            TimeSpan span1 = nowDate - (DateTime)customer.JoinDate;
+                            customer.JoinYear = (zeroTime + span1).Year - 1;
+                            customer.JoinMonth = (zeroTime + span1).Month - 1;
+                            customer.JoinDay = (zeroTime + span1).Day;
+                            #endregion
+                        }
                         return TokenManager.GenerateToken(customer);
                     }
                 }

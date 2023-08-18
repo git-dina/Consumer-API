@@ -65,10 +65,12 @@
           <Property Name="TransactionDate" Type="datetime2" Precision="7" />
           <Property Name="TransactionType" Type="nvarchar" MaxLength="50" />
           <Property Name="StocksCount" Type="int" Nullable="false" />
+          <Property Name="TransactionStocksCount" Type="int" />
           <Property Name="StocksPrice" Type="decimal" Precision="18" Scale="3" Nullable="false" />
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="MeetingDate" Type="datetime2" Precision="7" />
           <Property Name="CheckDate" Type="datetime2" Precision="7" />
+          <Property Name="CheckNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Notes" Type="ntext" />
           <Property Name="ToCustomerId" Type="bigint" />
           <Property Name="ToBoxNumber" Type="bigint" />
@@ -1954,6 +1956,8 @@
           <Property Name="CreateUserId" Type="Int64" />
           <Property Name="UpdateUserId" Type="Int64" />
           <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_TRANSACTION_GEN_CUSTOMER" FromRole="CUS_TRANSACTION" ToRole="GEN_CUSTOMER" />
+          <Property Name="CheckNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionStocksCount" Type="Int32" />
         </EntityType>
         <EntityType Name="GEN_AREA">
           <Key>
@@ -3982,6 +3986,8 @@
           <EntitySetMapping Name="CUS_TRANSACTION">
             <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_TRANSACTION">
               <MappingFragment StoreEntitySet="CUS_TRANSACTION">
+                <ScalarProperty Name="TransactionStocksCount" ColumnName="TransactionStocksCount" />
+                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
                 <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="BoxNumber" ColumnName="BoxNumber" />
