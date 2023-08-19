@@ -59,7 +59,7 @@ namespace POS_Server.Controllers
                         entity.CUS_TRANSACTION.Add(transaction);
 
                         var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
-                        customer.SharesCount += transaction.StocksCount;
+                        customer.SharesCount += (int)transaction.TransactionStocksCount;
 
                         entity.SaveChanges();
 
@@ -110,8 +110,109 @@ namespace POS_Server.Controllers
                         entity.CUS_TRANSACTION.Add(transaction);
 
                         var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
-                        customer.SharesCount -= transaction.StocksCount;
+                        customer.SharesCount -= (int)transaction.TransactionStocksCount;
 
+                        entity.SaveChanges();
+
+                    }
+                    return TokenManager.GenerateToken("1");
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+        [HttpPost]
+        [Route("RetreatTransaction")]
+        public async Task<string> RetreatTransaction(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string jsonObject = "";
+                CUS_TRANSACTION transaction = null;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        jsonObject = c.Value;
+                        transaction = JsonConvert.DeserializeObject<CUS_TRANSACTION>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                try
+                {
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        transaction.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                        transaction.UpdateDate = transaction.CreateDate;
+                        transaction.UpdateUserId = transaction.CreateUserId;
+
+                        entity.CUS_TRANSACTION.Add(transaction);
+
+                        var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
+                        customer.SharesCount = 0;
+                        customer.CustomerStatus = "withdrawn";
+                        entity.SaveChanges();
+
+                    }
+                    return TokenManager.GenerateToken("1");
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("DeathTransaction")]
+        public async Task<string> DeathTransaction(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string jsonObject = "";
+                CUS_TRANSACTION transaction = null;
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        jsonObject = c.Value;
+                        transaction = JsonConvert.DeserializeObject<CUS_TRANSACTION>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                try
+                {
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        transaction.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                        transaction.UpdateDate = transaction.CreateDate;
+                        transaction.UpdateUserId = transaction.CreateUserId;
+
+                        entity.CUS_TRANSACTION.Add(transaction);
+
+                        var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
+                        customer.SharesCount = 0;
+                        customer.CustomerStatus = "dead";
                         entity.SaveChanges();
 
                     }
@@ -161,10 +262,10 @@ namespace POS_Server.Controllers
                         entity.CUS_TRANSACTION.Add(transaction);
 
                         var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
-                        customer.SharesCount -= transaction.StocksCount;
+                        customer.SharesCount -= (int)transaction.TransactionStocksCount;
 
                         var toCustomer = entity.GEN_CUSTOMER.Find(transaction.ToCustomerId);
-                        toCustomer.SharesCount += transaction.StocksCount;
+                        toCustomer.SharesCount += (int)transaction.TransactionStocksCount;
                         entity.SaveChanges();
 
                     }
