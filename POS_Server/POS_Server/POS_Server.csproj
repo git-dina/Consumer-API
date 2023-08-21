@@ -240,6 +240,7 @@
     <Compile Include="Controllers\CustomerBankController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\CustomerTransactionController.cs" />
+    <Compile Include="Controllers\FundChangeController.cs" />
     <Compile Include="Controllers\HirarachyStructureController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemCategoryController.cs" />

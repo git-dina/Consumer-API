@@ -208,6 +208,94 @@ namespace POS_Server.Controllers
         }
 
         [HttpPost]
+        [Route("SearchFamilyCardsCustomers")]
+        public string SearchFamilyCardsCustomers(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            string textSearch = "";
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        textSearch = c.Value;
+                    }
+                }
+
+                var customersList = GetCustomersCards(null, textSearch);
+                return TokenManager.GenerateToken(customersList);
+            }
+        }
+        public List<FamilyCardModel> GetCustomersCards(bool? isActive, string textSearch = "")
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var searchPredicate = PredicateBuilder.New<GEN_CUSTOMER>();
+                searchPredicate = searchPredicate.And(x => true);
+
+                if (isActive != null)
+                    searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
+                if (textSearch != "")
+                {
+                    textSearch = textSearch.ToLower();
+                    searchPredicate = searchPredicate.And(x => x.IsActive == true);
+                    searchPredicate = searchPredicate.And(s => s.BoxNumber.ToString().Contains(textSearch) ||
+                    s.Name.ToLower().Contains(textSearch) || s.Family.ToLower().Contains(textSearch)
+                     || s.CivilNum.Contains(textSearch)
+                     );
+
+                }
+
+                var nowDate = cc.AddOffsetTodate(DateTime.Now);
+                var customers =(from x in entity.GEN_CUSTOMER.Where(searchPredicate)
+                                join c in entity.CUS_FAMILY_CARD on x.CustomerId equals c.CustomerId
+                                select new FamilyCardModel()
+                                {
+                                    CustomerId = x.CustomerId,
+                                    BoxNumber = x.BoxNumber,                                 
+                                    CivilNum = x.CivilNum,
+                                    CustomerStatus = x.CustomerStatus,  
+                                    AutomatedNumber = x.GEN_CUSTOMER_ADDRESS.AutomtedNumber,
+                                    CustomerName = x.Name,
+                                    FamilyCardId = c.FamilyCardId,
+                                    IsStopped = c.IsStopped,
+                                    ReleaseDate = c.ReleaseDate,
+                                    
+                                    Notes = x.Notes,                                  
+                                    CreateUserId = x.CreateUserId,
+                                    CreateDate = x.CreateDate,
+                                    UpdateDate = x.UpdateDate,
+                                    UpdateUserId = x.UpdateUserId,                                 
+
+                                    Escorts = entity.CUS_ESCORT.Where(m => m.FamilyCardId == c.FamilyCardId && m.IsActive == true)
+                                                .Select(m => new EscortModel()
+                                                {
+                                                    IsCustomer = m.CustomerId == null? false:true,
+                                                    CustomerId = m.CustomerId,
+                                                    KinshipId = m.KinshipId,
+                                                    AddedDate = m.AddedDate,
+                                                    BoxNumber = m.GEN_CUSTOMER.BoxNumber,
+                                                    CivilNum = m.GEN_CUSTOMER.CivilNum,
+                                                    EscortId = m.EscortId,
+                                                    EscortName = m.EscortName,
+                                                   
+                                                }).ToList(),
+                                }).ToList();
+
+
+                return customers;
+            }
+        }
+
+        [HttpPost]
         [Route("Save")]
         public string Save(string token)
         {
