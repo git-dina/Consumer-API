@@ -162,7 +162,7 @@ namespace POS_Server.Controllers
                     cus.CanArchive = canArchive;
 
                     #region FamilyCardHolder
-                    var card = entity.CUS_FAMILY_CARD.Where(x => x.CustomerId == cus.CustomerId).FirstOrDefault();
+                    var card = entity.CUS_FAMILY_CARD.Where(x => x.CustomerId == cus.CustomerId && x.IsStopped == false).FirstOrDefault();
                     if (card != null)
                         hasFamilyCard = true;
                     cus.FamilyCardHolder = hasFamilyCard;
