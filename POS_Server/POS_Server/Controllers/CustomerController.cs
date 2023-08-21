@@ -994,5 +994,163 @@ namespace POS_Server.Controllers
                 }
             }
         }
+
+        [HttpPost]
+        [Route("SaveFamilyCard")]
+        public string SaveFamilyCard(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string supObject = "";
+                CUS_FAMILY_CARD cardObj = null;
+                FamilyCardModel cardModel = null;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "itemObject")
+                    {
+                        supObject = c.Value;
+                        cardObj = JsonConvert.DeserializeObject<CUS_FAMILY_CARD>(supObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        cardModel = JsonConvert.DeserializeObject<FamilyCardModel>(supObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        break;
+                    }
+                }
+                try
+                {
+                    CUS_FAMILY_CARD card;
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        var cardEntity = entity.Set<CUS_FAMILY_CARD>();
+                        if (cardObj.FamilyCardId == 0)
+                        {
+                            cardObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            cardObj.UpdateDate = cardObj.CreateDate;
+                            cardObj.UpdateUserId = cardObj.CreateUserId;
+
+                            card = cardEntity.Add(cardObj);
+                        }
+                        else
+                        {
+                            card = entity.CUS_FAMILY_CARD.Find(cardObj.FamilyCardId);
+                            card.IsStopped = cardObj.IsStopped;
+                            card.ReleaseDate = cardObj.ReleaseDate;
+
+                            card.Notes = cardObj.Notes;
+                            card.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            card.UpdateUserId = cardObj.UpdateUserId;
+                        }
+                        entity.SaveChanges();
+                        cardModel.FamilyCardId = card.FamilyCardId;
+
+                        SaveCustomerEscorts(cardModel.Escorts, card.FamilyCardId);
+                    }
+
+                    //var supList = GetSuplliers(true);
+                    return TokenManager.GenerateToken(cardModel);
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            sb.AppendLine(string.Format("Property: {0} Error: {1}",
+                            validationError.PropertyName, validationError.ErrorMessage));
+                        }
+                    }
+                    return sb.ToString();
+                }
+            }
+        }
+
+        public void SaveCustomerEscorts(List<EscortModel> customerEscorts, long familyCardId)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                if (customerEscorts != null)
+                {
+                    var cusEscortIds = customerEscorts.Select(x => x.EscortId).ToList();
+                    #region remove not existed escorts
+
+                    var escortsToRemove = entity.CUS_ESCORT.Where(x => x.FamilyCardId == familyCardId
+                                && !cusEscortIds.Contains(x.EscortId)).ToList();
+
+                    foreach (var row in escortsToRemove)
+                    {
+                        row.IsActive = false;
+                        row.UpdateDate = DateTime.Now;
+                        row.UpdateUserId = row.UpdateUserId;
+
+                        entity.SaveChanges();
+                    }
+                    #endregion
+
+                    #region edit existed escorts
+                    var escortsToEdit = entity.CUS_ESCORT.Where(x => x.FamilyCardId == familyCardId
+                                    && cusEscortIds.Contains(x.EscortId)).ToList();
+
+                    foreach (var row in escortsToEdit)
+                    {
+                        var esc = customerEscorts.Where(x => x.EscortId == row.EscortId).FirstOrDefault();
+                        row.AddedDate = esc.AddedDate;
+                        row.KinshipId = esc.KinshipId;
+                        row.CustomerId = esc.CustomerId;
+                        row.CivilNum = esc.CivilNum;
+                        row.EscortName = esc.EscortName;
+
+                        row.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                        row.UpdateUserId = esc.UpdateUserId;
+                        entity.SaveChanges();
+
+                    }
+                    #endregion
+
+                    #region add new escorts
+                    var newEscorts = customerEscorts.Where(x => x.EscortId == 0).ToList();
+                    foreach (var row in newEscorts)
+                    {
+                        var doc = new CUS_ESCORT()
+                        {
+                            FamilyCardId = familyCardId,
+                            AddedDate = row.AddedDate,
+                            CustomerId = row.CustomerId,
+                            KinshipId = row.KinshipId,
+                            CivilNum = row.CivilNum,
+                            EscortName = row.EscortName,                            
+                            IsActive = true,
+                            CreateDate = cc.AddOffsetTodate(DateTime.Now),
+                            UpdateDate = cc.AddOffsetTodate(DateTime.Now),
+                            CreateUserId = row.CreateUserId,
+                            UpdateUserId = row.CreateUserId,
+
+                        };
+                        entity.CUS_ESCORT.Add(doc);
+
+                        long escortId = entity.SaveChanges();
+
+                        entity.SaveChanges();
+                    }
+                    #endregion
+                }
+                else
+                {
+                    var escortsToRemove = entity.CUS_ESCORT.Where(x => x.FamilyCardId == familyCardId).ToList();
+                    foreach (var row in escortsToRemove)
+                    {
+                        row.IsActive = false;
+                        entity.SaveChanges();
+                    }
+                }
+            }
+        }
     }
 }

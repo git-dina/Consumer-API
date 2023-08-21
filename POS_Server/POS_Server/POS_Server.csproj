@@ -406,6 +406,7 @@
     <Compile Include="Models\CustomerBankModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\FamilyCardModel.cs" />
+    <Compile Include="Models\FundChangeModel.cs" />
     <Compile Include="Models\HelpClass.cs" />
     <Compile Include="Models\HirarachyStructureModel.cs" />
     <Compile Include="Models\ItemAllowedTransModel.cs" />
