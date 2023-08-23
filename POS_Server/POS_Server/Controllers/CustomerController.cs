@@ -713,7 +713,7 @@ namespace POS_Server.Controllers
                         bool isValid = false;
 
                         var cus = entity.GEN_CUSTOMER.Where(x => x.BoxNumber == fundNumber && x.CustomerId != customerId 
-                                                            && x.IsActive == true && x.CustomerStatus == "continouse").FirstOrDefault();
+                                                           && x.IsArchived == false && x.IsActive == true ).FirstOrDefault();
                         if (cus == null)
                             isValid = true;
                         return TokenManager.GenerateToken(isValid.ToString());
@@ -860,6 +860,7 @@ namespace POS_Server.Controllers
                 }
             }
         }
+
 
        [HttpPost]
         [Route("GetByBoxNumber")]

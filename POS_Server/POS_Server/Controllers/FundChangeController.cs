@@ -33,14 +33,20 @@ namespace POS_Server.Controllers
             else
             {
                 string jsonObject = "";
-                CUS_CHANGE_FUND transaction = null;
+                CUS_CHANGE_FUND fundChange = null;
+                CUS_CHANGE_FUND secondFundChange = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
                         jsonObject = c.Value;
-                        transaction = JsonConvert.DeserializeObject<CUS_CHANGE_FUND>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        fundChange = JsonConvert.DeserializeObject<CUS_CHANGE_FUND>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                    }
+                    else if (c.Type == "secondFundChange")
+                    {
+                        jsonObject = c.Value;
+                        secondFundChange = JsonConvert.DeserializeObject<CUS_CHANGE_FUND>(jsonObject, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
@@ -49,12 +55,26 @@ namespace POS_Server.Controllers
 
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        transaction.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                        transaction.UpdateDate = transaction.CreateDate;
-                        transaction.UpdateUserId = transaction.CreateUserId;
+                        fundChange.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                        fundChange.UpdateDate = fundChange.CreateDate;
+                        fundChange.UpdateUserId = fundChange.CreateUserId;
 
-                        entity.CUS_CHANGE_FUND.Add(transaction);
+                        entity.CUS_CHANGE_FUND.Add(fundChange);
 
+                        var customer = entity.GEN_CUSTOMER.Where(x => x.CustomerId == fundChange.CustomerId).FirstOrDefault();
+                        customer.BoxNumber = fundChange.NewFundNumber;
+
+                        if (fundChange.ChangeType == "exchange")
+                        {
+                            entity.CUS_CHANGE_FUND.Add(secondFundChange);
+                            var customer2 = entity.GEN_CUSTOMER.Where(x => x.CustomerId == secondFundChange.CustomerId).FirstOrDefault();
+                            customer2.BoxNumber = secondFundChange.NewFundNumber;
+                        }
+                        else if(fundChange.ChangeType == "emptying")
+                        {
+                            var dumpedNumber = GetMaxDumpedBoxNum();
+                            entity.CUS_DUMPED_BOX.Add(new CUS_DUMPED_BOX() { BoxNumber = dumpedNumber});
+                        }
                         entity.SaveChanges();
 
                     }
@@ -64,6 +84,39 @@ namespace POS_Server.Controllers
                 {
                     return TokenManager.GenerateToken("0");
                 }
+            }
+        }
+
+        [HttpPost]
+        [Route("GetMaxDumpedBoxNum")]
+        public string GetMaxDumpedBoxNum(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                return TokenManager.GenerateToken(GetMaxDumpedBoxNum().ToString());
+              
+            }
+        }
+
+        private long GetMaxDumpedBoxNum()
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                long maxId = 0;
+                var item = entity.CUS_DUMPED_BOX.Count();
+                if (item > 0)
+                    maxId = entity.CUS_DUMPED_BOX.Select(x => x.BoxNumber).Max();
+                maxId++;
+
+                return maxId;
+
             }
         }
     }
