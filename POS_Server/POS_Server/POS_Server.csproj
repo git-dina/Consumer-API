@@ -231,12 +231,15 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Classes\Calculate.cs" />
+    <Compile Include="Controllers\ActivityController.cs" />
+    <Compile Include="Controllers\ActivityTypeController.cs" />
     <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\AssistantSupController.cs" />
     <Compile Include="Controllers\BankController.cs" />
     <Compile Include="Controllers\BrandController.cs" />
     <Compile Include="Controllers\CompanySettingsController.cs" />
     <Compile Include="Controllers\CountriesController.cs" />
+    <Compile Include="Controllers\CustomerActivityController.cs" />
     <Compile Include="Controllers\CustomerBankController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\CustomerTransactionController.cs" />
@@ -259,7 +262,16 @@
     <Compile Include="Controllers\SupplierGroupController.cs" />
     <Compile Include="Controllers\SupplierTypeController.cs" />
     <Compile Include="Controllers\UnitController.cs" />
+    <Compile Include="CUS_ACTIVITY.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUS_ACTIVITY_TYPE.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="CUS_CHANGE_FUND.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUS_CUSTOMER_ACTIVITY.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="CUS_ESCORT.cs">
@@ -397,6 +409,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActivityModel.cs" />
+    <Compile Include="Models\ActivityTypeModel.cs" />
     <Compile Include="Models\AreaModel.cs" />
     <Compile Include="Models\AssistantSupModel.cs" />
     <Compile Include="Models\BankModel.cs" />
@@ -404,6 +418,7 @@
     <Compile Include="Models\ChangeFundModel.cs" />
     <Compile Include="Models\CompanySettingModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
+    <Compile Include="Models\CustomerActivityModel.cs" />
     <Compile Include="Models\CustomerBankModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\FamilyCardModel.cs" />

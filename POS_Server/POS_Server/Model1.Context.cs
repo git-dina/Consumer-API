@@ -27,6 +27,12 @@ namespace POS_Server
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<CUS_ACTIVITY> CUS_ACTIVITY { get; set; }
+        public virtual DbSet<CUS_ACTIVITY_TYPE> CUS_ACTIVITY_TYPE { get; set; }
+        public virtual DbSet<CUS_CHANGE_FUND> CUS_CHANGE_FUND { get; set; }
+        public virtual DbSet<CUS_CUSTOMER_ACTIVITY> CUS_CUSTOMER_ACTIVITY { get; set; }
+        public virtual DbSet<CUS_ESCORT> CUS_ESCORT { get; set; }
+        public virtual DbSet<CUS_FAMILY_CARD> CUS_FAMILY_CARD { get; set; }
         public virtual DbSet<CUS_TRANSACTION> CUS_TRANSACTION { get; set; }
         public virtual DbSet<GEN_AREA> GEN_AREA { get; set; }
         public virtual DbSet<GEN_ASSISTANT_SUPPLIER> GEN_ASSISTANT_SUPPLIER { get; set; }
@@ -73,9 +79,6 @@ namespace POS_Server
         public virtual DbSet<SAL_INVOICE_DETAILS> SAL_INVOICE_DETAILS { get; set; }
         public virtual DbSet<SAL_PAYMENT> SAL_PAYMENT { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<CUS_ESCORT> CUS_ESCORT { get; set; }
-        public virtual DbSet<CUS_FAMILY_CARD> CUS_FAMILY_CARD { get; set; }
-        public virtual DbSet<CUS_CHANGE_FUND> CUS_CHANGE_FUND { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

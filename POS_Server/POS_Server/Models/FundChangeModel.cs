@@ -20,5 +20,18 @@ namespace POS_Server.Models
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
+
+        // customer
+        public string CustomerName { get; set; }
+        public string CustomerStatus { get; set; }
+        public string CivilNum { get; set; }
+        public string MobileNumber { get; set; }
+        public Nullable<System.DateTime> JoinDate { get; set; }
+
+        public string SecondCustomerName { get; set; }
+        public string SecondCustomerStatus { get; set; }
+        public string SecondCivilNum { get; set; }
+        public string SecondMobileNumber { get; set; }
+        public Nullable<System.DateTime> SecondJoinDate { get; set; }
     }
 }

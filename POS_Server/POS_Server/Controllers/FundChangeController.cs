@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using LinqKit;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using POS_Server.Models;
 using POS_Server.Models.VM;
 using System;
 using System.Collections.Generic;
@@ -72,8 +74,7 @@ namespace POS_Server.Controllers
                         }
                         else if(fundChange.ChangeType == "emptying")
                         {
-                            var dumpedNumber = GetMaxDumpedBoxNum();
-                            entity.CUS_DUMPED_BOX.Add(new CUS_DUMPED_BOX() { BoxNumber = dumpedNumber});
+                            
                         }
                         entity.SaveChanges();
 
@@ -88,10 +89,11 @@ namespace POS_Server.Controllers
         }
 
         [HttpPost]
-        [Route("GetMaxDumpedBoxNum")]
-        public string GetMaxDumpedBoxNum(string token)
+        [Route("SearchFundChanges")]
+        public string SearchFundChanges(string token)
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
+            string textSearch = "";
 
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
@@ -100,24 +102,70 @@ namespace POS_Server.Controllers
             }
             else
             {
-                return TokenManager.GenerateToken(GetMaxDumpedBoxNum().ToString());
-              
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "textSearch")
+                    {
+                        textSearch = c.Value;
+                    }
+                }
+
+                var transactionsList = GetTransactions( textSearch);
+                return TokenManager.GenerateToken(transactionsList);
             }
         }
-
-        private long GetMaxDumpedBoxNum()
+        public List<FundChangeModel> GetTransactions( string textSearch = "")
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                long maxId = 0;
-                var item = entity.CUS_DUMPED_BOX.Count();
-                if (item > 0)
-                    maxId = entity.CUS_DUMPED_BOX.Select(x => x.BoxNumber).Max();
-                maxId++;
+                var searchPredicate = PredicateBuilder.New<CUS_CHANGE_FUND>();
+                searchPredicate = searchPredicate.And(x => true);
 
-                return maxId;
+                if (textSearch != "")
+                {
+                    textSearch = textSearch.ToLower();
+                    searchPredicate = searchPredicate.And(s => s.CustomerId.ToString().Contains(textSearch) ||
+                    s.GEN_CUSTOMER.Name.ToLower().Contains(textSearch) || s.GEN_CUSTOMER.Family.ToLower().Contains(textSearch)
+                    
+                     );
 
+                }
+
+                var transactions = entity.CUS_CHANGE_FUND.Where(searchPredicate)
+                            .Select(x => new FundChangeModel()
+                            {
+                                CustomerId = x.CustomerId,
+                                CustomerName = x.GEN_CUSTOMER.Name,
+                                CivilNum = x.GEN_CUSTOMER.CivilNum,
+                                CustomerStatus = x.GEN_CUSTOMER.CustomerStatus,
+                                JoinDate = x.GEN_CUSTOMER.JoinDate,
+                                MobileNumber = x.GEN_CUSTOMER.GEN_CUSTOMER_ADDRESS.MobileNumber,
+                                
+                                ChangeDate = x.ChangeDate,
+                                ChangeType = x.ChangeType,
+                                EmptyFundNumber = x.EmptyFundNumber,
+                                NewFundNumber = x.NewFundNumber,
+                                OldFundNumber = x.OldFundNumber,
+                                Reason = x.Reason,
+
+                                SecondCustomerId = x.SecondCustomerId,
+                                SecondCustomerName = x.GEN_CUSTOMER1.Name,
+                                SecondCivilNum = x.GEN_CUSTOMER1.CivilNum,
+                                SecondCustomerStatus = x.GEN_CUSTOMER1.CustomerStatus,
+                                SecondJoinDate = x.GEN_CUSTOMER1.JoinDate,
+                                SecondMobileNumber = x.GEN_CUSTOMER1.GEN_CUSTOMER_ADDRESS.MobileNumber,
+                                CreateUserId = x.CreateUserId,
+                                CreateDate = x.CreateDate,
+                                UpdateDate = x.UpdateDate,
+                                UpdateUserId = x.UpdateUserId,
+
+                            }).ToList();
+
+
+                return transactions;
             }
         }
+
     }
 }

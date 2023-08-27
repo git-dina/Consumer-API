@@ -161,6 +161,7 @@ namespace POS_Server.Controllers
 
                         var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
                         customer.SharesCount = 0;
+                        customer.JoiningSharesCount = 0;
                         customer.CustomerStatus = "withdrawn";
                         entity.SaveChanges();
 
@@ -212,6 +213,7 @@ namespace POS_Server.Controllers
 
                         var customer = entity.GEN_CUSTOMER.Find(transaction.CustomerId);
                         customer.SharesCount = 0;
+                        customer.JoiningSharesCount = 0;
                         customer.CustomerStatus = "dead";
                         entity.SaveChanges();
 
@@ -331,7 +333,6 @@ namespace POS_Server.Controllers
 
                 }
 
-                var nowDate = cc.AddOffsetTodate(DateTime.Now);
                 var transactions = entity.CUS_TRANSACTION.Where(searchPredicate)
                             .Select(x => new TransactionModel()
                             {
@@ -348,6 +349,7 @@ namespace POS_Server.Controllers
                                 ToStocksCount = x.ToStocksCount,
                                 MeetingDate = x.MeetingDate,
                                 StocksPrice = x.StocksPrice,
+                                TotalPrice = x.StocksPrice * (int)x.TransactionStocksCount,
                                 ToBoxNumber = x.ToBoxNumber,
                                 ToCustomerId = x.ToCustomerId,
                                 ToCustomerName = entity.GEN_CUSTOMER.Where(m => m.CustomerId == x.ToCustomerId).Select(m => m.Name).FirstOrDefault(),

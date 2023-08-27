@@ -4,17 +4,23 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="292fc0a0bc3d418badf26b4779c72ee2" Name="Diagram1">
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_TRANSACTION" Width="1.5" PointX="13.5" PointY="56.25" IsExpanded="true" />
+      <Diagram DiagramId="4bba59831cb0456889717b744f405336" Name="Diagram1">
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_ACTIVITY" Width="1.5" PointX="14.25" PointY="71.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_ACTIVITY_TYPE" Width="1.5" PointX="12" PointY="71.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_CHANGE_FUND" Width="1.5" PointX="13.5" PointY="47.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_CUSTOMER_ACTIVITY" Width="1.5" PointX="16.5" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_ESCORT" Width="1.5" PointX="18.75" PointY="54.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_FAMILY_CARD" Width="1.5" PointX="13.5" PointY="57" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_TRANSACTION" Width="1.5" PointX="13.5" PointY="61" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_AREA" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ASSISTANT_SUPPLIER" Width="1.5" PointX="0.75" PointY="36" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BANK" Width="1.5" PointX="0.75" PointY="32.125" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_BRAND" Width="1.5" PointX="3" PointY="28.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_COMPANY_SETTINGS" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER" Width="1.5" PointX="11.25" PointY="49.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_ADDRESS" Width="1.5" PointX="16.5" PointY="25.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_BANK" Width="1.5" PointX="9" PointY="50" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_DOCUMENT" Width="1.5" PointX="13.5" PointY="62" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER" Width="1.5" PointX="11.25" PointY="49.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_ADDRESS" Width="1.5" PointX="16.5" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_BANK" Width="1.5" PointX="9" PointY="51" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_CUSTOMER_DOCUMENT" Width="1.5" PointX="13.5" PointY="67.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_HIRARACHY_STRUCTURE" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM" Width="1.5" PointX="5.25" PointY="31.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_ALLOWED_TRANSACTION" Width="1.5" PointX="7.5" PointY="40.25" IsExpanded="true" />
@@ -22,8 +28,8 @@
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_GENERALIZATION" Width="1.5" PointX="7.5" PointY="26.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_LOCATION" Width="1.5" PointX="13.5" PointY="29.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_ITEM_UNIT" Width="1.5" PointX="13.5" PointY="42.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_JOB" Width="1.5" PointX="9" PointY="54.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_KINSHIP_TIES" Width="1.5" PointX="14.25" PointY="25.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_JOB" Width="1.5" PointX="9" PointY="55.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_KINSHIP_TIES" Width="1.5" PointX="14.25" PointY="26.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_LOCATION" Width="1.5" PointX="11.25" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SECTION" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.GEN_SUPPLIER" Width="1.5" PointX="3" PointY="32.5" IsExpanded="true" />
@@ -47,10 +53,18 @@
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.PUR_PROMOTION_LOCATION" Width="1.5" PointX="13.5" PointY="16.125" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.PUR_PURCHASE_INV" Width="1.5" PointX="14.25" PointY="33.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.PUR_PURCHASE_INV_DETAILS" Width="1.5" PointX="19.5" PointY="34.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.SAL_INVOICE" Width="1.5" PointX="13.5" PointY="51.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.SAL_INVOICE" Width="1.5" PointX="13.5" PointY="52.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.SAL_INVOICE_DETAILS" Width="1.5" PointX="15.75" PointY="42.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.SAL_PAYMENT" Width="1.5" PointX="15.75" PointY="52" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConsumerAssociationDBModel.SAL_PAYMENT" Width="1.5" PointX="15.75" PointY="53" IsExpanded="true" />
         <EntityTypeShape EntityType="ConsumerAssociationDBModel.sysdiagrams" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_CUS_FAMILY_CARD" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_GEN_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_TRANSACTION_GEN_CUSTOMER" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_CUSTOMER_ADDRESS_GEN_AREA" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_GEN_SECTION_GEN_AREA" ManuallyRouted="false" />
@@ -103,14 +117,6 @@
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_PUR_PURCHASE_INV_PUR_PURCHASE_INV" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_SAL_INVOICE_DETAILS_SAL_INVOICE" ManuallyRouted="false" />
         <AssociationConnector Association="ConsumerAssociationDBModel.FK_SAL_PAYMENT_SAL_INVOICE" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_ESCORT" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_FAMILY_CARD" Width="1.5" PointX="7.375" PointY="5.75" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_CUS_FAMILY_CARD" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_GEN_CUSTOMER" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" />
-        <EntityTypeShape EntityType="ConsumerAssociationDBModel.CUS_CHANGE_FUND" Width="1.5" PointX="13.5" PointY="66" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" />
-        <AssociationConnector Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

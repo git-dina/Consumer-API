@@ -17,13 +17,14 @@ namespace POS_Server
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GEN_CUSTOMER()
         {
+            this.CUS_CHANGE_FUND = new HashSet<CUS_CHANGE_FUND>();
+            this.CUS_CHANGE_FUND1 = new HashSet<CUS_CHANGE_FUND>();
+            this.CUS_CUSTOMER_ACTIVITY = new HashSet<CUS_CUSTOMER_ACTIVITY>();
+            this.CUS_ESCORT = new HashSet<CUS_ESCORT>();
+            this.CUS_FAMILY_CARD = new HashSet<CUS_FAMILY_CARD>();
             this.CUS_TRANSACTION = new HashSet<CUS_TRANSACTION>();
             this.GEN_CUSTOMER_DOCUMENT = new HashSet<GEN_CUSTOMER_DOCUMENT>();
             this.SAL_INVOICE = new HashSet<SAL_INVOICE>();
-            this.CUS_ESCORT = new HashSet<CUS_ESCORT>();
-            this.CUS_FAMILY_CARD = new HashSet<CUS_FAMILY_CARD>();
-            this.CUS_CHANGE_FUND = new HashSet<CUS_CHANGE_FUND>();
-            this.CUS_CHANGE_FUND1 = new HashSet<CUS_CHANGE_FUND>();
         }
     
         public long CustomerId { get; set; }
@@ -46,6 +47,7 @@ namespace POS_Server
         public int SharesCount { get; set; }
         public bool CalculateEarnings { get; set; }
         public Nullable<int> BankId { get; set; }
+        public string IBAN { get; set; }
         public bool PrintNameOnInv { get; set; }
         public bool RegisteredInMinistry { get; set; }
         public bool DataCompleted { get; set; }
@@ -58,6 +60,16 @@ namespace POS_Server
         public Nullable<long> UpdateUserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CUS_CHANGE_FUND> CUS_CHANGE_FUND { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CUS_CHANGE_FUND> CUS_CHANGE_FUND1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CUS_CUSTOMER_ACTIVITY> CUS_CUSTOMER_ACTIVITY { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CUS_ESCORT> CUS_ESCORT { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CUS_FAMILY_CARD> CUS_FAMILY_CARD { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CUS_TRANSACTION> CUS_TRANSACTION { get; set; }
         public virtual GEN_CUSTOMER_ADDRESS GEN_CUSTOMER_ADDRESS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -66,13 +78,5 @@ namespace POS_Server
         public virtual GEN_JOB GEN_JOB { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SAL_INVOICE> SAL_INVOICE { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CUS_ESCORT> CUS_ESCORT { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CUS_FAMILY_CARD> CUS_FAMILY_CARD { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CUS_CHANGE_FUND> CUS_CHANGE_FUND { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CUS_CHANGE_FUND> CUS_CHANGE_FUND1 { get; set; }
     }
 }

@@ -4,7 +4,46 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ConsumerAssociationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ConsumerAssociationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CUS_ACTIVITY">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeId" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" />
+          <Property Name="BasicValue" Type="decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="ValueAfterDiscount" Type="decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="MaximumBenefit" Type="int" Nullable="false" />
+          <Property Name="RegestrtionCount" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime2" Precision="7" />
+          <Property Name="EndDate" Type="datetime2" Precision="7" />
+          <Property Name="Notes" Type="ntext" />
+          <Property Name="IsBlocked" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="CUS_ACTIVITY_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentTypeId" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Notes" Type="ntext" />
+          <Property Name="IsFinal" Type="bit" Nullable="false" />
+          <Property Name="OnlyFamilyCardHolder" Type="bit" Nullable="false" />
+          <Property Name="IsBlocked" Type="bit" Nullable="false" />
+          <Property Name="OnlyOneActivity" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+        </EntityType>
         <EntityType Name="CUS_CHANGE_FUND">
           <Key>
             <PropertyRef Name="Id" />
@@ -18,6 +57,22 @@
           <Property Name="Reason" Type="ntext" />
           <Property Name="ChangeDate" Type="datetime2" Precision="7" />
           <Property Name="EmptyFundNumber" Type="bigint" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" />
+          <Property Name="CreateUserId" Type="bigint" />
+          <Property Name="UpdateUserId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="CUS_CUSTOMER_ACTIVITY">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="bigint" />
+          <Property Name="BoxNumber" Type="bigint" />
+          <Property Name="ActivityId" Type="bigint" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Notes" Type="ntext" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" />
           <Property Name="UpdateDate" Type="datetime2" Precision="7" />
           <Property Name="CreateUserId" Type="bigint" />
@@ -171,6 +226,7 @@
           <Property Name="SharesCount" Type="int" Nullable="false" />
           <Property Name="CalculateEarnings" Type="bit" Nullable="false" />
           <Property Name="BankId" Type="int" />
+          <Property Name="IBAN" Type="nvarchar" MaxLength="50" />
           <Property Name="PrintNameOnInv" Type="bit" Nullable="false" />
           <Property Name="RegisteredInMinistry" Type="bit" Nullable="false" />
           <Property Name="DataCompleted" Type="bit" Nullable="false" />
@@ -934,6 +990,18 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <Association Name="FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE">
+          <End Role="CUS_ACTIVITY_TYPE" Type="Self.CUS_ACTIVITY_TYPE" Multiplicity="0..1" />
+          <End Role="CUS_ACTIVITY" Type="Self.CUS_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUS_ACTIVITY_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CUS_ACTIVITY">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
           <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
           <End Role="CUS_CHANGE_FUND" Type="Self.CUS_CHANGE_FUND" Multiplicity="*" />
@@ -955,6 +1023,30 @@
             </Principal>
             <Dependent Role="CUS_CHANGE_FUND">
               <PropertyRef Name="SecondCustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY">
+          <End Role="CUS_ACTIVITY" Type="Self.CUS_ACTIVITY" Multiplicity="0..1" />
+          <End Role="CUS_CUSTOMER_ACTIVITY" Type="Self.CUS_CUSTOMER_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUS_ACTIVITY">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="CUS_CUSTOMER_ACTIVITY">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_CUSTOMER_ACTIVITY" Type="Self.CUS_CUSTOMER_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_CUSTOMER_ACTIVITY">
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1650,7 +1742,10 @@
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ConsumerAssociationDBModelStoreContainer">
+          <EntitySet Name="CUS_ACTIVITY" EntityType="Self.CUS_ACTIVITY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CUS_ACTIVITY_TYPE" EntityType="Self.CUS_ACTIVITY_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUS_CHANGE_FUND" EntityType="Self.CUS_CHANGE_FUND" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CUS_CUSTOMER_ACTIVITY" EntityType="Self.CUS_CUSTOMER_ACTIVITY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUS_ESCORT" EntityType="Self.CUS_ESCORT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUS_FAMILY_CARD" EntityType="Self.CUS_FAMILY_CARD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUS_TRANSACTION" EntityType="Self.CUS_TRANSACTION" Schema="dbo" store:Type="Tables" />
@@ -1699,6 +1794,10 @@
           <EntitySet Name="SAL_INVOICE_DETAILS" EntityType="Self.SAL_INVOICE_DETAILS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SAL_PAYMENT" EntityType="Self.SAL_PAYMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE" Association="Self.FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE">
+            <End Role="CUS_ACTIVITY_TYPE" EntitySet="CUS_ACTIVITY_TYPE" />
+            <End Role="CUS_ACTIVITY" EntitySet="CUS_ACTIVITY" />
+          </AssociationSet>
           <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER" Association="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
             <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
             <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
@@ -1706,6 +1805,14 @@
           <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" Association="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1">
             <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
             <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY" Association="Self.FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY">
+            <End Role="CUS_ACTIVITY" EntitySet="CUS_ACTIVITY" />
+            <End Role="CUS_CUSTOMER_ACTIVITY" EntitySet="CUS_CUSTOMER_ACTIVITY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER" Association="Self.FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_CUSTOMER_ACTIVITY" EntitySet="CUS_CUSTOMER_ACTIVITY" />
           </AssociationSet>
           <AssociationSet Name="FK_CUS_ESCORT_CUS_FAMILY_CARD" Association="Self.FK_CUS_ESCORT_CUS_FAMILY_CARD">
             <End Role="CUS_FAMILY_CARD" EntitySet="CUS_FAMILY_CARD" />
@@ -1928,10 +2035,127 @@
             <End Role="SAL_PAYMENT" EntitySet="SAL_PAYMENT" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ConsumerAssociationDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CUS_ACTIVITY">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeId" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BasicValue" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="ValueAfterDiscount" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
+          <Property Name="MaximumBenefit" Type="Int32" Nullable="false" />
+          <Property Name="RegestrtionCount" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="7" />
+          <Property Name="EndDate" Type="DateTime" Precision="7" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_ACTIVITY_TYPE" Relationship="Self.FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE" FromRole="CUS_ACTIVITY" ToRole="CUS_ACTIVITY_TYPE" />
+          <NavigationProperty Name="CUS_CUSTOMER_ACTIVITY" Relationship="Self.FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY" FromRole="CUS_ACTIVITY" ToRole="CUS_CUSTOMER_ACTIVITY" />
+        </EntityType>
+        <EntityType Name="CUS_ACTIVITY_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentTypeId" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsFinal" Type="Boolean" Nullable="false" />
+          <Property Name="OnlyFamilyCardHolder" Type="Boolean" Nullable="false" />
+          <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+          <Property Name="OnlyOneActivity" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_ACTIVITY" Relationship="Self.FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE" FromRole="CUS_ACTIVITY_TYPE" ToRole="CUS_ACTIVITY" />
+        </EntityType>
+        <EntityType Name="CUS_CHANGE_FUND">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int64" />
+          <Property Name="OldFundNumber" Type="Int64" />
+          <Property Name="NewFundNumber" Type="Int64" />
+          <Property Name="SecondCustomerId" Type="Int64" />
+          <Property Name="ChangeType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ChangeDate" Type="DateTime" Precision="7" />
+          <Property Name="EmptyFundNumber" Type="Int64" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" FromRole="CUS_CHANGE_FUND" ToRole="GEN_CUSTOMER" />
+          <NavigationProperty Name="GEN_CUSTOMER1" Relationship="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" FromRole="CUS_CHANGE_FUND" ToRole="GEN_CUSTOMER" />
+        </EntityType>
+        <EntityType Name="CUS_CUSTOMER_ACTIVITY">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int64" />
+          <Property Name="BoxNumber" Type="Int64" />
+          <Property Name="ActivityId" Type="Int64" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_ACTIVITY" Relationship="Self.FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY" FromRole="CUS_CUSTOMER_ACTIVITY" ToRole="CUS_ACTIVITY" />
+          <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER" FromRole="CUS_CUSTOMER_ACTIVITY" ToRole="GEN_CUSTOMER" />
+        </EntityType>
+        <EntityType Name="CUS_ESCORT">
+          <Key>
+            <PropertyRef Name="EscortId" />
+          </Key>
+          <Property Name="EscortId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FamilyCardId" Type="Int64" />
+          <Property Name="CustomerId" Type="Int64" />
+          <Property Name="CivilNum" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EscortName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="KinshipId" Type="Int32" />
+          <Property Name="AddedDate" Type="DateTime" Precision="7" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_FAMILY_CARD" Relationship="Self.FK_CUS_ESCORT_CUS_FAMILY_CARD" FromRole="CUS_ESCORT" ToRole="CUS_FAMILY_CARD" />
+          <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_ESCORT_GEN_CUSTOMER" FromRole="CUS_ESCORT" ToRole="GEN_CUSTOMER" />
+        </EntityType>
+        <EntityType Name="CUS_FAMILY_CARD">
+          <Key>
+            <PropertyRef Name="FamilyCardId" />
+          </Key>
+          <Property Name="FamilyCardId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int64" />
+          <Property Name="ReleaseDate" Type="DateTime" Precision="7" />
+          <Property Name="IsStopped" Type="Boolean" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreateDate" Type="DateTime" Precision="7" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
+          <Property Name="CreateUserId" Type="Int64" />
+          <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_ESCORT" Relationship="Self.FK_CUS_ESCORT_CUS_FAMILY_CARD" FromRole="CUS_FAMILY_CARD" ToRole="CUS_ESCORT" />
+          <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" FromRole="CUS_FAMILY_CARD" ToRole="GEN_CUSTOMER" />
+        </EntityType>
         <EntityType Name="CUS_TRANSACTION">
           <Key>
             <PropertyRef Name="TransactionId" />
@@ -1942,13 +2166,16 @@
           <Property Name="TransactionDate" Type="DateTime" Precision="7" />
           <Property Name="TransactionType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="StocksCount" Type="Int32" Nullable="false" />
+          <Property Name="TransactionStocksCount" Type="Int32" />
           <Property Name="StocksPrice" Type="Decimal" Precision="18" Scale="3" Nullable="false" />
           <Property Name="ApprovalNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="MeetingDate" Type="DateTime" Precision="7" />
           <Property Name="CheckDate" Type="DateTime" Precision="7" />
+          <Property Name="CheckNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ToCustomerId" Type="Int64" />
           <Property Name="ToBoxNumber" Type="Int64" />
+          <Property Name="ToStocksCount" Type="Int32" />
           <Property Name="BondNo" Type="Int32" />
           <Property Name="BondDate" Type="DateTime" Precision="7" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1957,9 +2184,6 @@
           <Property Name="CreateUserId" Type="Int64" />
           <Property Name="UpdateUserId" Type="Int64" />
           <NavigationProperty Name="GEN_CUSTOMER" Relationship="Self.FK_CUS_TRANSACTION_GEN_CUSTOMER" FromRole="CUS_TRANSACTION" ToRole="GEN_CUSTOMER" />
-          <Property Name="CheckNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TransactionStocksCount" Type="Int32" />
-          <Property Name="ToStocksCount" Type="Int32" />
         </EntityType>
         <EntityType Name="GEN_AREA">
           <Key>
@@ -2054,6 +2278,7 @@
           <Property Name="SharesCount" Type="Int32" Nullable="false" />
           <Property Name="CalculateEarnings" Type="Boolean" Nullable="false" />
           <Property Name="BankId" Type="Int32" />
+          <Property Name="IBAN" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PrintNameOnInv" Type="Boolean" Nullable="false" />
           <Property Name="RegisteredInMinistry" Type="Boolean" Nullable="false" />
           <Property Name="DataCompleted" Type="Boolean" Nullable="false" />
@@ -2064,16 +2289,17 @@
           <Property Name="UpdateDate" Type="DateTime" Precision="7" />
           <Property Name="CreateUserId" Type="Int64" />
           <Property Name="UpdateUserId" Type="Int64" />
+          <NavigationProperty Name="CUS_CHANGE_FUND" Relationship="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_CHANGE_FUND" />
+          <NavigationProperty Name="CUS_CHANGE_FUND1" Relationship="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" FromRole="GEN_CUSTOMER" ToRole="CUS_CHANGE_FUND" />
+          <NavigationProperty Name="CUS_CUSTOMER_ACTIVITY" Relationship="Self.FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_CUSTOMER_ACTIVITY" />
+          <NavigationProperty Name="CUS_ESCORT" Relationship="Self.FK_CUS_ESCORT_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_ESCORT" />
+          <NavigationProperty Name="CUS_FAMILY_CARD" Relationship="Self.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_FAMILY_CARD" />
           <NavigationProperty Name="CUS_TRANSACTION" Relationship="Self.FK_CUS_TRANSACTION_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_TRANSACTION" />
           <NavigationProperty Name="GEN_CUSTOMER_ADDRESS" Relationship="Self.FK_GEN_CUSTOMER_ADDRESS_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="GEN_CUSTOMER_ADDRESS" />
           <NavigationProperty Name="GEN_CUSTOMER_DOCUMENT" Relationship="Self.FK_GEN_CUSTOMER_DOCUMENT_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="GEN_CUSTOMER_DOCUMENT" />
           <NavigationProperty Name="GEN_CUSTOMER_BANK" Relationship="Self.FK_GEN_CUSTOMER_GEN_CUSTOMER_BANK" FromRole="GEN_CUSTOMER" ToRole="GEN_CUSTOMER_BANK" />
           <NavigationProperty Name="GEN_JOB" Relationship="Self.FK_GEN_CUSTOMER_GEN_JOB" FromRole="GEN_CUSTOMER" ToRole="GEN_JOB" />
           <NavigationProperty Name="SAL_INVOICE" Relationship="Self.FK_SAL_INVOICE_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="SAL_INVOICE" />
-          <NavigationProperty Name="CUS_ESCORT" Relationship="ConsumerAssociationDBModel.FK_CUS_ESCORT_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_ESCORT" />
-          <NavigationProperty Name="CUS_FAMILY_CARD" Relationship="ConsumerAssociationDBModel.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_FAMILY_CARD" />
-          <NavigationProperty Name="CUS_CHANGE_FUND" Relationship="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" FromRole="GEN_CUSTOMER" ToRole="CUS_CHANGE_FUND" />
-          <NavigationProperty Name="CUS_CHANGE_FUND1" Relationship="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" FromRole="GEN_CUSTOMER" ToRole="CUS_CHANGE_FUND" />
         </EntityType>
         <EntityType Name="GEN_CUSTOMER_ADDRESS">
           <Key>
@@ -2919,6 +3145,102 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
+        <Association Name="FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE">
+          <End Role="CUS_ACTIVITY_TYPE" Type="Self.CUS_ACTIVITY_TYPE" Multiplicity="0..1" />
+          <End Role="CUS_ACTIVITY" Type="Self.CUS_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUS_ACTIVITY_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CUS_ACTIVITY">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY">
+          <End Role="CUS_ACTIVITY" Type="Self.CUS_ACTIVITY" Multiplicity="0..1" />
+          <End Role="CUS_CUSTOMER_ACTIVITY" Type="Self.CUS_CUSTOMER_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUS_ACTIVITY">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="CUS_CUSTOMER_ACTIVITY">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_CHANGE_FUND" Type="Self.CUS_CHANGE_FUND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_CHANGE_FUND">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER1">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_CHANGE_FUND" Type="Self.CUS_CHANGE_FUND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_CHANGE_FUND">
+              <PropertyRef Name="SecondCustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_CUSTOMER_ACTIVITY" Type="Self.CUS_CUSTOMER_ACTIVITY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_CUSTOMER_ACTIVITY">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_ESCORT_CUS_FAMILY_CARD">
+          <End Role="CUS_FAMILY_CARD" Type="Self.CUS_FAMILY_CARD" Multiplicity="0..1" />
+          <End Role="CUS_ESCORT" Type="Self.CUS_ESCORT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUS_FAMILY_CARD">
+              <PropertyRef Name="FamilyCardId" />
+            </Principal>
+            <Dependent Role="CUS_ESCORT">
+              <PropertyRef Name="FamilyCardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_ESCORT_GEN_CUSTOMER">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_ESCORT" Type="Self.CUS_ESCORT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_ESCORT">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CUS_FAMILY_CARD_GEN_CUSTOMER">
+          <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
+          <End Role="CUS_FAMILY_CARD" Type="Self.CUS_FAMILY_CARD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CUSTOMER">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CUS_FAMILY_CARD">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CUS_TRANSACTION_GEN_CUSTOMER">
           <End Role="GEN_CUSTOMER" Type="Self.GEN_CUSTOMER" Multiplicity="0..1" />
           <End Role="CUS_TRANSACTION" Type="Self.CUS_TRANSACTION" Multiplicity="*" />
@@ -3544,6 +3866,12 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ConsumerAssociationDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CUS_ACTIVITY" EntityType="Self.CUS_ACTIVITY" />
+          <EntitySet Name="CUS_ACTIVITY_TYPE" EntityType="Self.CUS_ACTIVITY_TYPE" />
+          <EntitySet Name="CUS_CHANGE_FUND" EntityType="Self.CUS_CHANGE_FUND" />
+          <EntitySet Name="CUS_CUSTOMER_ACTIVITY" EntityType="Self.CUS_CUSTOMER_ACTIVITY" />
+          <EntitySet Name="CUS_ESCORT" EntityType="Self.CUS_ESCORT" />
+          <EntitySet Name="CUS_FAMILY_CARD" EntityType="Self.CUS_FAMILY_CARD" />
           <EntitySet Name="CUS_TRANSACTION" EntityType="Self.CUS_TRANSACTION" />
           <EntitySet Name="GEN_AREA" EntityType="Self.GEN_AREA" />
           <EntitySet Name="GEN_ASSISTANT_SUPPLIER" EntityType="Self.GEN_ASSISTANT_SUPPLIER" />
@@ -3590,6 +3918,38 @@
           <EntitySet Name="SAL_INVOICE_DETAILS" EntityType="Self.SAL_INVOICE_DETAILS" />
           <EntitySet Name="SAL_PAYMENT" EntityType="Self.SAL_PAYMENT" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE" Association="Self.FK_CUS_ACTIVITY_CUS_ACTIVITY_TYPE">
+            <End Role="CUS_ACTIVITY_TYPE" EntitySet="CUS_ACTIVITY_TYPE" />
+            <End Role="CUS_ACTIVITY" EntitySet="CUS_ACTIVITY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY" Association="Self.FK_CUS_CUSTOMER_ACTIVITY_CUS_ACTIVITY">
+            <End Role="CUS_ACTIVITY" EntitySet="CUS_ACTIVITY" />
+            <End Role="CUS_CUSTOMER_ACTIVITY" EntitySet="CUS_CUSTOMER_ACTIVITY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER" Association="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" Association="Self.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER" Association="Self.FK_CUS_CUSTOMER_ACTIVITY_GEN_CUSTOMER">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_CUSTOMER_ACTIVITY" EntitySet="CUS_CUSTOMER_ACTIVITY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_ESCORT_CUS_FAMILY_CARD" Association="Self.FK_CUS_ESCORT_CUS_FAMILY_CARD">
+            <End Role="CUS_FAMILY_CARD" EntitySet="CUS_FAMILY_CARD" />
+            <End Role="CUS_ESCORT" EntitySet="CUS_ESCORT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_ESCORT_GEN_CUSTOMER" Association="Self.FK_CUS_ESCORT_GEN_CUSTOMER">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_ESCORT" EntitySet="CUS_ESCORT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CUS_FAMILY_CARD_GEN_CUSTOMER" Association="Self.FK_CUS_FAMILY_CARD_GEN_CUSTOMER">
+            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
+            <End Role="CUS_FAMILY_CARD" EntitySet="CUS_FAMILY_CARD" />
+          </AssociationSet>
           <AssociationSet Name="FK_CUS_TRANSACTION_GEN_CUSTOMER" Association="Self.FK_CUS_TRANSACTION_GEN_CUSTOMER">
             <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
             <End Role="CUS_TRANSACTION" EntitySet="CUS_TRANSACTION" />
@@ -3828,29 +4188,6 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
-          <EntitySet Name="CUS_ESCORT" EntityType="ConsumerAssociationDBModel.CUS_ESCORT" />
-          <EntitySet Name="CUS_FAMILY_CARD" EntityType="ConsumerAssociationDBModel.CUS_FAMILY_CARD" />
-          <AssociationSet Name="FK_CUS_ESCORT_CUS_FAMILY_CARD" Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_CUS_FAMILY_CARD">
-            <End Role="CUS_FAMILY_CARD" EntitySet="CUS_FAMILY_CARD" />
-            <End Role="CUS_ESCORT" EntitySet="CUS_ESCORT" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CUS_ESCORT_GEN_CUSTOMER" Association="ConsumerAssociationDBModel.FK_CUS_ESCORT_GEN_CUSTOMER">
-            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
-            <End Role="CUS_ESCORT" EntitySet="CUS_ESCORT" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CUS_FAMILY_CARD_GEN_CUSTOMER" Association="ConsumerAssociationDBModel.FK_CUS_FAMILY_CARD_GEN_CUSTOMER">
-            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
-            <End Role="CUS_FAMILY_CARD" EntitySet="CUS_FAMILY_CARD" />
-          </AssociationSet>
-          <EntitySet Name="CUS_CHANGE_FUND" EntityType="ConsumerAssociationDBModel.CUS_CHANGE_FUND" />
-          <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER" Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
-            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
-            <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" Association="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1">
-            <End Role="GEN_CUSTOMER" EntitySet="GEN_CUSTOMER" />
-            <End Role="CUS_CHANGE_FUND" EntitySet="CUS_CHANGE_FUND" />
-          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -3863,147 +4200,142 @@
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
-        <EntityType Name="CUS_ESCORT">
-          <Key>
-            <PropertyRef Name="EscortId" />
-          </Key>
-          <Property Name="EscortId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FamilyCardId" Type="Int64" />
-          <Property Name="CustomerId" Type="Int64" />
-          <Property Name="CivilNum" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="EscortName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="KinshipId" Type="Int32" />
-          <Property Name="AddedDate" Type="DateTime" Precision="7" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="CreateDate" Type="DateTime" Precision="7" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
-          <Property Name="CreateUserId" Type="Int64" />
-          <Property Name="UpdateUserId" Type="Int64" />
-          <NavigationProperty Name="CUS_FAMILY_CARD" Relationship="ConsumerAssociationDBModel.FK_CUS_ESCORT_CUS_FAMILY_CARD" FromRole="CUS_ESCORT" ToRole="CUS_FAMILY_CARD" />
-          <NavigationProperty Name="GEN_CUSTOMER" Relationship="ConsumerAssociationDBModel.FK_CUS_ESCORT_GEN_CUSTOMER" FromRole="CUS_ESCORT" ToRole="GEN_CUSTOMER" />
-        </EntityType>
-        <EntityType Name="CUS_FAMILY_CARD">
-          <Key>
-            <PropertyRef Name="FamilyCardId" />
-          </Key>
-          <Property Name="FamilyCardId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int64" />
-          <Property Name="ReleaseDate" Type="DateTime" Precision="7" />
-          <Property Name="IsStopped" Type="Boolean" />
-          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="CreateDate" Type="DateTime" Precision="7" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
-          <Property Name="CreateUserId" Type="Int64" />
-          <Property Name="UpdateUserId" Type="Int64" />
-          <NavigationProperty Name="CUS_ESCORT" Relationship="ConsumerAssociationDBModel.FK_CUS_ESCORT_CUS_FAMILY_CARD" FromRole="CUS_FAMILY_CARD" ToRole="CUS_ESCORT" />
-          <NavigationProperty Name="GEN_CUSTOMER" Relationship="ConsumerAssociationDBModel.FK_CUS_FAMILY_CARD_GEN_CUSTOMER" FromRole="CUS_FAMILY_CARD" ToRole="GEN_CUSTOMER" />
-        </EntityType>
-        <Association Name="FK_CUS_ESCORT_CUS_FAMILY_CARD">
-          <End Type="ConsumerAssociationDBModel.CUS_FAMILY_CARD" Role="CUS_FAMILY_CARD" Multiplicity="0..1" />
-          <End Type="ConsumerAssociationDBModel.CUS_ESCORT" Role="CUS_ESCORT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CUS_FAMILY_CARD">
-              <PropertyRef Name="FamilyCardId" />
-            </Principal>
-            <Dependent Role="CUS_ESCORT">
-              <PropertyRef Name="FamilyCardId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CUS_ESCORT_GEN_CUSTOMER">
-          <End Type="ConsumerAssociationDBModel.GEN_CUSTOMER" Role="GEN_CUSTOMER" Multiplicity="0..1" />
-          <End Type="ConsumerAssociationDBModel.CUS_ESCORT" Role="CUS_ESCORT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_CUSTOMER">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="CUS_ESCORT">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CUS_FAMILY_CARD_GEN_CUSTOMER">
-          <End Type="ConsumerAssociationDBModel.GEN_CUSTOMER" Role="GEN_CUSTOMER" Multiplicity="0..1" />
-          <End Type="ConsumerAssociationDBModel.CUS_FAMILY_CARD" Role="CUS_FAMILY_CARD" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_CUSTOMER">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="CUS_FAMILY_CARD">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="CUS_CHANGE_FUND">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int64" />
-          <Property Name="OldFundNumber" Type="Int64" />
-          <Property Name="NewFundNumber" Type="Int64" />
-          <Property Name="SecondCustomerId" Type="Int64" />
-          <Property Name="ChangeType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ChangeDate" Type="DateTime" Precision="7" />
-          <Property Name="CreateDate" Type="DateTime" Precision="7" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="7" />
-          <Property Name="CreateUserId" Type="Int64" />
-          <Property Name="UpdateUserId" Type="Int64" />
-          <NavigationProperty Name="GEN_CUSTOMER" Relationship="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER" FromRole="CUS_CHANGE_FUND" ToRole="GEN_CUSTOMER" />
-          <NavigationProperty Name="GEN_CUSTOMER1" Relationship="ConsumerAssociationDBModel.FK_CUS_CHANGE_FUND_GEN_CUSTOMER1" FromRole="CUS_CHANGE_FUND" ToRole="GEN_CUSTOMER" />
-          <Property Name="EmptyFundNumber" Type="Int64" />
-        </EntityType>
-        <Association Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER">
-          <End Type="ConsumerAssociationDBModel.GEN_CUSTOMER" Role="GEN_CUSTOMER" Multiplicity="0..1" />
-          <End Type="ConsumerAssociationDBModel.CUS_CHANGE_FUND" Role="CUS_CHANGE_FUND" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_CUSTOMER">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="CUS_CHANGE_FUND">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CUS_CHANGE_FUND_GEN_CUSTOMER1">
-          <End Type="ConsumerAssociationDBModel.GEN_CUSTOMER" Role="GEN_CUSTOMER" Multiplicity="0..1" />
-          <End Type="ConsumerAssociationDBModel.CUS_CHANGE_FUND" Role="CUS_CHANGE_FUND" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_CUSTOMER">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="CUS_CHANGE_FUND">
-              <PropertyRef Name="SecondCustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ConsumerAssociationDBModelStoreContainer" CdmEntityContainer="ConsumerAssociationDBEntities">
+          <EntitySetMapping Name="CUS_ACTIVITY">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_ACTIVITY">
+              <MappingFragment StoreEntitySet="CUS_ACTIVITY">
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="BasicValue" ColumnName="BasicValue" />
+                <ScalarProperty Name="ValueAfterDiscount" ColumnName="ValueAfterDiscount" />
+                <ScalarProperty Name="MaximumBenefit" ColumnName="MaximumBenefit" />
+                <ScalarProperty Name="RegestrtionCount" ColumnName="RegestrtionCount" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUS_ACTIVITY_TYPE">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_ACTIVITY_TYPE">
+              <MappingFragment StoreEntitySet="CUS_ACTIVITY_TYPE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentTypeId" ColumnName="ParentTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsFinal" ColumnName="IsFinal" />
+                <ScalarProperty Name="OnlyFamilyCardHolder" ColumnName="OnlyFamilyCardHolder" />
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="OnlyOneActivity" ColumnName="OnlyOneActivity" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUS_CHANGE_FUND">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_CHANGE_FUND">
+              <MappingFragment StoreEntitySet="CUS_CHANGE_FUND">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="OldFundNumber" ColumnName="OldFundNumber" />
+                <ScalarProperty Name="NewFundNumber" ColumnName="NewFundNumber" />
+                <ScalarProperty Name="SecondCustomerId" ColumnName="SecondCustomerId" />
+                <ScalarProperty Name="ChangeType" ColumnName="ChangeType" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="EmptyFundNumber" ColumnName="EmptyFundNumber" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUS_CUSTOMER_ACTIVITY">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_CUSTOMER_ACTIVITY">
+              <MappingFragment StoreEntitySet="CUS_CUSTOMER_ACTIVITY">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="BoxNumber" ColumnName="BoxNumber" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUS_ESCORT">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_ESCORT">
+              <MappingFragment StoreEntitySet="CUS_ESCORT">
+                <ScalarProperty Name="EscortId" ColumnName="EscortId" />
+                <ScalarProperty Name="FamilyCardId" ColumnName="FamilyCardId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CivilNum" ColumnName="CivilNum" />
+                <ScalarProperty Name="EscortName" ColumnName="EscortName" />
+                <ScalarProperty Name="KinshipId" ColumnName="KinshipId" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUS_FAMILY_CARD">
+            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_FAMILY_CARD">
+              <MappingFragment StoreEntitySet="CUS_FAMILY_CARD">
+                <ScalarProperty Name="FamilyCardId" ColumnName="FamilyCardId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+                <ScalarProperty Name="IsStopped" ColumnName="IsStopped" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CUS_TRANSACTION">
             <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_TRANSACTION">
               <MappingFragment StoreEntitySet="CUS_TRANSACTION">
-                <ScalarProperty Name="ToStocksCount" ColumnName="ToStocksCount" />
-                <ScalarProperty Name="TransactionStocksCount" ColumnName="TransactionStocksCount" />
-                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
                 <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="BoxNumber" ColumnName="BoxNumber" />
                 <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
                 <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
                 <ScalarProperty Name="StocksCount" ColumnName="StocksCount" />
+                <ScalarProperty Name="TransactionStocksCount" ColumnName="TransactionStocksCount" />
                 <ScalarProperty Name="StocksPrice" ColumnName="StocksPrice" />
                 <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
                 <ScalarProperty Name="MeetingDate" ColumnName="MeetingDate" />
                 <ScalarProperty Name="CheckDate" ColumnName="CheckDate" />
+                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="ToCustomerId" ColumnName="ToCustomerId" />
                 <ScalarProperty Name="ToBoxNumber" ColumnName="ToBoxNumber" />
+                <ScalarProperty Name="ToStocksCount" ColumnName="ToStocksCount" />
                 <ScalarProperty Name="BondNo" ColumnName="BondNo" />
                 <ScalarProperty Name="BondDate" ColumnName="BondDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -4106,6 +4438,7 @@
                 <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
                 <ScalarProperty Name="CalculateEarnings" ColumnName="CalculateEarnings" />
                 <ScalarProperty Name="BankId" ColumnName="BankId" />
+                <ScalarProperty Name="IBAN" ColumnName="IBAN" />
                 <ScalarProperty Name="PrintNameOnInv" ColumnName="PrintNameOnInv" />
                 <ScalarProperty Name="RegisteredInMinistry" ColumnName="RegisteredInMinistry" />
                 <ScalarProperty Name="DataCompleted" ColumnName="DataCompleted" />
@@ -4934,59 +5267,6 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ConsumerAssociationDBModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ConsumerAssociationDBModel.Store.sp_upgraddiagrams" />
-          <EntitySetMapping Name="CUS_ESCORT">
-            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_ESCORT">
-              <MappingFragment StoreEntitySet="CUS_ESCORT">
-                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
-                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
-                <ScalarProperty Name="KinshipId" ColumnName="KinshipId" />
-                <ScalarProperty Name="EscortName" ColumnName="EscortName" />
-                <ScalarProperty Name="CivilNum" ColumnName="CivilNum" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="FamilyCardId" ColumnName="FamilyCardId" />
-                <ScalarProperty Name="EscortId" ColumnName="EscortId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CUS_FAMILY_CARD">
-            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_FAMILY_CARD">
-              <MappingFragment StoreEntitySet="CUS_FAMILY_CARD">
-                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
-                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="IsStopped" ColumnName="IsStopped" />
-                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="FamilyCardId" ColumnName="FamilyCardId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CUS_CHANGE_FUND">
-            <EntityTypeMapping TypeName="ConsumerAssociationDBModel.CUS_CHANGE_FUND">
-              <MappingFragment StoreEntitySet="CUS_CHANGE_FUND">
-                <ScalarProperty Name="EmptyFundNumber" ColumnName="EmptyFundNumber" />
-                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
-                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
-                <ScalarProperty Name="ChangeType" ColumnName="ChangeType" />
-                <ScalarProperty Name="SecondCustomerId" ColumnName="SecondCustomerId" />
-                <ScalarProperty Name="NewFundNumber" ColumnName="NewFundNumber" />
-                <ScalarProperty Name="OldFundNumber" ColumnName="OldFundNumber" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
