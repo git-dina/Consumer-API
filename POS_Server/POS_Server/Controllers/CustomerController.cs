@@ -67,7 +67,7 @@ namespace POS_Server.Controllers
                     searchPredicate = searchPredicate.And(x => x.IsActive == true);
                     searchPredicate = searchPredicate.And(s => s.BoxNumber.ToString().Contains(textSearch) ||
                     s.Name.ToLower().Contains(textSearch) || s.Family.ToLower().Contains(textSearch)
-                     || s.CivilNum.Contains(textSearch)
+                     || s.CustomerId.ToString().Contains(textSearch)
                      );
 
                 }
@@ -147,10 +147,10 @@ namespace POS_Server.Controllers
                     canArchive = false;
                     hasFamilyCard = false;
 
-                    var withdraw = entity.CUS_CHANGE_FUND.Where(x => x.CustomerId == cus.CustomerId && x.ChangeType == "withdraw").FirstOrDefault();
+                    var withdraw = entity.CUS_TRANSACTION.Where(x => x.CustomerId == cus.CustomerId && x.TransactionType == "retreat").FirstOrDefault();
                     if(withdraw != null)
                     {
-                        var withdrawDate = withdraw.ChangeDate;
+                        var withdrawDate = withdraw.TransactionDate;
                      
                         TimeSpan span = nowDate - (DateTime)withdrawDate;
                         // Because we start at year 1 for the Gregorian
@@ -158,6 +158,9 @@ namespace POS_Server.Controllers
                         int years = (zeroTime + span).Year - 1;
                         if(years >= 2)
                             canArchive = true;
+
+                        cus.WithdrawnDate = withdrawDate;
+                        cus.CheckNumber = withdraw.CheckNumber;
                     }
                     else
                     {
@@ -354,8 +357,8 @@ namespace POS_Server.Controllers
                             customer.CustomerStatus = cusObj.CustomerStatus;
                             customer.MemberNature = cusObj.MemberNature;
                             customer.DOB = cusObj.DOB;
-                            customer.BankId = cusObj.BankId;
-                            customer.IBAN = cusObj.IBAN;
+                           // customer.BankId = cusObj.BankId;
+                           // customer.IBAN = cusObj.IBAN;
                             customer.Gender = cusObj.Gender;
                             customer.MaritalStatus = cusObj.MaritalStatus;
                             customer.JobId = cusObj.JobId;
@@ -650,40 +653,40 @@ namespace POS_Server.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetMaxFundNum")]
-        public string GetMaxFundNum(string token)
-        {
-            token = TokenManager.readToken(HttpContext.Current.Request);
+        //[HttpPost]
+        //[Route("GetMaxFundNum")]
+        //public string GetMaxFundNum(string token)
+        //{
+        //    token = TokenManager.readToken(HttpContext.Current.Request);
 
-            var strP = TokenManager.GetPrincipal(token);
-            if (strP != "0") //invalid authorization
-            {
-                return TokenManager.GenerateToken(strP);
-            }
-            else
-            {
+        //    var strP = TokenManager.GetPrincipal(token);
+        //    if (strP != "0") //invalid authorization
+        //    {
+        //        return TokenManager.GenerateToken(strP);
+        //    }
+        //    else
+        //    {
 
-                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
-                {
-                    long maxId = 1;
-                    var fundNums = entity.GEN_CUSTOMER.Select(x=> x.BoxNumber).ToList();
-                    long counter = fundNums.Count() > 0 ? (long)fundNums.First() : 0;
+        //        using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+        //        {
+        //            long maxId = 1;
+        //            var fundNums = entity.GEN_CUSTOMER.Select(x=> x.BoxNumber).ToList();
+        //            long counter = fundNums.Count() > 0 ? (long)fundNums.First() : 0;
 
-                    while (counter < int.MaxValue)
-                    {
-                        if (!fundNums.Contains(++counter)) 
-                        {
-                            maxId = counter;
-                            break;
-                        }
-                    }
+        //            while (counter < int.MaxValue)
+        //            {
+        //                if (!fundNums.Contains(++counter)) 
+        //                {
+        //                    maxId = counter;
+        //                    break;
+        //                }
+        //            }
 
-                    return TokenManager.GenerateToken(maxId.ToString());
+        //            return TokenManager.GenerateToken(maxId.ToString());
 
-                }
-            }
-        } 
+        //        }
+        //    }
+        //} 
         
         [HttpPost]
         [Route("GetMaxCustomerId")]
@@ -715,6 +718,35 @@ namespace POS_Server.Controllers
                     }
 
                     return TokenManager.GenerateToken(maxId.ToString());
+
+                }
+            }
+        }
+        
+        [HttpPost]
+        [Route("GetMaxFamilyCardId")]
+        public string GetMaxFamilyCardId(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+
+                        long maxId = 0;
+                        var item = entity.CUS_FAMILY_CARD.Count();
+                        if (item > 0)
+                            maxId = entity.CUS_FAMILY_CARD.Select(x => x.FamilyCardId).Max();
+                        maxId++;
+
+                        return TokenManager.GenerateToken(maxId.ToString());
 
                 }
             }
@@ -934,6 +966,83 @@ namespace POS_Server.Controllers
                     {
 
                         var customer =(from x in  entity.GEN_CUSTOMER.Where(x => x.CustomerId == customerId && x.IsArchived == false)
+                                       join c in entity.CUS_FAMILY_CARD on x.CustomerId equals c.CustomerId into cards
+                                       from card in cards.DefaultIfEmpty()
+                                       select  new FamilyCardModel()
+                                       {
+                                           CustomerId = x.CustomerId,
+                                           BoxNumber = x.BoxNumber,
+                                           CustomerName = x.Name,
+                                            AutomatedNumber = x.GEN_CUSTOMER_ADDRESS.AutomtedNumber,
+                                            FamilyCardId = card.FamilyCardId,
+                                           CivilNum = x.CivilNum,
+                                           CustomerStatus = x.CustomerStatus,
+                                           IsStopped = card.IsStopped,
+                                           ReleaseDate = card.ReleaseDate,
+                                           Notes = x.Notes,                                         
+                                           CreateUserId = x.CreateUserId,
+                                           CreateDate = x.CreateDate,
+                                           UpdateDate = x.UpdateDate,
+                                           UpdateUserId = x.UpdateUserId,
+                                          Escorts = entity.CUS_ESCORT.Where(m=> m.CustomerId == x.CustomerId && m.IsActive == true)
+                                                    .Select(m=> new EscortModel()
+                                                    {
+                                                        BoxNumber = m.GEN_CUSTOMER.BoxNumber,
+                                                        AddedDate=m.AddedDate,
+                                                        CustomerId = m.CustomerId,
+                                                        CivilNum = m.CivilNum,
+                                                        EscortId = m.EscortId,
+                                                        EscortName = m.EscortName,
+                                                        IsActive = m.IsActive,
+                                                        IsCustomer = m.CustomerId == null? false :true,
+                                                        KinshipId = m.KinshipId,
+                                                        FamilyCardId = m.FamilyCardId,
+                                                    }).ToList(),
+                                       }).FirstOrDefault();
+
+                        
+                        return TokenManager.GenerateToken(customer);
+                    }
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken("0");
+                }
+            }
+        }
+
+
+        [HttpPost]
+        [Route("GetFamilyCardByBoxNumber")]
+        public string GetFamilyCardByBoxNumber(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                long boxNumber = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "boxNumber")
+                    {
+                        boxNumber = long.Parse(c.Value);
+                    }
+                }
+                try
+                {
+                    var nowDate = cc.AddOffsetTodate(DateTime.Now);
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+
+                        var customer =(from x in  entity.GEN_CUSTOMER.Where(x => x.BoxNumber == boxNumber && x.IsArchived == false)
                                        join c in entity.CUS_FAMILY_CARD on x.CustomerId equals c.CustomerId into cards
                                        from card in cards.DefaultIfEmpty()
                                        select  new FamilyCardModel()

@@ -52,6 +52,9 @@ namespace POS_Server.Models
         public int JoinDay { get; set; }
         public int JoinMonth { get; set; }
         public int JoinYear { get; set; }
+        public Nullable<System.DateTime> WithdrawnDate { get; set; } = DateTime.Now;
+        public string CheckNumber { get; set; }
+
     }
 
     public class CustomerAddressModel

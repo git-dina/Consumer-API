@@ -56,7 +56,7 @@ namespace POS_Server.Controllers
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var brandsList = entity.CUS_ACTIVITY
+                var lst = entity.CUS_ACTIVITY
                                     .Where(searchPredicate)
                                 .Select(p => new ActivityModel
                                 {
@@ -76,10 +76,17 @@ namespace POS_Server.Controllers
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
+                                    TypeName = p.CUS_ACTIVITY_TYPE.Name,
                                 }).ToList();
 
+                foreach (var row in lst)
+                {
+                    row.RemainCount = row.RegestrtionCount
+                        - entity.CUS_CUSTOMER_ACTIVITY.Where(x => x.IsActive == true && x.ActivityId == row.ActivityId).ToList().Sum(x => x.Count);
 
-                return brandsList;
+                    
+                }
+                return lst;
             }
         }
 

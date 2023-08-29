@@ -7,7 +7,7 @@ namespace POS_Server.Models
 {
     public class FamilyCardModel
     {
-        public long FamilyCardId { get; set; }
+        public long? FamilyCardId { get; set; }
         public Nullable<long> CustomerId { get; set; }
         public Nullable<System.DateTime> ReleaseDate { get; set; }
         public Nullable<bool> IsStopped { get; set; }
