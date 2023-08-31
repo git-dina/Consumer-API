@@ -918,6 +918,13 @@ namespace POS_Server.Controllers
                             }
                             customer.CanArchive = canArchive;
 
+                            #region FamilyCardHolder
+                            bool hasFamilyCard = false;
+                            var card = entity.CUS_FAMILY_CARD.Where(x => x.CustomerId == customer.CustomerId && x.IsStopped == false).FirstOrDefault();
+                            if (card != null)
+                                hasFamilyCard = true;
+                            customer.FamilyCardHolder = hasFamilyCard;
+                            #endregion
                             #region join date
                             TimeSpan span1 = nowDate - (DateTime)customer.JoinDate;
                             customer.JoinYear = (zeroTime + span1).Year - 1;
