@@ -34,7 +34,6 @@ namespace POS_Server.Models
         public Nullable<long> CreateUserId { get; set; }
         public Nullable<long> UpdateUserId { get; set; }
 
-        public List<UserModel> Users { get; set; }
         public List<PermissionsModel> Permissions { get; set; }
     }
 

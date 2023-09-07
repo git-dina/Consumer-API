@@ -14,54 +14,29 @@ using System.Web.Http;
 
 namespace POS_Server.Controllers
 {
-    [RoutePrefix("api/LocationType")]
-    public class LocationTypeController : ApiController
+    [RoutePrefix("api/User")]
+    public class UserController : ApiController
     {
         CountriesController cc = new CountriesController();
-        [HttpPost]
-        [Route("Get")]
-        public string Get(string token)
-        {
-            token = TokenManager.readToken(HttpContext.Current.Request);
-            bool? isActive = null;
 
-            var strP = TokenManager.GetPrincipal(token);
-            if (strP != "0") //invalid authorization
-            {
-                return TokenManager.GenerateToken(strP);
-            }
-            else
-            {
-                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
-                foreach (Claim c in claims)
-                {
-                    if (c.Type == "isActive")
-                    {
-                        if (c.Value != "")
-                            isActive = bool.Parse(c.Value);
-                    }
-                }
 
-                var typeList = GetLocationTypes(isActive);
-                return TokenManager.GenerateToken(typeList);
-            }
-        }
-
-        public List<LocationTypeModel> GetLocationTypes(bool? isActive)
+        public List<UserModel> GetUsersList(bool? isActive)
         {
             using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
             {
-                var searchPredicate = PredicateBuilder.New<LST_LOCATION_TYPE>();
+                var searchPredicate = PredicateBuilder.New<USR_USER>();
                 searchPredicate = searchPredicate.And(x => true);
                 if (isActive != null)
                     searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
 
-                var locationTypeList = entity.LST_LOCATION_TYPE
+                var usersList = entity.USR_USER
                                     .Where(searchPredicate)
-                                .Select(p => new LocationTypeModel
+                                .Select(p => new UserModel
                                 {
-                                    LocationTypeId = p.LocationTypeId,
-                                    Name = p.Name,
+                                    UserId = p.UserId,
+                                    UserName = p.UserName,
+                                    LoginName = p.LoginName,
+                                    Password = p.Password,
                                     IsActive = p.IsActive,
                                     CreateDate = p.CreateDate,
                                     UpdateDate = p.UpdateDate,
@@ -70,10 +45,9 @@ namespace POS_Server.Controllers
                                 }).ToList();
 
 
-                return locationTypeList;
+                return usersList;
             }
         }
-
         [HttpPost]
         [Route("Save")]
         public string Save(string token)
@@ -88,45 +62,47 @@ namespace POS_Server.Controllers
             else
             {
                 string Object = "";
-                LST_LOCATION_TYPE typeObj = null;
+                USR_USER userObj = null;
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
                 foreach (Claim c in claims)
                 {
                     if (c.Type == "itemObject")
                     {
                         Object = c.Value;
-                        typeObj = JsonConvert.DeserializeObject<LST_LOCATION_TYPE>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
+                        userObj = JsonConvert.DeserializeObject<USR_USER>(Object, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
                         break;
                     }
                 }
                 try
                 {
-                    LST_LOCATION_TYPE type;
+                    USR_USER user;
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var typeEntity = entity.Set<LST_LOCATION_TYPE>();
-                        if (typeObj.LocationTypeId == 0)
+                        var userEntity = entity.Set<USR_USER>();
+                        if (userObj.UserId == 0)
                         {
-                            typeObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
-                            typeObj.UpdateDate = typeObj.CreateDate;
-                            typeObj.UpdateUserId = typeObj.CreateUserId;
-                            typeObj.IsActive = true;
+                            userObj.CreateDate = cc.AddOffsetTodate(DateTime.Now);
+                            userObj.UpdateDate = userObj.CreateDate;
+                            userObj.UpdateUserId = userObj.CreateUserId;
+                            userObj.IsActive = true;
 
-                            type = typeEntity.Add(typeObj);
+                            user = userEntity.Add(userObj);
                         }
                         else
                         {
-                            type = entity.LST_LOCATION_TYPE.Find(typeObj.LocationTypeId);
-                            type.Name = typeObj.Name;
-                            type.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
-                            type.UpdateUserId = typeObj.UpdateUserId;
+                            user = entity.USR_USER.Find(userObj.UserId);
+                            user.UserName = userObj.UserName;
+                            user.Password = userObj.Password;
+                            user.LoginName = userObj.LoginName;
+                            user.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
+                            user.UpdateUserId = userObj.UpdateUserId;
                         }
                         entity.SaveChanges();
 
                     }
 
-                    var typeList = GetLocationTypes(true);
-                    return TokenManager.GenerateToken(typeList);
+                    var usersList = GetUsersList(true);
+                    return TokenManager.GenerateToken(usersList);
                 }
                 catch
                 {
@@ -135,6 +111,7 @@ namespace POS_Server.Controllers
                 }
             }
         }
+
 
         [HttpPost]
         [Route("Delete")]
@@ -149,7 +126,7 @@ namespace POS_Server.Controllers
             }
             else
             {
-                long typeId = 0;
+                long deletedUserId = 0;
                 long userId = 0;
 
                 IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
@@ -157,7 +134,7 @@ namespace POS_Server.Controllers
                 {
                     if (c.Type == "itemId")
                     {
-                        typeId = long.Parse(c.Value);
+                        deletedUserId = long.Parse(c.Value);
                     }
                     else if (c.Type == "userId")
                     {
@@ -168,7 +145,7 @@ namespace POS_Server.Controllers
                 {
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        var tmpType = entity.LST_LOCATION_TYPE.Where(p => p.LocationTypeId == typeId).First();
+                        var tmpType = entity.USR_USER.Where(p => p.UserId == deletedUserId).First();
                         tmpType.IsActive = false;
                         tmpType.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                         tmpType.UpdateUserId = userId;
@@ -176,8 +153,8 @@ namespace POS_Server.Controllers
                         message = entity.SaveChanges().ToString();
                     }
 
-                    var typeList = GetLocationTypes(true);
-                    return TokenManager.GenerateToken(typeList);
+                    var usersList = GetUsersList(true);
+                    return TokenManager.GenerateToken(usersList);
                 }
                 catch
                 {
