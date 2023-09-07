@@ -442,6 +442,7 @@
     <Compile Include="Models\LocationModel.cs" />
     <Compile Include="Models\LocationTypeModel.cs" />
     <Compile Include="Models\LstCountryModel.cs" />
+    <Compile Include="Models\PermissionsModel.cs" />
     <Compile Include="Models\PhoneTypeModel.cs" />
     <Compile Include="Models\PromotionModel.cs" />
     <Compile Include="Models\PurchaseInvDetailsModel.cs" />
@@ -456,6 +457,7 @@
     <Compile Include="Models\SupplierTypeModel.cs" />
     <Compile Include="Models\TransactionModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\VM\APIResult.cs" />
     <Compile Include="Models\VM\ResponseVM.cs" />
     <Compile Include="Models\VM\TokenManager.cs" />
@@ -494,6 +496,21 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USR_APP_OBJECT.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USR_ROLE.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USR_ROLE_PERMISSION.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USR_USER.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USR_USER_ROLE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
   </ItemGroup>
