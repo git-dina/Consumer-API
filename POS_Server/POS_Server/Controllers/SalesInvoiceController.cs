@@ -35,5 +35,34 @@ namespace POS_Server.Controllers
                 }
             }
         }
+
+        [HttpPost]
+        [Route("GetLastInvNum")]
+        public string GetLastInvNum(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+
+                    long maxId = 0;
+                    var item = entity.SAL_INVOICE.Count();
+                    if (item > 0)
+                        maxId = long.Parse( entity.SAL_INVOICE.Select(x => x.InvNumber).Max());
+              
+
+                    return TokenManager.GenerateToken(maxId.ToString());
+
+                }
+            }
+        }
     }
 }

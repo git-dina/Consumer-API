@@ -8,7 +8,7 @@ namespace POS_Server.Models
     public class UserModel
     {
         public long UserId { get; set; }
-        public long RoleId { get; set; }
+        public long? RoleId { get; set; }
         public string LoginName { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }
@@ -20,5 +20,7 @@ namespace POS_Server.Models
 
         //extra
         public RoleModel userRole { get; set; }
+        public string RoleNameEn { get; set; }
+        public string RoleNameAr { get; set; }
     }
 }

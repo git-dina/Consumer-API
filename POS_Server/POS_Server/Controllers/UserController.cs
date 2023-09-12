@@ -42,6 +42,9 @@ namespace POS_Server.Controllers
                                     UpdateDate = p.UpdateDate,
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
+                                    RoleId = p.RoleId,
+                                    RoleNameAr = p.USR_ROLE.NameAr,
+                                    RoleNameEn = p.USR_ROLE.NameEn,
                                 }).ToList();
 
 
@@ -92,7 +95,7 @@ namespace POS_Server.Controllers
                         {
                             user = entity.USR_USER.Find(userObj.UserId);
                             user.UserName = userObj.UserName;
-                            user.Password = userObj.Password;
+                            //user.Password = userObj.Password;
                             user.LoginName = userObj.LoginName;
                             user.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             user.UpdateUserId = userObj.UpdateUserId;
@@ -164,5 +167,199 @@ namespace POS_Server.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("LoginUser")]
+        public  string LoginUser(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            List<UserModel> usersList = new List<UserModel>();
+            UserModel user = new UserModel();
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                string loginName = "";
+                string password = "";
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "loginName")
+                    {
+                        loginName = c.Value;
+                    }
+                    else if (c.Type == "password")
+                    {
+                        password = c.Value;
+                    }
+
+                }
+
+                UserModel emptyuser = new UserModel();
+
+                try
+                {
+
+                    using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                    {
+                        usersList = entity.USR_USER.Where(u => u.IsActive == true && u.LoginName == loginName)
+                        .Select(u => new UserModel
+                        {
+                            UserId = u.UserId,
+                           LoginName = u.LoginName,
+                           UserName = u.UserName,
+                           RoleId = u.RoleId,
+                           CreateDate = u.CreateDate,
+                           UpdateDate = u.UpdateDate,
+                           CreateUserId = u.CreateUserId,
+                           UpdateUserId = u.UpdateUserId,
+                           userRole = entity.USR_ROLE.Where(x => x.RoleId == u.RoleId && x.IsActive == true)
+                                    .Select(x => new RoleModel()
+                                    {
+                                        NameAr = x.NameAr,
+                                        NameEn = x.NameEn,
+                                        RoleID = x.RoleId,
+                                        Permissions = entity.USR_ROLE_PERMISSION.Where(m => m.RoleId == x.RoleId && m.IsActive == true)
+                                                    .Select( m => new PermissionsModel()
+                                                    {
+                                                        RolesPermissionId = m.RolesPermissionId,
+                                                        RoleId = m.RoleId,
+                                                        AppObjectId = m.AppObjectId,
+                                                        AppObject = m.USR_APP_OBJECT.Name,
+                                                        ViewObject = m.ViewObject,
+                                                        EditObject = m.EditObject,
+                                                        ApproveObject = m.EditObject,
+                                                        Notes = m.Notes,
+                                                        CreateDate = m.CreateDate,
+                                                        UpdateDate = m.UpdateDate,
+                                                        CreateUserId = m.CreateUserId,
+                                                        UpdateUserId = m.UpdateUserId,
+                                                    }).ToList()
+                                       
+                                    }).FirstOrDefault(),
+                        })
+                        .ToList();
+
+                        if (usersList == null || usersList.Count <= 0)
+                        {
+                            user = new UserModel();
+                            // rong user
+                            return TokenManager.GenerateToken(user);
+                        }
+                        else
+                        {
+                            user = usersList.Where(i => i.LoginName == loginName && i.Password == password).FirstOrDefault();
+                            if (user != null)
+                            {
+                              
+                                // correct username and pasword
+                                return TokenManager.GenerateToken(user);
+                            }
+                            else
+                            {
+                                // rong pass return just username
+                                user = new UserModel();
+                                user.UserName = loginName;
+                                return TokenManager.GenerateToken(user);
+
+                            }
+                        }
+                    }
+
+                }
+                catch
+                {
+                    return TokenManager.GenerateToken(emptyuser);
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("Get")]
+        public string Get(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+            bool? isActive = null;
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "isActive")
+                    {
+                        if (c.Value != "")
+                            isActive = bool.Parse(c.Value);
+                    }
+                }
+
+                var lst = GetUsers(isActive);
+                return TokenManager.GenerateToken(lst);
+            }
+        }
+
+        public List<UserModel> GetUsers(bool? isActive)
+        {
+            using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+            {
+                var searchPredicate = PredicateBuilder.New<USR_USER>();
+                searchPredicate = searchPredicate.And(x => true);
+                if (isActive != null)
+                    searchPredicate = searchPredicate.And(x => x.IsActive == isActive);
+
+                var usrsList = entity.USR_USER
+                                    .Where(searchPredicate)
+                                .Select(p => new UserModel
+                                {
+                                    UserId = p.UserId,
+                                    UserName = p.UserName,
+                                    LoginName = p.LoginName,
+                                    RoleId = p.RoleId,
+                                    IsActive = p.IsActive,
+                                    CreateDate = p.CreateDate,
+                                    UpdateDate = p.UpdateDate,
+                                    CreateUserId = p.CreateUserId,
+                                    UpdateUserId = p.UpdateUserId,
+                                    userRole = entity.USR_ROLE.Where(x => x.RoleId == p.RoleId && x.IsActive == true)
+                                    .Select(x => new RoleModel()
+                                    {
+                                        NameAr = x.NameAr,
+                                        NameEn = x.NameEn,
+                                        RoleID = x.RoleId,
+                                        Permissions = entity.USR_ROLE_PERMISSION.Where(m => m.RoleId == x.RoleId && m.IsActive == true)
+                                                    .Select(m => new PermissionsModel()
+                                                    {
+                                                        RolesPermissionId = m.RolesPermissionId,
+                                                        RoleId = m.RoleId,
+                                                        AppObjectId = m.AppObjectId,
+                                                        AppObject = m.USR_APP_OBJECT.Name,
+                                                        ViewObject = m.ViewObject,
+                                                        EditObject = m.EditObject,
+                                                        ApproveObject = m.EditObject,
+                                                        Notes = m.Notes,
+                                                        CreateDate = m.CreateDate,
+                                                        UpdateDate = m.UpdateDate,
+                                                        CreateUserId = m.CreateUserId,
+                                                        UpdateUserId = m.UpdateUserId,
+                                                    }).ToList()
+
+                                    }).FirstOrDefault(),
+                                }).ToList();
+
+
+                return usrsList;
+            }
+        }
+
+
     }
 }

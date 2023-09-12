@@ -1580,6 +1580,78 @@ namespace POS_Server.Controllers
         }
 
         [HttpPost]
+        [Route("GetItemUnitByBarcode")]
+        public string GetItemUnitByBarcode(string token)
+        {
+            token = TokenManager.readToken(HttpContext.Current.Request);
+
+            var strP = TokenManager.GetPrincipal(token);
+            if (strP != "0") //invalid authorization
+            {
+                return TokenManager.GenerateToken(strP);
+            }
+            else
+            {
+                #region parameters
+                string barcode = "";
+                long locationId = 0;
+
+                IEnumerable<Claim> claims = TokenManager.getTokenClaims(token);
+                foreach (Claim c in claims)
+                {
+                    if (c.Type == "barcode")
+                    {
+                        if (c.Value != "")
+                            barcode = c.Value;
+                    }
+                    else if (c.Type == "locationId")
+                    {
+                        if (c.Value != "")
+                            locationId = long.Parse(c.Value);
+                    }
+
+                }
+                #endregion
+                using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
+                {
+                    var searchPredicate = PredicateBuilder.New<GEN_ITEM_UNIT>();
+                    searchPredicate = searchPredicate.And(p => p.IsActive == true
+                                && p.GEN_ITEM.IsActive == true
+                                && p.IsBlocked == false
+                                && p.Barcode.ToLower() == barcode.ToLower());
+
+
+                    if (locationId != 0)
+                        searchPredicate = searchPredicate.And(p => p.GEN_ITEM.GEN_ITEM_LOCATION.Any(u => u.LocationId == locationId));
+
+                   
+
+                    var item = entity.GEN_ITEM_UNIT.Where(searchPredicate)
+                        .Select(p => new ItemUnitModel
+                        {
+                            ItemId = p.ItemId,
+                            Barcode = p.Barcode,
+                            BarcodeType = p.BarcodeType,
+                            ItemUnitId = p.ItemUnitId,
+                            SalePrice = p.SalePrice,
+                            Cost = p.Cost,                          
+                            UnitId = p.UnitId,
+                           ItemName = p.GEN_ITEM.Name,
+                            Factor = p.Factor,
+                            IsActive = p.IsActive,
+                            CreateDate = p.CreateDate,
+                            UpdateDate = p.UpdateDate,
+                            CreateUserId = p.CreateUserId,
+                            UpdateUserId = p.UpdateUserId,
+
+                         
+                        }).FirstOrDefault();
+                    return TokenManager.GenerateToken(item);
+
+                }
+            }
+        }
+        [HttpPost]
         [Route("GetPromotionItemByBarcode")]
         public string GetPromotionItemByBarcode(string token)
         {

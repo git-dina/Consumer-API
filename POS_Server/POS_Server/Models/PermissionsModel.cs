@@ -21,6 +21,8 @@ namespace POS_Server.Models
         public Nullable<long> UpdateUserId { get; set; }
         //extr 
         public string AppObject { get; set; }
+        public string NameAr { get; set; }
+        public string NameEn { get; set; }
     }
 
     public class RoleModel
