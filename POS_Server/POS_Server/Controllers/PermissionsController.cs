@@ -34,7 +34,13 @@ namespace POS_Server.Controllers
 
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
-                    var appObjectList = entity.USR_APP_OBJECT.ToList();
+                    var appObjectList = entity.USR_APP_OBJECT.Select(x => new AppObjectModel()
+                    {
+                        AppObjectId = x.AppObjectId,
+                        Name = x.Name,
+                        NameAr = x.NameAr,
+                        NameEn = x.NameEn,
+                    }).ToList();
                     return TokenManager.GenerateToken(appObjectList);
                 }
             }

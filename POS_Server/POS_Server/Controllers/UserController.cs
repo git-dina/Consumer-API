@@ -95,7 +95,8 @@ namespace POS_Server.Controllers
                         {
                             user = entity.USR_USER.Find(userObj.UserId);
                             user.UserName = userObj.UserName;
-                            //user.Password = userObj.Password;
+                            if(userObj.Password != null && userObj.Password != "")
+                                user.Password = userObj.Password;
                             user.LoginName = userObj.LoginName;
                             user.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             user.UpdateUserId = userObj.UpdateUserId;
@@ -173,8 +174,7 @@ namespace POS_Server.Controllers
         public  string LoginUser(string token)
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
-            List<UserModel> usersList = new List<UserModel>();
-            UserModel user = new UserModel();
+
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
             {
@@ -199,14 +199,12 @@ namespace POS_Server.Controllers
 
                 }
 
-                UserModel emptyuser = new UserModel();
-
                 try
                 {
 
                     using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                     {
-                        usersList = entity.USR_USER.Where(u => u.IsActive == true && u.LoginName == loginName)
+                      var  user = entity.USR_USER.Where(u => u.IsActive == true && u.LoginName == loginName && u.Password == password)
                         .Select(u => new UserModel
                         {
                             UserId = u.UserId,
@@ -242,9 +240,9 @@ namespace POS_Server.Controllers
                                        
                                     }).FirstOrDefault(),
                         })
-                        .ToList();
+                        .FirstOrDefault();
 
-                        if (usersList == null || usersList.Count <= 0)
+                        if (user == null )
                         {
                             user = new UserModel();
                             // rong user
@@ -252,28 +250,17 @@ namespace POS_Server.Controllers
                         }
                         else
                         {
-                            user = usersList.Where(i => i.LoginName == loginName && i.Password == password).FirstOrDefault();
-                            if (user != null)
-                            {
-                              
-                                // correct username and pasword
-                                return TokenManager.GenerateToken(user);
-                            }
-                            else
-                            {
-                                // rong pass return just username
-                                user = new UserModel();
-                                user.UserName = loginName;
-                                return TokenManager.GenerateToken(user);
-
-                            }
+                            
+                            // correct username and pasword
+                            return TokenManager.GenerateToken(user);
+                           
                         }
                     }
 
                 }
                 catch
                 {
-                    return TokenManager.GenerateToken(emptyuser);
+                    return TokenManager.GenerateToken(new UserModel());
                 }
             }
         }
