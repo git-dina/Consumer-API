@@ -43,8 +43,8 @@ namespace POS_Server.Controllers
                                     CreateUserId = p.CreateUserId,
                                     UpdateUserId = p.UpdateUserId,
                                     RoleId = p.RoleId,
-                                    RoleNameAr = p.USR_ROLE.NameAr,
-                                    RoleNameEn = p.USR_ROLE.NameEn,
+                                    RoleNameAr = entity.USR_ROLE.Where(x => x.RoleId == p.RoleId).Select(x => x.NameAr).FirstOrDefault(),
+                                    RoleNameEn = entity.USR_ROLE.Where(x => x.RoleId == p.RoleId).Select(x => x.NameEn).FirstOrDefault(),
                                 }).ToList();
 
 
@@ -98,6 +98,7 @@ namespace POS_Server.Controllers
                             if(userObj.Password != null && userObj.Password != "")
                                 user.Password = userObj.Password;
                             user.LoginName = userObj.LoginName;
+                            user.RoleId = userObj.RoleId;
                             user.UpdateDate = cc.AddOffsetTodate(DateTime.Now);
                             user.UpdateUserId = userObj.UpdateUserId;
                         }
