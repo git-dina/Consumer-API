@@ -1,4 +1,5 @@
-﻿using POS_Server.Models.VM;
+﻿using POS_Server.Models;
+using POS_Server.Models.VM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace POS_Server.Controllers
         public string GetPaymentTypes(string token)
         {
             token = TokenManager.readToken(HttpContext.Current.Request);
-            bool? isActive = null;
 
             var strP = TokenManager.GetPrincipal(token);
             if (strP != "0") //invalid authorization
@@ -30,7 +30,13 @@ namespace POS_Server.Controllers
             {
                 using (ConsumerAssociationDBEntities entity = new ConsumerAssociationDBEntities())
                 {
-                    var lst = entity.SAL_PAYMENT_TYPE.Where(x => x.IsBlocked == true).ToList();
+                    var lst = entity.SAL_PAYMENT_TYPE.Where(x => x.IsBlocked == false)
+                        .Select(x => new PaymentTypeModel()
+                        {
+                            IsCard = x.IsCard,
+                            PaymentTypeId = x.PaymentTypeId,
+                            PaymentTypeName = x.PaymentTypeName,
+                        }).ToList();
                     return TokenManager.GenerateToken(lst);
                 }
             }

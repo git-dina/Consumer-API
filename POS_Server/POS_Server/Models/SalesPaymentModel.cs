@@ -9,7 +9,8 @@ namespace POS_Server.Models
     {
         public long PaymentId { get; set; }
         public Nullable<long> InvoiceId { get; set; }
-        public Nullable<decimal> Amount { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Remain { get; set; }
         public int PaymentTypeId { get; set; }
 
         public string ReceiptNum { get; set; }
